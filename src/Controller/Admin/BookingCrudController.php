@@ -15,16 +15,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Symfony\Component\HttpFoundation\Response;
-
 class BookingCrudController extends AbstractCrudController
 {
-    public function __construct(private AdminUrlGenerator $adminUrlGenerator) {}
 
     public static function getEntityFqcn(): string
     {
@@ -78,7 +74,7 @@ class BookingCrudController extends AbstractCrudController
         yield DateTimeField::new('scheduledAt')->setLabel('RDV fixé')->setRequired(false);
         yield DateTimeField::new('scheduledEndAt')->setLabel('Fin RDV')->setRequired(false);
         yield TextField::new('address')->setLabel('Adresse')->setRequired(false);
-        yield MoneyField::new('price')->setLabel('Prix')->setCurrency('EUR')->setRequired(false);
+        yield NumberField::new('price')->setLabel('Prix (€)')->setNumDecimals(2)->setRequired(false);
         yield ChoiceField::new('status')
             ->setLabel('Statut')
             ->setChoices(BookingStatus::choices())
