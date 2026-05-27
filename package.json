@@ -1,0 +1,14 @@
+{
+  "name": "les-patounes-du-glazik",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "sass": "^1.80.0",
+    "vite": "^6.0.0"
+  }
+}

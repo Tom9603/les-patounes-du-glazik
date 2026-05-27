@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #faf9f7; margin: 0; padding: 2rem; }
+        .card { background: #fff; border-radius: 12px; max-width: 520px; margin: 0 auto; padding: 2.5rem; }
+        .logo { text-align: center; margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 700; color: #2c3e2d; }
+        h1 { font-size: 1.4rem; color: #2c3e2d; margin-bottom: 1rem; }
+        p { color: #6b7768; line-height: 1.7; margin-bottom: 1rem; }
+        .btn { display: inline-block; background: #7d8c6f; color: #fff; padding: 0.85rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 1rem 0; }
+        .footer { text-align: center; font-size: 0.8rem; color: #aaa; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">Les patounes du glazik</div>
+        <h1>Bonjour {{ member.firstName }},</h1>
+        <p>Merci de vous être inscrit. Il ne reste plus qu'une étape : confirmer votre adresse email en cliquant sur le bouton ci-dessous.</p>
+        <p style="text-align:center;">
+            <a href="{{ verifyUrl }}" class="btn">Confirmer mon inscription</a>
+        </p>
+        <p>Une fois confirmé, vous serez connecté automatiquement et pourrez commenter les articles du blog.</p>
+        <p>Si vous n'êtes pas à l'origine de cette inscription, ignorez simplement cet email.</p>
+        <div class="footer">Les patounes du glazik &bull; Landudal, Finistère</div>
+    </div>
+</body>
+</html>

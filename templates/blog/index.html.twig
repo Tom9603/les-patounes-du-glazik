@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog - Les patounes du glazik{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
+                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
+                <a href="{{ path('app_blog') }}" class="nav-link nav-link--active">Blog</a>
+                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
+            </nav>
+            <div class="navbar-actions">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin') }}" class="btn btn-admin">Administrer</a>
+                {% endif %}
+                {% if app.user %}
+                    <a href="{{ path('app_profile') }}" class="btn btn-profile">
+                        {% if app.user.avatarFilename %}
+                            <img src="{{ asset('uploads/avatars/' ~ app.user.avatarFilename) }}" alt="" class="avatar-mini">
+                        {% else %}
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        {% endif %}
+                        <span>Profil</span>
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_member_login') }}" class="btn btn-login">Connexion</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="blog-page">
+        <div class="container">
+
+            <div class="blog-header animate-on-scroll">
+                <h1 class="blog-main-title">Blog</h1>
+                <p class="blog-main-subtitle">Conseils, anecdotes et actualités autour du bien-être animal</p>
+            </div>
+
+            {% if categories is not empty %}
+            <div class="blog-categories animate-on-scroll">
+                <a href="{{ path('app_blog') }}" class="category-tag {% if currentCategory is null %}category-tag--active{% endif %}">
+                    Tous les articles
+                </a>
+                {% for cat in categories %}
+                    <a href="{{ path('app_blog', {categorie: cat.slug}) }}" class="category-tag {% if currentCategory and currentCategory.id == cat.id %}category-tag--active{% endif %}">
+                        {{ cat.name }}
+                    </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if articles is empty %}
+                <div class="blog-empty animate-on-scroll">
+                    <p>Aucun article publié pour l'instant. Revenez bientôt !</p>
+                </div>
+            {% else %}
+                <div class="blog-grid">
+                    {% for article in articles %}
+                        <article class="blog-card animate-on-scroll" style="--delay: {{ loop.index0 * 0.08 }}s">
+                            {% if article.featuredImageFilename %}
+                                <a href="{{ path('app_blog_show', {slug: article.slug}) }}" class="blog-card-img-link">
+                                    <img src="/uploads/articles/{{ article.featuredImageFilename }}" alt="{{ article.title }}" class="blog-card-img">
+                                </a>
+                            {% endif %}
+                            <div class="blog-card-body">
+                            {% if article.category %}
+                                <span class="blog-card-category">{{ article.category.name }}</span>
+                            {% endif %}
+                            <h2 class="blog-card-title">
+                                <a href="{{ path('app_blog_show', {slug: article.slug}) }}">{{ article.title }}</a>
+                            </h2>
+                            {% if article.excerpt %}
+                                <p class="blog-card-excerpt">{{ article.excerpt }}</p>
+                            {% endif %}
+                            <div class="blog-card-meta">
+                                <span>{{ article.publishedAt ? article.publishedAt|date('d/m/Y') : '' }}</span>
+                                <span>{{ article.approvedComments|length }} commentaire{{ article.approvedComments|length != 1 ? 's' : '' }}</span>
+                            </div>
+                            <a href="{{ path('app_blog_show', {slug: article.slug}) }}" class="blog-card-link">Lire la suite</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text-small">
+                    <a href="{{ path('app_home') }}" style="color:inherit;">Retour au site</a>
+                </p>
+                <div class="footer-legal">
+                    <span>SIRET : 982 097 362 00015</span>
+                    <span>•</span>
+                    <span>© 2025 Les patounes du glazik</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/animations.js') }}"></script>
+{% endblock %}

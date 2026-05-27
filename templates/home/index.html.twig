@@ -1,0 +1,572 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les patounes du glazik - Petsitting & Naturopathie animalière{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <h1 class="brand-title">Les patounes du glazik</h1>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#a-propos" class="nav-link">À propos</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#tarifs" class="nav-link">Tarifs</a>
+                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            <div class="navbar-actions">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin') }}" class="btn btn-admin">Administrer</a>
+                {% endif %}
+                {% if app.user %}
+                    <a href="{{ path('app_profile') }}" class="btn btn-profile">
+                        {% if app.user.avatarFilename %}
+                            <img src="{{ asset('uploads/avatars/' ~ app.user.avatarFilename) }}" alt="" class="avatar-mini">
+                        {% else %}
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        {% endif %}
+                        <span>Profil</span>
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_member_login') }}" class="btn btn-login">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        <span>Connexion</span>
+                    </a>
+                {% endif %}
+                <a href="tel:+33767473251" class="btn btn-secondary">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    Contactez-moi
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content fade-in-left">
+                    <h2 class="hero-title">
+                        Prenez soin de vos compagnons avec
+                        <span class="text-primary">amour</span> et
+                        <span class="text-secondary">professionnalisme</span>
+                    </h2>
+                    <p class="hero-description">
+                        Je me déplace chez vous dans le secteur de Landudal et alentours (rayon 20 km)
+                    </p>
+                    <div class="hero-info">
+                        <div class="info-item">
+                            <svg class="icon icon-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span>Landudal et alentours (rayon 20 km)</span>
+                        </div>
+                        <div class="info-item">
+                            <svg class="icon icon-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>Disponible 7j/7</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image fade-in-right">
+                    <img
+                        src="{{ asset('images/heroPicture.png') }}"
+                        alt="Sophie avec un Maine Coon"
+                        class="main-image"
+                    >
+                    <div class="hero-badge">
+                        <div class="stars">
+                            {% for i in 1..5 %}
+                                <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            {% endfor %}
+                        </div>
+                        <p class="badge-text">Plus de 30 clients satisfaits</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- À propos -->
+    <section class="about-section" id="a-propos">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image animate-on-scroll">
+                    <img src="{{ asset('images/heroPicture.png') }}" alt="Sophie, petsitter et naturopathe animalière" class="about-img">
+                </div>
+                <div class="about-content animate-on-scroll">
+                    <h3 class="section-title">Qui suis-je ?</h3>
+                    <p class="about-text">Je m'appelle Sophie, passionnée par les animaux depuis toujours. Basée à Landudal en Finistère, je me déplace chez vous pour prendre soin de vos compagnons, parce qu'un animal est toujours mieux dans son environnement familier.</p>
+                    <p class="about-text">Formée en naturopathie animalière, j'accompagne aussi vos animaux avec des solutions naturelles adaptées à chaque individu : stress, troubles du comportement, convalescence, bien-être au quotidien...</p>
+                    <div class="about-badges">
+                        <span class="about-badge">Formée en naturopathie animalière</span>
+                        <span class="about-badge">Déplacement à domicile uniquement</span>
+                        <span class="about-badge">Toutes espèces acceptées</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section" id="services">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Mes services</h3>
+                <p class="section-subtitle">Des prestations adaptées à vos besoins</p>
+            </div>
+
+            <div class="services-grid">
+                {% set services = [
+                    {
+                        title: "Petsitting à domicile",
+                        description: "Je me déplace chez vous pour garder vos animaux dans leur environnement familier. Chiens, chats, NACs... vos compagnons restent chez eux, en toute sérénité.",
+                        price: "À partir de 12€/visite",
+                        icon: 'dog'
+                    },
+                    {
+                        title: "Petsitting multi-espèce",
+                        description: "Équidés, animaux de mini-ferme, basse-cour… Je m'adapte à tous vos animaux, même les plus atypiques, avec le même soin et la même attention.",
+                        price: "Tarif selon espèce",
+                        icon: 'heart'
+                    },
+                    {
+                        title: "Naturopathie animalière",
+                        description: "Accompagnement naturel pour le bien-être de vos animaux. Consultations en présentiel ou en ligne, avec conseils personnalisés en phytothérapie et nutrition.",
+                        price: "70€ présentiel / 60€ en ligne",
+                        icon: 'leaf'
+                    }
+                ] %}
+
+                {% for service in services %}
+                    <div class="service-card animate-on-scroll" style="--delay: {{ loop.index0 * 0.1 }}s">
+                        <div class="service-icon">
+                            {% if service.icon == 'dog' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/>
+                                    <path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/>
+                                    <path d="M8 14v.5"/>
+                                    <path d="M16 14v.5"/>
+                                    <path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/>
+                                    <path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/>
+                                </svg>
+                            {% elseif service.icon == 'heart' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20V10"/>
+                                    <path d="M18 20V4"/>
+                                    <path d="M6 20v-4"/>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <h4 class="service-title">{{ service.title }}</h4>
+                        <p class="service-description">{{ service.description }}</p>
+                        <p class="service-price">{{ service.price }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Comment ça se passe -->
+    <section class="steps-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Comment ça se passe ?</h3>
+                <p class="section-subtitle">Simple, humain, sans stress</p>
+            </div>
+            <div class="steps-grid">
+                {% set steps = [
+                    {
+                        number: "1",
+                        title: "On se contacte",
+                        text: "On échange par téléphone ou par email pour parler de vos animaux, vos besoins et les dates souhaitées."
+                    },
+                    {
+                        number: "2",
+                        title: "Visite découverte",
+                        text: "Je viens chez vous faire connaissance avec vos animaux. C'est gratuit, sans engagement, et ça permet à tout le monde d'être à l'aise."
+                    },
+                    {
+                        number: "3",
+                        title: "Vous partez serein",
+                        text: "Le jour J, vos animaux sont gardés chez eux. Je vous envoie des nouvelles régulièrement (photos, messages) pour que vous partiez vraiment tranquille."
+                    }
+                ] %}
+                {% for step in steps %}
+                    <div class="step animate-on-scroll" style="--delay: {{ loop.index0 * 0.15 }}s">
+                        <div class="step-number">{{ step.number }}</div>
+                        <h4 class="step-title">{{ step.title }}</h4>
+                        <p class="step-text">{{ step.text }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="tarifs">
+        <div class="container-small">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Tarifs</h3>
+                <p class="section-subtitle">Prestations claires et transparentes</p>
+            </div>
+
+            <div class="pricing-table animate-on-scroll">
+                {% set pricing = [
+                    { service: "Visite à domicile (30 min)", price: "12€" },
+                    { service: "Visite à domicile (45 min)", price: "20€" },
+                    { service: "Majoration dimanche / jours fériés", price: "+3€" },
+                    { service: "Consultation naturopathie (présentiel)", price: "70€" },
+                    { service: "Consultation naturopathie (en ligne)", price: "60€" },
+                    { service: "Frais kilométriques", price: "0,52€/km (5 premiers offerts)" }
+                ] %}
+
+                {% for item in pricing %}
+                    <div class="pricing-row animate-on-scroll" style="--delay: {{ loop.index0 * 0.05 }}s">
+                        <span class="pricing-service">{{ item.service }}</span>
+                        <span class="pricing-price">{{ item.price }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <p class="pricing-note animate-on-scroll">
+                * Tarif selon espèce pour les équidés et animaux de ferme. N'hésitez pas à me contacter pour un devis personnalisé.
+            </p>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section" id="avis">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Avis clients</h3>
+                <p class="section-subtitle">Ce que disent mes clients</p>
+            </div>
+
+            <div class="reviews-grid">
+                {% set reviews = [
+                    {
+                        name: "Yeva",
+                        rating: 5,
+                        text: "Je recommande Sophie les yeux fermés. J'ai fait appel à ses services de petsitter et tout s'est très bien passé. Nos animaux étaient entre de bonnes mains.",
+                        date: "Avis Google"
+                    },
+                    {
+                        name: "Elodie, propriétaire de Foxie et Gaïa",
+                        rating: 5,
+                        text: "Un week-end, des vacances sans animal, c'est possible en toute confiance avec Sophie. Elle prend soin de nos compagnons comme s'ils étaient les siens.",
+                        date: "Avis Google"
+                    },
+                    {
+                        name: "Sandra, éleveuse de Maine Coon",
+                        rating: 5,
+                        text: "Éleveuse de maine coon, je confie ma chatterie à Sophie lors de mes rares absences. Sérieuse, attentionnée, je repars l'esprit tranquille à chaque fois.",
+                        date: "Avis Google"
+                    },
+                    {
+                        name: "Fanny, propriétaire de Heasy",
+                        rating: 5,
+                        text: "Ma chienne épileptique est suivie par Sophie pour apaiser les effets secondaires de son traitement. Les résultats sont là, je suis vraiment reconnaissante.",
+                        date: "Avis Google"
+                    }
+                ] %}
+
+                {% for review in reviews %}
+                    <div class="review-card animate-on-scroll" style="--delay: {{ loop.index0 * 0.1 }}s">
+                        <div class="review-stars">
+                            {% for i in 1..review.rating %}
+                                <svg class="star" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            {% endfor %}
+                        </div>
+                        <p class="review-text">"{{ review.text }}"</p>
+                        <div class="review-footer">
+                            <span class="review-author">{{ review.name }}</span>
+                            <span class="review-date">{{ review.date }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="reviews-cta animate-on-scroll">
+                <a href="https://g.page/r/search?q=Les+patounes+du+glazik+Landudal" target="_blank" rel="noopener noreferrer" class="btn btn-review">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    Laisser un avis Google
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zone d'intervention -->
+    <section class="zone-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Zone d'intervention</h3>
+                <p class="section-subtitle">Landudal et ses alentours dans un rayon de 20 km</p>
+            </div>
+            <div class="zone-grid animate-on-scroll">
+                <div class="zone-map">
+                    <iframe
+                        src="https://www.openstreetmap.org/export/embed.html?bbox=-4.38%2C47.80%2C-3.58%2C48.20&layer=mapnik&marker=47.9956%2C-3.9814"
+                        title="Zone d'intervention - Landudal"
+                        loading="lazy"
+                    ></iframe>
+                </div>
+                <div class="zone-info">
+                    <p class="zone-intro">Je me déplace notamment vers :</p>
+                    <ul class="zone-cities">
+                        <li>Landudal</li>
+                        <li>Briec</li>
+                        <li>Quimper</li>
+                        <li>Rosporden</li>
+                        <li>Fouesnant</li>
+                        <li>Ergué-Gabéric</li>
+                        <li>Elliant</li>
+                        <li>Coray</li>
+                        <li>Saint-Évarzec</li>
+                        <li>Guengat</li>
+                        <li>Plonéis</li>
+                    </ul>
+                    <p class="zone-note">Hors zone ? Contactez-moi, on peut trouver un arrangement !</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="container-small">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Questions fréquentes</h3>
+            </div>
+            <div class="faq-list">
+                {% set faqs = [
+                    {
+                        q: "Mes animaux restent-ils chez moi ?",
+                        a: "Oui, toujours. Je me déplace uniquement chez vous. Vos animaux gardent leurs repères, leur environnement, leurs habitudes. C'est bien moins stressant pour eux."
+                    },
+                    {
+                        q: "Acceptez-vous tous les animaux ?",
+                        a: "Oui ! Chiens, chats, NACs, équidés, animaux de basse-cour et de mini-ferme. Si vous avez un doute sur votre espèce, contactez-moi directement."
+                    },
+                    {
+                        q: "Comment se passe la première visite ?",
+                        a: "Je viens chez vous gratuitement et sans engagement pour rencontrer vos animaux, prendre connaissance de leurs habitudes et répondre à toutes vos questions."
+                    },
+                    {
+                        q: "Que se passe-t-il en cas d'urgence ?",
+                        a: "Je vous contacte immédiatement. Si nécessaire, je me coordonne avec votre vétérinaire. Vous restez informé à chaque instant."
+                    },
+                    {
+                        q: "Intervenez-vous les week-ends et jours fériés ?",
+                        a: "Oui, je suis disponible 7j/7. Une majoration de 3€ s'applique les dimanches et jours fériés."
+                    },
+                    {
+                        q: "La naturopathie, c'est pour quels cas ?",
+                        a: "Elle peut aider dans de nombreuses situations : stress, troubles digestifs, problèmes de peau, convalescence, prévention... Les consultations se font en présentiel ou en ligne."
+                    }
+                ] %}
+                {% for item in faqs %}
+                    <div class="faq-item animate-on-scroll">
+                        <button class="faq-question" aria-expanded="false">
+                            {{ item.q }}
+                            <svg class="faq-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </button>
+                        <div class="faq-answer" hidden>
+                            <p>{{ item.a }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact-section" id="contact">
+        <div class="container-small">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Me contacter</h3>
+                <p class="section-subtitle">Je vous réponds sous 24h</p>
+            </div>
+            <form class="contact-form animate-on-scroll" action="mailto:sophielukomski.pro@gmail.com" method="POST" enctype="text/plain">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Prénom et nom</label>
+                        <input type="text" id="name" name="nom" placeholder="Marie Dupont" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="marie@email.com" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="telephone" placeholder="06 xx xx xx xx">
+                    </div>
+                    <div class="form-group">
+                        <label for="animal">Type d'animal</label>
+                        <select id="animal" name="animal">
+                            <option value="">Choisir...</option>
+                            <option>Chien</option>
+                            <option>Chat</option>
+                            <option>NAC</option>
+                            <option>Équidé</option>
+                            <option>Animal de ferme</option>
+                            <option>Autre</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="service">Prestation souhaitée</label>
+                        <select id="service" name="service">
+                            <option value="">Choisir...</option>
+                            <option>Petsitting à domicile</option>
+                            <option>Naturopathie animalière (présentiel)</option>
+                            <option>Naturopathie animalière (en ligne)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dates">Dates souhaitées</label>
+                        <input type="text" id="dates" name="dates" placeholder="Ex : du 15 au 20 juillet">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Parlez-moi de vos animaux, posez vos questions..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-submit">Envoyer ma demande</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Galerie -->
+    {% if photos is not empty %}
+    <section class="gallery-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h3 class="section-title">Galerie</h3>
+                <p class="section-subtitle">Quelques moments partagés</p>
+            </div>
+            <div class="gallery-grid">
+                {% for photo in photos %}
+                    <div class="gallery-item animate-on-scroll" style="--delay: {{ loop.index0 * 0.07 }}s">
+                        <img
+                            src="{{ asset('uploads/photos/' ~ photo.filename) }}"
+                            alt="{{ photo.alt ?? 'Photo galerie Les patounes du glazik' }}"
+                            loading="lazy"
+                        >
+                        {% if photo.caption %}
+                            <div class="gallery-caption">{{ photo.caption }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container-small">
+            <div class="cta-content animate-on-scroll">
+                <h3 class="cta-title">Besoin d'une garde ou d'un conseil ?</h3>
+                <p class="cta-description">Contactez-moi dès maintenant pour discuter de vos besoins</p>
+                <div class="cta-buttons">
+                    <a href="tel:+33767473251" class="btn btn-cta-primary">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        07 67 47 32 51
+                    </a>
+                    <a href="mailto:sophielukomski.pro@gmail.com" class="btn btn-cta-secondary">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        M'envoyer un email
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo-circle logo-circle-small">
+                        <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                    </div>
+                    <h4 class="footer-title">Les patounes du glazik</h4>
+                </div>
+                <p class="footer-text">Petsitting & Naturopathie animalière</p>
+                <p class="footer-text-small">Landudal et alentours (rayon 20 km), disponible 7j/7</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                            <circle cx="12" cy="12" r="4"/>
+                            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="footer-legal">
+                    <span>SIRET : 982 097 362 00015</span>
+                    <span>•</span>
+                    <span>© 2025 Les patounes du glazik</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/animations.js') }}"></script>
+{% endblock %}

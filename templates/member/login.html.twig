@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}Connexion - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="login-page">
+    <div class="login-card">
+        <div class="login-logo">
+            <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik">
+        </div>
+        <h1 class="login-title">Se connecter</h1>
+
+        {% if error %}
+            <div class="login-error">Email ou mot de passe incorrect.</div>
+        {% endif %}
+
+        {% for flash in app.flashes('success') %}
+            <div style="background:rgba(125,140,111,.1);border:1px solid rgba(125,140,111,.3);border-radius:8px;padding:.75rem 1rem;color:#7d8c6f;font-size:.9rem;margin-bottom:1rem;">{{ flash }}</div>
+        {% endfor %}
+
+        <form method="post" class="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="_username" value="{{ last_username }}" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="_password" required autocomplete="current-password">
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button type="submit" class="btn btn-submit" style="width:100%;justify-content:center;">Se connecter</button>
+        </form>
+
+        <a href="{{ path('app_register') }}" class="login-back">Pas encore inscrit ? Créer un compte</a>
+        <a href="{{ path('app_home') }}" class="login-back" style="font-size:0.8rem;color:#aaa;">Retour au site</a>
+    </div>
+</div>
+{% endblock %}

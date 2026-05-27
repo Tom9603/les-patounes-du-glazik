@@ -1,0 +1,31 @@
+# Dépendances
+/node_modules/
+/vendor/
+
+# Assets compilés
+/public/build/
+
+# Symfony
+/var/
+/.env.local
+/.env.*.local
+
+# IDE
+/.idea/
+/.vscode/
+
+# Uploads utilisateurs
+/public/uploads/
+
+# macOS
+.DS_Store
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###

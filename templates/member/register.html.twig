@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inscription - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="login-page">
+    <div class="login-card" style="max-width:460px;">
+        <div class="login-logo">
+            <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik">
+        </div>
+        <h1 class="login-title">Créer un compte</h1>
+
+        {% if error %}
+            <div class="login-error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" class="login-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">Prénom *</label>
+                    <input type="text" id="firstName" name="firstName" required placeholder="Prénom">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Nom *</label>
+                    <input type="text" id="lastName" name="lastName" required placeholder="Nom de famille">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="votre@email.com">
+            </div>
+            <div class="form-group">
+                <label for="username">Pseudo *</label>
+                <input type="text" id="username" name="username" required placeholder="ex : ChatNoir42" minlength="3">
+                <p class="register-field-hint">
+                    Votre pseudo sera affiché publiquement à la place de votre vrai nom, notamment lors de vos commentaires.
+                    Choisissez-le librement pour préserver votre vie privée.
+                </p>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe * (8 caractères minimum)</label>
+                <input type="password" id="password" name="password" required autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="confirm">Confirmer le mot de passe *</label>
+                <input type="password" id="confirm" name="confirm" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-submit" style="width:100%;justify-content:center;">Créer mon compte</button>
+        </form>
+
+        <a href="{{ path('app_member_login') }}" class="login-back">Déjà inscrit ? Se connecter</a>
+    </div>
+</div>
+{% endblock %}

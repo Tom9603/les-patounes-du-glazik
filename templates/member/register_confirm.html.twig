@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block title %}Vérifiez votre email - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="login-page">
+    <div class="login-card" style="text-align:center;">
+        <div class="login-logo">
+            <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik">
+        </div>
+        <h1 class="login-title">Vérifiez votre email</h1>
+        <p style="color:#6b7768;line-height:1.7;">
+            Un email de confirmation a été envoyé à <strong>{{ email }}</strong>.<br>
+            Cliquez sur le lien dans l'email pour activer votre compte et vous connecter automatiquement.
+        </p>
+        <p style="color:#6b7768;font-size:0.875rem;margin-top:1rem;">
+            Vous ne trouvez pas l'email ? Vérifiez vos spams.
+        </p>
+        <a href="{{ path('app_home') }}" class="login-back">Retour au site</a>
+    </div>
+</div>
+{% endblock %}

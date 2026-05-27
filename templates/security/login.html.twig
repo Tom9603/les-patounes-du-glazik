@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - Les patounes du glazik{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="login-page">
+    <div class="login-card">
+        <div class="login-logo">
+            <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik">
+        </div>
+        <h1 class="login-title">Administration</h1>
+
+        {% if error %}
+            <div class="login-error">Identifiant ou mot de passe incorrect.</div>
+        {% endif %}
+
+        <form method="post" class="login-form">
+            <div class="form-group">
+                <label for="username">Identifiant</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" autocomplete="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="_password" autocomplete="current-password" required>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button type="submit" class="btn btn-submit" style="width: 100%; justify-content: center;">
+                Se connecter
+            </button>
+        </form>
+
+        <a href="{{ path('app_home') }}" class="login-back">Retour au site</a>
+    </div>
+</div>
+{% endblock %}
