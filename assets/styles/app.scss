@@ -2345,3 +2345,62 @@ body {
         padding: 0.75rem;
     }
 }
+
+// Boutons flottants
+.floating-actions {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+    z-index: 900;
+}
+
+.floating-btn {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease;
+
+    svg {
+        width: 1.2rem;
+        height: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    &--phone {
+        background: #28a745;
+        color: #fff;
+        display: none;
+
+        @media (max-width: 768px) {
+            display: flex;
+        }
+    }
+
+    &--top {
+        background: $color-primary;
+        color: #fff;
+        opacity: 0;
+        pointer-events: none;
+
+        &.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+}
