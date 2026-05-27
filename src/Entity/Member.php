@@ -48,6 +48,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $facebookId = null;
 
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $resetPasswordToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $resetPasswordExpiresAt = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -123,6 +129,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFacebookId(): ?string { return $this->facebookId; }
     public function setFacebookId(?string $facebookId): static { $this->facebookId = $facebookId; return $this; }
+
+    public function getResetPasswordToken(): ?string { return $this->resetPasswordToken; }
+    public function setResetPasswordToken(?string $token): static { $this->resetPasswordToken = $token; return $this; }
+
+    public function getResetPasswordExpiresAt(): ?\DateTimeImmutable { return $this->resetPasswordExpiresAt; }
+    public function setResetPasswordExpiresAt(?\DateTimeImmutable $dt): static { $this->resetPasswordExpiresAt = $dt; return $this; }
 
     public function __toString(): string { return $this->firstName . ($this->lastName ? ' ' . $this->lastName : '') . ' (' . $this->email . ')'; }
 }

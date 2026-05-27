@@ -21,6 +21,11 @@ security:
                 login_path: app_member_login
                 check_path: app_member_login
                 success_handler: App\Security\LoginSuccessHandler
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                always_remember_me: false
             logout:
                 path: app_member_logout
                 target: /

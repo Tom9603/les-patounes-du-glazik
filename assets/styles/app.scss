@@ -1501,6 +1501,264 @@ body {
     }
 }
 
+// Oeil mot de passe
+.input-password-wrap {
+    position: relative;
+
+    input[type="password"],
+    input[type="text"] {
+        padding-right: 2.75rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+.btn-eye {
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem;
+    color: $color-muted-foreground;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        color: $color-primary;
+    }
+}
+
+// Ligne remember me + lien mot de passe oublié
+.login-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+.form-check-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: $color-muted-foreground;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: $color-primary;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+}
+
+.forgot-link {
+    font-size: 0.875rem;
+    color: $color-primary;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// Checkbox CGU inscription
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+
+    input[type="checkbox"] {
+        margin-top: 0.2rem;
+        width: 1rem;
+        height: 1rem;
+        accent-color: $color-primary;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    span {
+        font-size: 0.85rem;
+        color: $color-muted-foreground;
+        line-height: 1.5;
+
+        a {
+            color: $color-primary;
+            text-decoration: underline;
+
+            &:hover {
+                color: $color-foreground;
+            }
+        }
+    }
+}
+
+// Pied de page minimal dans les cards login/register
+.login-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+    justify-content: center;
+    font-size: 0.72rem;
+    color: rgba(0,0,0,.35);
+    margin-top: 0.25rem;
+    width: 100%;
+
+    a {
+        color: rgba(0,0,0,.35);
+        text-decoration: none;
+
+        &:hover {
+            color: $color-primary;
+        }
+    }
+}
+
+// Footer - nouvelles classes
+.footer-email {
+    display: inline-block;
+    color: rgba(255,255,255,.75);
+    font-size: 0.875rem;
+    text-decoration: none;
+    margin-bottom: 1rem;
+
+    &:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+}
+
+.footer-legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,.5);
+    margin-bottom: 0.75rem;
+
+    a {
+        color: rgba(255,255,255,.6);
+        text-decoration: none;
+
+        &:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+    }
+}
+
+.footer-bytom {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,.3);
+    margin-top: 0.5rem;
+
+    a {
+        color: rgba(255,255,255,.4);
+        text-decoration: none;
+
+        &:hover {
+            color: rgba(255,255,255,.7);
+        }
+    }
+}
+
+// Pages légales
+.legal-page {
+    padding: 3rem 0 4rem;
+    min-height: 60vh;
+
+    .container {
+        max-width: 800px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $color-foreground;
+        margin-bottom: 0.5rem;
+    }
+
+    .legal-date {
+        color: $color-muted-foreground;
+        font-size: 0.875rem;
+        margin-bottom: 2.5rem;
+    }
+
+    h2 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: $color-foreground;
+        margin: 2rem 0 0.75rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid $color-border;
+    }
+
+    p {
+        color: $color-muted-foreground;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    ul {
+        color: $color-muted-foreground;
+        line-height: 1.8;
+        margin: 0 0 1rem 1.25rem;
+
+        li {
+            margin-bottom: 0.35rem;
+        }
+    }
+
+    a {
+        color: $color-primary;
+        text-decoration: underline;
+    }
+
+    strong {
+        color: $color-foreground;
+        font-weight: 600;
+    }
+}
+
+.legal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+
+    th {
+        background: $color-border;
+        padding: 0.6rem 0.75rem;
+        text-align: left;
+        font-weight: 600;
+        color: $color-foreground;
+    }
+
+    td {
+        padding: 0.6rem 0.75rem;
+        border-bottom: 1px solid $color-border;
+        color: $color-muted-foreground;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+}
+
 // Galerie
 .gallery-section {
     padding: 5rem 0;

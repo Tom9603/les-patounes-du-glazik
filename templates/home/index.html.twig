@@ -529,40 +529,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <div class="logo-circle logo-circle-small">
-                        <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
-                    </div>
-                    <h4 class="footer-title">Les patounes du glazik</h4>
-                </div>
-                <p class="footer-text">Petsitting & Naturopathie animalière</p>
-                <p class="footer-text-small">Landudal et alentours (rayon 20 km), disponible 7j/7</p>
-                <div class="footer-social">
-                    <a href="#" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                        </svg>
-                    </a>
-                    <a href="#" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                            <circle cx="12" cy="12" r="4"/>
-                            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
-                        </svg>
-                    </a>
-                </div>
-                <div class="footer-legal">
-                    <span>SIRET : 982 097 362 00015</span>
-                    <span>•</span>
-                    <span>© 2025 Les patounes du glazik</span>
-                </div>
-            </div>
-        </div>
-    </footer>
+    {% include 'partials/_footer.html.twig' %}
 </div>
 {% endblock %}
 

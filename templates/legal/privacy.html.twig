@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+{% block title %}Politique de confidentialité - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
+                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
+                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
+                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="legal-page">
+        <div class="container">
+            <h1>Politique de confidentialité</h1>
+            <p class="legal-date">Dernière mise à jour : mai 2026</p>
+
+            <h2>1. Responsable du traitement</h2>
+            <p>
+                Sophie Lukomski, entreprise individuelle, SIRET 982 097 362 00015.<br>
+                Contact : <a href="mailto:sophielukomski.pro@gmail.com">sophielukomski.pro@gmail.com</a>
+            </p>
+
+            <h2>2. Données collectées</h2>
+            <p>Dans le cadre de la création d'un compte membre, nous collectons :</p>
+            <ul>
+                <li>Adresse email (identifiant de connexion)</li>
+                <li>Prénom et nom de famille</li>
+                <li>Pseudo (affiché publiquement sur les commentaires)</li>
+                <li>Photo de profil (optionnelle)</li>
+                <li>Identifiant Google ou Facebook (si connexion via OAuth)</li>
+            </ul>
+            <p>
+                Lors de la navigation, des données techniques (adresse IP, user-agent) peuvent être temporairement traitées pour la sécurité et la lutte contre les abus (comptage des vues d'articles).
+            </p>
+
+            <h2>3. Finalité du traitement</h2>
+            <ul>
+                <li>Gestion des comptes membres et de l'authentification</li>
+                <li>Affichage des commentaires sur le blog</li>
+                <li>Envoi d'emails transactionnels (vérification de compte, réinitialisation de mot de passe)</li>
+            </ul>
+
+            <h2>4. Base légale</h2>
+            <p>
+                Le traitement de vos données est fondé sur votre consentement (article 6.1.a du RGPD), exprimé lors de la création de votre compte.
+            </p>
+
+            <h2>5. Durée de conservation</h2>
+            <p>
+                Vos données sont conservées jusqu'à la suppression de votre compte. Vous pouvez supprimer votre compte à tout moment depuis votre espace profil.
+            </p>
+
+            <h2>6. Partage des données</h2>
+            <p>
+                Vos données personnelles ne sont pas vendues ni transmises à des tiers à des fins commerciales. Seuls les prestataires techniques nécessaires au fonctionnement du site (hébergeur) peuvent y accéder, dans le cadre de leurs obligations contractuelles.
+            </p>
+
+            <h2>7. Vos droits</h2>
+            <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+            <ul>
+                <li><strong>Accès :</strong> consulter vos données depuis votre profil</li>
+                <li><strong>Rectification :</strong> modifier vos informations depuis votre profil</li>
+                <li><strong>Effacement :</strong> supprimer votre compte depuis votre profil</li>
+                <li><strong>Opposition :</strong> nous contacter par email</li>
+                <li><strong>Portabilité :</strong> demande par email</li>
+            </ul>
+            <p>Pour exercer ces droits : <a href="mailto:sophielukomski.pro@gmail.com">sophielukomski.pro@gmail.com</a></p>
+            <p>Vous pouvez également déposer une réclamation auprès de la <strong>CNIL</strong> (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
+
+            <h2>8. Cookies</h2>
+            <p>
+                Ce site utilise uniquement des cookies strictement nécessaires :
+            </p>
+            <ul>
+                <li>Cookie de session (gestion de la connexion)</li>
+                <li>Cookie CSRF (sécurité des formulaires)</li>
+                <li>Cookie "se souvenir de moi" (optionnel, 7 jours, si coché à la connexion)</li>
+            </ul>
+            <p>Aucun cookie publicitaire ni analytique n'est déposé.</p>
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html.twig' %}
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mentions légales - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
+                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
+                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
+                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="legal-page">
+        <div class="container">
+            <h1>Mentions légales</h1>
+
+            <h2>Éditeur du site</h2>
+            <p>
+                <strong>Nom :</strong> Sophie Lukomski<br>
+                <strong>Forme juridique :</strong> Entreprise individuelle (auto-entrepreneur)<br>
+                <strong>SIRET :</strong> 982 097 362 00015<br>
+                <strong>Adresse :</strong> 4 Créach Galliec, 29510 Landudal<br>
+                <strong>Téléphone :</strong> <a href="tel:+33767473251">07 67 47 32 51</a><br>
+                <strong>Email :</strong> <a href="mailto:sophielukomski.pro@gmail.com">sophielukomski.pro@gmail.com</a>
+            </p>
+
+            <h2>Directrice de la publication</h2>
+            <p>Sophie Lukomski</p>
+
+            <h2>Hébergement</h2>
+            <p>
+                Ce site est hébergé par un prestataire d'hébergement web professionnel. Pour toute question relative à l'hébergement, vous pouvez nous contacter à l'adresse email indiquée ci-dessus.
+            </p>
+
+            <h2>Propriété intellectuelle</h2>
+            <p>
+                L'ensemble du contenu de ce site (textes, images, logos, icônes) est la propriété exclusive de Sophie Lukomski, sauf mention contraire. Toute reproduction, distribution ou utilisation sans autorisation préalable est strictement interdite.
+            </p>
+
+            <h2>Responsabilité</h2>
+            <p>
+                Sophie Lukomski s'efforce de maintenir les informations publiées sur ce site à jour et exactes. Toutefois, elle ne saurait être tenue responsable des erreurs ou omissions, ni des dommages résultant de l'utilisation des informations contenues sur ce site.
+            </p>
+
+            <h2>Cookies</h2>
+            <p>
+                Ce site utilise uniquement des cookies strictement nécessaires à son fonctionnement (session de connexion, sécurité CSRF). Aucun cookie publicitaire ni de suivi tiers n'est déposé sans votre consentement.
+            </p>
+
+            <h2>Droit applicable</h2>
+            <p>
+                Le présent site et ses mentions légales sont soumis au droit français. Tout litige sera porté devant les juridictions compétentes du ressort du tribunal de Quimper.
+            </p>
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html.twig' %}
+</div>
+{% endblock %}

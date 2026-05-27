@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+{% block title %}Conditions Générales d'Utilisation - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
+                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
+                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
+                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="legal-page">
+        <div class="container">
+            <h1>Conditions Générales d'Utilisation</h1>
+            <p class="legal-date">Dernière mise à jour : mai 2026</p>
+
+            <h2>1. Objet</h2>
+            <p>
+                Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation du site web <strong>Les patounes du glazik</strong>, édité par Sophie Lukomski (SIRET : 982 097 362 00015).
+            </p>
+
+            <h2>2. Acceptation des CGU</h2>
+            <p>
+                Toute création de compte membre implique l'acceptation pleine et entière des présentes CGU. En cochant la case prévue à cet effet lors de l'inscription, l'utilisateur reconnaît en avoir pris connaissance et les accepter.
+            </p>
+
+            <h2>3. Accès au site</h2>
+            <p>
+                Le site est accessible librement à tout internaute disposant d'une connexion internet. La création d'un compte membre est nécessaire pour accéder aux fonctionnalités interactives (commentaires).
+            </p>
+            <p>
+                Sophie Lukomski se réserve le droit de suspendre ou de supprimer tout compte ne respectant pas les présentes CGU, sans préavis ni justification.
+            </p>
+
+            <h2>4. Compte membre</h2>
+            <p>
+                L'utilisateur s'engage à fournir des informations exactes lors de la création de son compte et à les maintenir à jour. Chaque compte est personnel et non transférable. L'utilisateur est responsable de la confidentialité de ses identifiants.
+            </p>
+            <p>
+                L'adresse email doit être vérifiée pour accéder aux fonctionnalités interactives. Un pseudo unique est requis pour préserver la vie privée dans les espaces publics (commentaires).
+            </p>
+
+            <h2>5. Commentaires et contenu</h2>
+            <p>
+                Les membres peuvent publier des commentaires sur les articles du blog, sous réserve d'avoir un compte vérifié. L'utilisateur s'engage à :
+            </p>
+            <ul>
+                <li>Ne pas publier de contenu injurieux, diffamatoire, haineux ou illégal</li>
+                <li>Respecter les autres utilisateurs et l'éditrice du site</li>
+                <li>Ne pas utiliser le service à des fins commerciales ou de démarchage</li>
+                <li>Ne pas publier de contenu trompeur ou portant atteinte aux droits de tiers</li>
+            </ul>
+            <p>
+                Les commentaires peuvent être modérés ou supprimés sans préavis. Sophie Lukomski se réserve le droit d'approuver ou de refuser tout commentaire.
+            </p>
+
+            <h2>6. Propriété intellectuelle</h2>
+            <p>
+                L'ensemble des contenus du site (textes, photos, logo, structure) est protégé par le droit d'auteur. Toute reproduction partielle ou totale sans autorisation est interdite.
+            </p>
+
+            <h2>7. Limitation de responsabilité</h2>
+            <p>
+                Sophie Lukomski ne saurait être tenue responsable des dommages directs ou indirects résultant de l'utilisation ou de l'impossibilité d'utiliser le site, ni du contenu publié par les membres.
+            </p>
+
+            <h2>8. Modifications</h2>
+            <p>
+                Les présentes CGU peuvent être modifiées à tout moment. La poursuite de l'utilisation du site après modification vaut acceptation des nouvelles conditions.
+            </p>
+
+            <h2>9. Droit applicable</h2>
+            <p>
+                Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux du ressort de Quimper sont compétents.
+            </p>
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html.twig' %}
+</div>
+{% endblock %}

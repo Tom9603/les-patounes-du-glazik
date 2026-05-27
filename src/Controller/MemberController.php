@@ -40,9 +40,12 @@ class MemberController extends AbstractController
             $email     = trim($request->request->get('email', ''));
             $password  = $request->request->get('password', '');
             $confirm   = $request->request->get('confirm', '');
+            $acceptCgu = $request->request->get('acceptCgu');
 
             if (!$firstName || !$lastName || !$username || !$email || !$password) {
                 $error = 'Tous les champs obligatoires doivent être remplis.';
+            } elseif (!$acceptCgu) {
+                $error = 'Vous devez accepter les CGU et la politique de confidentialité pour créer un compte.';
             } elseif (strlen($username) < 3) {
                 $error = 'Le pseudo doit contenir au moins 3 caractères.';
             } elseif (!preg_match('/^[\w\-]+$/u', $username)) {
@@ -280,6 +283,88 @@ class MemberController extends AbstractController
 
         $this->addFlash('success', 'Mot de passe modifié avec succès.');
         return $this->redirectToRoute('app_profile');
+    }
+
+    #[Route('/mot-de-passe-oublie', name: 'app_forgot_password', methods: ['GET', 'POST'])]
+    public function forgotPassword(
+        Request $request,
+        EntityManagerInterface $em,
+        MailerInterface $mailer,
+    ): Response {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $emailSent = false;
+
+        if ($request->isMethod('POST')) {
+            $email = trim($request->request->get('email', ''));
+            if ($email) {
+                $member = $em->getRepository(Member::class)->findOneBy(['email' => $email]);
+                if ($member) {
+                    $token = bin2hex(random_bytes(32));
+                    $member->setResetPasswordToken($token);
+                    $member->setResetPasswordExpiresAt(new \DateTimeImmutable('+1 hour'));
+                    $em->flush();
+
+                    $resetUrl = $this->generateUrl('app_reset_password', [
+                        'token' => $token,
+                    ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+                    $mailer->send(
+                        (new TemplatedEmail())
+                            ->from($_ENV['MAILER_FROM'] ?? 'noreply@lespatounesduglaizik.fr')
+                            ->to($member->getEmail())
+                            ->subject('Réinitialisation de votre mot de passe - Les patounes du glazik')
+                            ->htmlTemplate('emails/reset_password.html.twig')
+                            ->context(['member' => $member, 'resetUrl' => $resetUrl])
+                    );
+                }
+                $emailSent = true;
+            }
+        }
+
+        return $this->render('member/forgot_password.html.twig', ['emailSent' => $emailSent]);
+    }
+
+    #[Route('/reinitialiser-mot-de-passe/{token}', name: 'app_reset_password', methods: ['GET', 'POST'])]
+    public function resetPassword(
+        string $token,
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $hasher,
+        Security $security,
+    ): Response {
+        $member = $em->getRepository(Member::class)->findOneBy(['resetPasswordToken' => $token]);
+
+        if (!$member || !$member->getResetPasswordExpiresAt() || $member->getResetPasswordExpiresAt() < new \DateTimeImmutable()) {
+            $this->addFlash('error', 'Ce lien est invalide ou a expiré. Faites une nouvelle demande.');
+            return $this->redirectToRoute('app_forgot_password');
+        }
+
+        $error = null;
+
+        if ($request->isMethod('POST')) {
+            $password = $request->request->get('password', '');
+            $confirm  = $request->request->get('confirm', '');
+
+            if (strlen($password) < 8) {
+                $error = 'Le mot de passe doit contenir au moins 8 caractères.';
+            } elseif ($password !== $confirm) {
+                $error = 'Les mots de passe ne correspondent pas.';
+            } else {
+                $member->setPassword($hasher->hashPassword($member, $password));
+                $member->setResetPasswordToken(null);
+                $member->setResetPasswordExpiresAt(null);
+                $em->flush();
+
+                $security->login($member, 'form_login', 'main');
+                $this->addFlash('success', 'Mot de passe réinitialisé avec succès. Bienvenue ' . $member->getFirstName() . ' !');
+                return $this->redirectToRoute('app_blog');
+            }
+        }
+
+        return $this->render('member/reset_password.html.twig', ['error' => $error, 'token' => $token]);
     }
 
     #[Route('/profil/delete', name: 'app_profile_delete', methods: ['POST'])]
