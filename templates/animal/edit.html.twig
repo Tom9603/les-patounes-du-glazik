@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier {{ animal.name }} - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <div class="navbar-actions">
+                <a href="{{ path('app_profile') }}" class="btn btn-profile">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>Profil</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="booking-page">
+        <div class="container">
+            <div class="booking-header">
+                <h1>Modifier {{ animal.name }}</h1>
+            </div>
+
+            <div class="booking-container">
+                <form method="post" action="{{ path('app_animal_edit', { id: animal.id }) }}" class="booking-form">
+                    <input type="hidden" name="_token" value="{{ csrf_token('animal-edit-' ~ animal.id) }}">
+                    {% include 'animal/_form_fields.html.twig' with { animal: animal, species: species, sexes: sexes } %}
+                    <div class="booking-form-actions">
+                        <a href="{{ path('app_profile') }}" class="btn-secondary-action">Annuler</a>
+                        <button type="submit" class="btn-booking-submit">Enregistrer les modifications</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html.twig' %}
+</div>
+{% endblock %}

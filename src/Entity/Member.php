@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MemberRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -57,10 +59,18 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
+    #[ORM\OneToMany(targetEntity: \App\Entity\Animal::class, mappedBy: 'owner', cascade: ['persist', 'remove'])]
+    private Collection $animals;
+
+    #[ORM\OneToMany(targetEntity: \App\Entity\Booking::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
+    private Collection $bookings;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->verificationToken = bin2hex(random_bytes(32));
+        $this->animals = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -137,4 +147,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function setResetPasswordExpiresAt(?\DateTimeImmutable $dt): static { $this->resetPasswordExpiresAt = $dt; return $this; }
 
     public function __toString(): string { return $this->firstName . ($this->lastName ? ' ' . $this->lastName : '') . ' (' . $this->email . ')'; }
+
+    public function getAnimals(): Collection { return $this->animals; }
+    public function addAnimal(\App\Entity\Animal $animal): static { if (!$this->animals->contains($animal)) { $this->animals->add($animal); $animal->setOwner($this); } return $this; }
+    public function removeAnimal(\App\Entity\Animal $animal): static { $this->animals->removeElement($animal); return $this; }
+
+    public function getBookings(): Collection { return $this->bookings; }
+    public function addBooking(\App\Entity\Booking $booking): static { if (!$this->bookings->contains($booking)) { $this->bookings->add($booking); $booking->setClient($this); } return $this; }
+    public function removeBooking(\App\Entity\Booking $booking): static { $this->bookings->removeElement($booking); return $this; }
 }

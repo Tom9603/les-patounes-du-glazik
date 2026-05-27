@@ -1,0 +1,46 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Confirmer la réservation #{{ booking.id }}{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div class="card-header">
+        <h2>Confirmer la réservation #{{ booking.id }}</h2>
+        <p class="text-muted">Client : {{ booking.client }} &mdash; Service : {{ booking.serviceType.label() }}</p>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{{ path('app_booking_admin_confirm', { id: booking.id }) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('booking-confirm-' ~ booking.id) }}">
+
+            <div class="mb-3">
+                <label class="form-label">Date et heure du RDV</label>
+                <input type="datetime-local" name="scheduledAt" class="form-control"
+                       value="{{ booking.preferredDate|date('Y-m-d') }}T{{ booking.preferredTime ?? '09:00' }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Heure de fin (optionnel)</label>
+                <input type="datetime-local" name="scheduledEndAt" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Prix confirmé (€)</label>
+                <input type="number" name="price" step="0.01" min="0" class="form-control"
+                       value="{{ booking.serviceType.basePrice() }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Message pour le client (optionnel)</label>
+                <textarea name="adminNotes" class="form-control" rows="3" placeholder="Instructions, point de rencontre..."></textarea>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-check"></i> Confirmer la réservation
+                </button>
+                <a href="{{ path('admin', { crudControllerFqcn: 'App\\Controller\\Admin\\BookingCrudController', crudAction: 'index' }) }}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

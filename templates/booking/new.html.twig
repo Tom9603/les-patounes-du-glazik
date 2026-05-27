@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+{% block title %}Réserver une prestation - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
+                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
+                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
+                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
+            </nav>
+            <div class="navbar-actions">
+                <a href="{{ path('app_profile') }}" class="btn btn-profile">
+                    {% if member.avatarFilename %}
+                        <img src="{{ asset('uploads/avatars/' ~ member.avatarFilename) }}" alt="" class="avatar-mini">
+                    {% else %}
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    {% endif %}
+                    <span>Profil</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="booking-page">
+        <div class="container">
+
+            {% for msg in app.flashes('success') %}
+                <div class="profile-flash profile-flash--success"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>{{ msg }}</div>
+            {% endfor %}
+            {% for msg in app.flashes('error') %}
+                <div class="profile-flash profile-flash--error"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>{{ msg }}</div>
+            {% endfor %}
+
+            <div class="booking-header">
+                <h1>Réserver une prestation</h1>
+                <p>Choisissez votre service et indiquez vos disponibilités. Sophie vous confirmera le rendez-vous.</p>
+            </div>
+
+            <div class="booking-container">
+
+                {# Service cards #}
+                <div class="booking-services">
+                    {% for service in services %}
+                    <label class="service-card" for="service_{{ service.value }}">
+                        <input type="radio" name="serviceType" id="service_{{ service.value }}" value="{{ service.value }}" class="service-radio">
+                        <div class="service-card-content">
+                            <div class="service-card-icon">
+                                {% if service.value starts with 'petsitting' %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5M8 14v.5M16 14v.5M11.25 16.25h1.5L12 17l-.75-.75z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/></svg>
+                                {% else %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 10.5c-.4-1.6.1-3.4 1.5-4.5C8 4.5 10.5 5 12 7c1.5-2 4-2.5 6-1s2.1 4.3 0 6L12 18 6 12c-.6-.6-1.1-1-.5-1.5z"/><path d="M9 15.5A5 5 0 0 1 12 7"/></svg>
+                                {% endif %}
+                            </div>
+                            <div class="service-card-info">
+                                <strong>{{ service.label() }}</strong>
+                                <span>{{ service.description() }}</span>
+                            </div>
+                            <div class="service-card-price">{{ service.basePrice()|number_format(2, ',', ' ') }} €</div>
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+
+                <form method="post" action="{{ path('app_booking_new') }}" class="booking-form" id="booking-form">
+                    <input type="hidden" name="_token" value="{{ csrf_token('booking-new') }}">
+                    <input type="hidden" name="serviceType" id="serviceType-hidden">
+
+                    <div class="booking-form-grid">
+
+                        <div class="form-group">
+                            <label for="preferredDate">Date souhaitée <span class="required">*</span></label>
+                            <input type="date" id="preferredDate" name="preferredDate" required
+                                   min="{{ "now"|date('Y-m-d') }}"
+                                   class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preferredTime">Heure souhaitée</label>
+                            <input type="time" id="preferredTime" name="preferredTime" class="form-control">
+                            <span class="field-hint">Indicatif, Sophie confirmera l'heure exacte.</span>
+                        </div>
+
+                        <div class="form-group form-group--full">
+                            <label for="address">Adresse d'intervention</label>
+                            <input type="text" id="address" name="address" placeholder="Ex : 12 rue des Fleurs, 29510 Landudal" class="form-control">
+                            <span class="field-hint">Obligatoire pour le petsitting à domicile.</span>
+                        </div>
+
+                        {% if animals|length > 0 %}
+                        <div class="form-group form-group--full">
+                            <label for="animalId">Animal concerné</label>
+                            <select id="animalId" name="animalId" class="form-control">
+                                <option value="">-- Choisir un animal (optionnel) --</option>
+                                {% for animal in animals %}
+                                    <option value="{{ animal.id }}">{{ animal.name }} ({{ animal.species.label() }}{% if animal.breed %}, {{ animal.breed }}{% endif %})</option>
+                                {% endfor %}
+                            </select>
+                            <span class="field-hint">Vous pouvez <a href="{{ path('app_animal_new') }}">ajouter un animal depuis votre profil</a>.</span>
+                        </div>
+                        {% else %}
+                        <div class="form-group form-group--full">
+                            <p class="field-hint">Vous n'avez pas encore d'animal enregistré. <a href="{{ path('app_animal_new') }}">Ajouter un animal</a> pour faciliter vos prochaines réservations.</p>
+                        </div>
+                        {% endif %}
+
+                        <div class="form-group form-group--full">
+                            <label for="clientNotes">Message / précisions</label>
+                            <textarea id="clientNotes" name="clientNotes" rows="4" class="form-control"
+                                      placeholder="Particularités de votre animal, contraintes horaires, informations utiles..."></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="booking-summary" id="booking-summary" style="display:none">
+                        <h3>Récapitulatif</h3>
+                        <p id="summary-service"></p>
+                        <p id="summary-price" class="booking-summary-price"></p>
+                        <small style="color:#6b7768;">Le tarif final sera confirmé par Sophie (frais km éventuels, majoration dimanche/fériés).</small>
+                    </div>
+
+                    <div class="booking-form-actions">
+                        <a href="{{ path('app_profile') }}" class="btn-secondary-action">Annuler</a>
+                        <button type="submit" class="btn-booking-submit" id="btn-submit" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                            Envoyer ma demande
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html.twig' %}
+</div>
+
+<script>
+(function () {
+    const radios = document.querySelectorAll('.service-radio');
+    const hiddenInput = document.getElementById('serviceType-hidden');
+    const submitBtn = document.getElementById('btn-submit');
+    const summary = document.getElementById('booking-summary');
+    const summaryService = document.getElementById('summary-service');
+    const summaryPrice = document.getElementById('summary-price');
+
+    const serviceLabels = {
+        {% for service in services %}
+        '{{ service.value }}': { label: '{{ service.label() }}', price: '{{ service.basePrice()|number_format(2, ',', ' ') }} €' },
+        {% endfor %}
+    };
+
+    radios.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.querySelectorAll('.service-card').forEach(c => c.classList.remove('service-card--selected'));
+            this.closest('.service-card').classList.add('service-card--selected');
+            hiddenInput.value = this.value;
+            submitBtn.disabled = false;
+            const s = serviceLabels[this.value];
+            if (s) {
+                summaryService.textContent = s.label;
+                summaryPrice.textContent = 'Tarif de base : ' + s.price;
+                summary.style.display = '';
+            }
+        });
+    });
+})();
+</script>
+{% endblock %}

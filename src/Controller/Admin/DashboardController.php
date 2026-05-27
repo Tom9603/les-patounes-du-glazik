@@ -35,6 +35,10 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkTo(CommentCrudController::class, 'Commentaires', 'fa fa-comments'),
         ]);
 
+        yield MenuItem::section('Réservations');
+        yield MenuItem::linkTo(BookingCrudController::class, 'Réservations', 'fa fa-calendar-check');
+        yield MenuItem::linkTo(AnimalCrudController::class, 'Animaux', 'fa fa-paw');
+
         yield MenuItem::section('Paramètres');
         yield MenuItem::linkTo(MemberCrudController::class, 'Utilisateurs', 'fa fa-users');
 

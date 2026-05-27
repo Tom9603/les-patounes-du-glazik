@@ -1,0 +1,27 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Marquer la réservation #{{ booking.id }} comme terminée{% endblock %}
+
+{% block main %}
+<div class="card">
+    <div class="card-header">
+        <h2>Marquer la prestation comme terminée</h2>
+        <p class="text-muted">Client : {{ booking.client }} &mdash; Service : {{ booking.serviceType.label() }}</p>
+        {% if booking.scheduledAt %}
+        <p class="text-muted">RDV : {{ booking.scheduledAt|date('d/m/Y à H:i') }}</p>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <p>Confirmez-vous que cette prestation a bien été réalisée ?</p>
+        <form method="post" action="{{ path('app_booking_admin_complete', { id: booking.id }) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('booking-complete-' ~ booking.id) }}">
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-flag-checkered"></i> Marquer comme terminée
+                </button>
+                <a href="{{ path('admin', { crudControllerFqcn: 'App\\Controller\\Admin\\BookingCrudController', crudAction: 'index' }) }}" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

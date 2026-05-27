@@ -22,6 +22,7 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.0.*",
         "symfony/mailer": "8.0.*",
+        "symfony/rate-limiter": "8.0.*",
         "symfony/runtime": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
         "symfony/yaml": "8.0.*",

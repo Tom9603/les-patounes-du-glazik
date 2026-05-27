@@ -1,0 +1,66 @@
+<div class="booking-form-grid">
+
+    <div class="form-group">
+        <label for="name">Nom <span class="required">*</span></label>
+        <input type="text" id="name" name="name" required class="form-control"
+               value="{{ animal ? animal.name : '' }}" maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="species">Espèce <span class="required">*</span></label>
+        <select id="species" name="species" required class="form-control">
+            {% for s in species %}
+                <option value="{{ s.value }}" {% if animal and animal.species == s %}selected{% endif %}>{{ s.label() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="breed">Race</label>
+        <input type="text" id="breed" name="breed" class="form-control"
+               value="{{ animal ? animal.breed : '' }}" maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="birthDate">Date de naissance</label>
+        <input type="date" id="birthDate" name="birthDate" class="form-control"
+               value="{{ animal and animal.birthDate ? animal.birthDate|date('Y-m-d') : '' }}">
+    </div>
+
+    <div class="form-group">
+        <label for="sex">Sexe</label>
+        <select id="sex" name="sex" class="form-control">
+            <option value="">-- Non précisé --</option>
+            {% for s in sexes %}
+                <option value="{{ s.value }}" {% if animal and animal.sex == s %}selected{% endif %}>{{ s.label() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="color">Couleur / robe</label>
+        <input type="text" id="color" name="color" class="form-control"
+               value="{{ animal ? animal.color : '' }}" maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="microchip">Numéro de puce</label>
+        <input type="text" id="microchip" name="microchip" class="form-control"
+               value="{{ animal ? animal.microchip : '' }}" maxlength="20">
+    </div>
+
+    <div class="form-group form-group--checkbox">
+        <label class="checkbox-label">
+            <input type="checkbox" name="sterilized" value="1"
+                   {% if animal and animal.sterilized %}checked{% endif %}>
+            Stérilisé(e)
+        </label>
+    </div>
+
+    <div class="form-group form-group--full">
+        <label for="healthNotes">Notes de santé / comportement</label>
+        <textarea id="healthNotes" name="healthNotes" rows="4" class="form-control"
+                  placeholder="Allergies, traitements en cours, comportement particulier...">{{ animal ? animal.healthNotes : '' }}</textarea>
+    </div>
+
+</div>

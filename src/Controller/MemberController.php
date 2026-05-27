@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\Repository\BookingRepository;
 use App\Repository\MemberRepository;
 use App\Service\ImageResizerService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -371,6 +372,7 @@ class MemberController extends AbstractController
     public function profileDelete(
         Request $request,
         EntityManagerInterface $em,
+        BookingRepository $bookingRepo,
     ): Response {
         /** @var Member $member */
         $member = $this->getUser();
@@ -382,6 +384,11 @@ class MemberController extends AbstractController
 
         if (!$this->isCsrfTokenValid('profile-delete', $request->request->get('_token'))) {
             $this->addFlash('error', 'Token de sécurité invalide.');
+            return $this->redirectToRoute('app_profile');
+        }
+
+        if ($bookingRepo->hasActivBookings($member)) {
+            $this->addFlash('error', 'Votre compte ne peut pas être supprimé car vous avez des réservations en attente ou confirmées. Veuillez contacter Sophie pour les annuler.');
             return $this->redirectToRoute('app_profile');
         }
 
