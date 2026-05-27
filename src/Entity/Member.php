@@ -42,6 +42,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarFilename = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $facebookId = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -111,6 +117,12 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getAvatarFilename(): ?string { return $this->avatarFilename; }
     public function setAvatarFilename(?string $avatarFilename): static { $this->avatarFilename = $avatarFilename; return $this; }
+
+    public function getGoogleId(): ?string { return $this->googleId; }
+    public function setGoogleId(?string $googleId): static { $this->googleId = $googleId; return $this; }
+
+    public function getFacebookId(): ?string { return $this->facebookId; }
+    public function setFacebookId(?string $facebookId): static { $this->facebookId = $facebookId; return $this; }
 
     public function __toString(): string { return $this->firstName . ($this->lastName ? ' ' . $this->lastName : '') . ' (' . $this->email . ')'; }
 }
