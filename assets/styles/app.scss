@@ -2843,3 +2843,297 @@ textarea.form-control {
     color: $color-muted-foreground;
     border-left: 3px solid $color-primary;
 }
+
+// ============================================================
+// PROFILE TABS
+// ============================================================
+
+.profile-tabs {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 2px solid $color-border;
+    padding-bottom: 0;
+    flex-wrap: wrap;
+}
+
+.profile-tab {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .6rem 1.1rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-size: .9rem;
+    font-weight: 500;
+    color: $color-muted-foreground;
+    cursor: pointer;
+    transition: $transition-base;
+    border-radius: $border-radius $border-radius 0 0;
+
+    svg { width: 1rem; height: 1rem; }
+
+    &:hover { color: $color-primary; background: rgba(125, 140, 111, .06); }
+
+    &--active {
+        color: $color-primary;
+        border-bottom-color: $color-primary;
+        font-weight: 600;
+    }
+}
+
+.tab-badge {
+    background: $color-primary;
+    color: #fff;
+    border-radius: 20px;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: .1rem .45rem;
+    line-height: 1.4;
+}
+
+.profile-tab-panel {
+    display: none;
+    &--active { display: contents; }
+}
+
+// ============================================================
+// ANIMAL CARDS WITH AVATAR
+// ============================================================
+
+.animal-card-avatar-link {
+    display: block;
+    text-decoration: none;
+}
+
+.animal-card-avatar {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: $border-radius;
+    display: block;
+
+    &--placeholder {
+        width: 100%;
+        aspect-ratio: 1;
+        background: rgba(125, 140, 111, .1);
+        border-radius: $border-radius;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg { width: 2.5rem; height: 2.5rem; color: $color-primary; opacity: .5; }
+    }
+}
+
+// ============================================================
+// ANIMAL PROFILE PAGE
+// ============================================================
+
+.animal-profile-page {
+    padding: 2rem 0 4rem;
+    min-height: calc(100vh - 80px);
+}
+
+.animal-profile-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    background: #fff;
+    border-radius: $border-radius-lg;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    flex-wrap: wrap;
+}
+
+.animal-profile-avatar-wrap {
+    flex-shrink: 0;
+}
+
+.animal-profile-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid $color-border;
+
+    &--placeholder {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: rgba(125, 140, 111, .1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid $color-border;
+
+        svg { width: 3.5rem; height: 3.5rem; color: $color-primary; opacity: .4; }
+    }
+}
+
+.animal-profile-header-info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.animal-profile-name-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+    margin-bottom: .5rem;
+}
+
+.animal-profile-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $color-foreground;
+}
+
+.animal-profile-breed {
+    color: $color-muted-foreground;
+    font-size: 1rem;
+    margin-bottom: .75rem;
+}
+
+.animal-profile-meta {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    font-size: .9rem;
+    color: $color-muted-foreground;
+
+    span { display: flex; align-items: center; gap: .35rem; }
+    i { color: $color-primary; }
+}
+
+.animal-profile-edit-btn {
+    margin-left: auto;
+    align-self: flex-start;
+    white-space: nowrap;
+}
+
+.animal-profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.animal-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+    margin-top: .5rem;
+
+    th, td { padding: .5rem 0; border-bottom: 1px solid $color-border; text-align: left; }
+    th { width: 45%; color: $color-muted-foreground; font-weight: 500; }
+    td { color: $color-foreground; }
+    tr:last-child th, tr:last-child td { border-bottom: none; }
+    code { background: rgba(125,140,111,.1); padding: .1rem .4rem; border-radius: 4px; font-size: .85rem; }
+}
+
+.animal-health-notes {
+    margin-top: 1rem;
+    padding: .75rem 1rem;
+    background: rgba(125, 140, 111, .07);
+    border-left: 3px solid $color-primary;
+    border-radius: 0 $border-radius $border-radius 0;
+    font-size: .9rem;
+
+    p { margin-top: .3rem; color: $color-muted-foreground; line-height: 1.6; }
+}
+
+.avatar-upload-preview {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: $border-radius;
+    margin-bottom: .75rem;
+    border: 2px solid $color-border;
+}
+
+.avatar-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    width: 100%;
+    padding: .65rem;
+    border: 2px dashed $color-border;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-size: .9rem;
+    color: $color-primary;
+    transition: $transition-base;
+    margin-bottom: .5rem;
+
+    &:hover { border-color: $color-primary; background: rgba(125,140,111,.05); }
+}
+
+// Fiches santé dans le profil animal
+.health-records-list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-top: .5rem;
+}
+
+.health-record-item {
+    display: flex;
+    gap: 1rem;
+    padding: .75rem;
+    background: $color-background;
+    border-radius: $border-radius;
+    border: 1.5px solid $color-border;
+}
+
+.health-record-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(125,140,111,.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: $color-primary;
+}
+
+.health-record-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .4rem;
+    font-size: .88rem;
+
+    strong { color: $color-foreground; }
+}
+
+.health-record-type {
+    font-size: .75rem;
+    background: rgba(125,140,111,.15);
+    color: $color-primary;
+    padding: .1rem .5rem;
+    border-radius: 10px;
+}
+
+.health-record-date, .health-record-next {
+    font-size: .8rem;
+    color: $color-muted-foreground;
+}
+
+.health-record-next { color: $color-secondary; }
+
+.health-record-notes {
+    width: 100%;
+    font-size: .85rem;
+    color: $color-muted-foreground;
+    margin-top: .2rem;
+}

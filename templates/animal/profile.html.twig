@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ animal.name }} - Les patounes du glazik{% endblock %}
+{% block stylesheets %}{{ parent() }}<link rel="stylesheet" href="{{ asset('build/app.css') }}">{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <div class="navbar-brand">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                </div>
+                <div class="brand-text">
+                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+                </div>
+            </div>
+            <div class="navbar-actions">
+                <a href="{{ path('app_profile') }}#animaux" class="btn btn-outline-secondary" style="font-size:.85rem;">
+                    <i class="fa fa-arrow-left" style="margin-right:.3rem;"></i> Mon profil
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="animal-profile-page">
+        <div class="container">
+
+            {% for msg in app.flashes('success') %}
+                <div class="profile-flash profile-flash--success">{{ msg }}</div>
+            {% endfor %}
+            {% for msg in app.flashes('error') %}
+                <div class="profile-flash profile-flash--error">{{ msg }}</div>
+            {% endfor %}
+
+            {# Header #}
+            <div class="animal-profile-header">
+                <div class="animal-profile-avatar-wrap">
+                    {% if animal.avatarFilename %}
+                        <img src="{{ asset('uploads/animals/' ~ animal.avatarFilename) }}" alt="{{ animal.name }}" class="animal-profile-avatar">
+                    {% else %}
+                        <div class="animal-profile-avatar animal-profile-avatar--placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5"/></svg>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="animal-profile-header-info">
+                    <div class="animal-profile-name-row">
+                        <h1 class="animal-profile-name">{{ animal.name }}</h1>
+                        <span class="animal-species-badge" style="font-size:.9rem; padding:.3rem .8rem;">{{ animal.species.label() }}</span>
+                        {% if animal.sterilized %}
+                            <span class="animal-sterilized">Stérilisé(e)</span>
+                        {% endif %}
+                    </div>
+                    {% if animal.breed %}
+                        <p class="animal-profile-breed">{{ animal.breed }}</p>
+                    {% endif %}
+                    <div class="animal-profile-meta">
+                        {% if animal.age is not null %}
+                            <span><i class="fa fa-cake-candles"></i> {{ animal.age }} an{{ animal.age > 1 ? 's' : '' }}</span>
+                        {% endif %}
+                        {% if animal.sex %}
+                            <span><i class="fa fa-venus-mars"></i> {{ animal.sex.label() }}</span>
+                        {% endif %}
+                        {% if animal.color %}
+                            <span><i class="fa fa-palette"></i> {{ animal.color }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <a href="{{ path('app_animal_edit', {id: animal.id}) }}" class="btn-profile-save animal-profile-edit-btn">
+                    <i class="fa fa-pen" style="margin-right:.3rem;"></i> Modifier
+                </a>
+            </div>
+
+            {# Info grid #}
+            <div class="animal-profile-grid">
+
+                {# Infos #}
+                <div class="profile-card">
+                    <h2 style="display:flex;align-items:center;gap:.5rem;">
+                        <i class="fa fa-circle-info" style="color:var(--color-primary, #7d8c6f);"></i>
+                        Informations
+                    </h2>
+                    <table class="animal-info-table">
+                        {% if animal.birthDate %}
+                        <tr>
+                            <th>Date de naissance</th>
+                            <td>{{ animal.birthDate|date('d/m/Y') }}{% if animal.age is not null %} <span class="text-muted">({{ animal.age }} an{{ animal.age > 1 ? 's' : '' }})</span>{% endif %}</td>
+                        </tr>
+                        {% endif %}
+                        {% if animal.sex %}
+                        <tr><th>Sexe</th><td>{{ animal.sex.label() }}</td></tr>
+                        {% endif %}
+                        {% if animal.color %}
+                        <tr><th>Robe / couleur</th><td>{{ animal.color }}</td></tr>
+                        {% endif %}
+                        {% if animal.microchip %}
+                        <tr><th>Puce / tatouage</th><td><code>{{ animal.microchip }}</code></td></tr>
+                        {% endif %}
+                        <tr><th>Stérilisé(e)</th><td>{{ animal.sterilized ? 'Oui' : 'Non' }}</td></tr>
+                        <tr><th>Enregistré le</th><td>{{ animal.createdAt|date('d/m/Y') }}</td></tr>
+                    </table>
+                    {% if animal.healthNotes %}
+                    <div class="animal-health-notes">
+                        <strong>Notes de santé :</strong>
+                        <p>{{ animal.healthNotes|nl2br }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {# Photo de profil #}
+                <div class="profile-card">
+                    <h2 style="display:flex;align-items:center;gap:.5rem;">
+                        <i class="fa fa-camera" style="color:var(--color-primary, #7d8c6f);"></i>
+                        Photo de profil
+                    </h2>
+                    <form method="post" action="{{ path('app_animal_edit', {id: animal.id}) }}" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token('animal-edit-' ~ animal.id) }}">
+                        <input type="hidden" name="name" value="{{ animal.name }}">
+                        <input type="hidden" name="species" value="{{ animal.species.value }}">
+                        <input type="hidden" name="breed" value="{{ animal.breed ?? '' }}">
+                        <input type="hidden" name="birthDate" value="{{ animal.birthDate ? animal.birthDate|date('Y-m-d') : '' }}">
+                        <input type="hidden" name="sex" value="{{ animal.sex ? animal.sex.value : '' }}">
+                        <input type="hidden" name="color" value="{{ animal.color ?? '' }}">
+                        <input type="hidden" name="microchip" value="{{ animal.microchip ?? '' }}">
+                        {% if animal.sterilized %}<input type="hidden" name="sterilized" value="1">{% endif %}
+                        <input type="hidden" name="healthNotes" value="{{ animal.healthNotes ?? '' }}">
+
+                        <div class="avatar-upload-preview" id="avatar-preview-wrap">
+                            {% if animal.avatarFilename %}
+                                <img id="avatar-preview" src="{{ asset('uploads/animals/' ~ animal.avatarFilename) }}" alt="">
+                            {% else %}
+                                <img id="avatar-preview" src="" alt="" style="display:none;">
+                            {% endif %}
+                        </div>
+                        <label class="avatar-upload-label" for="avatar-input-animal">
+                            <i class="fa fa-upload"></i>
+                            {% if animal.avatarFilename %}Changer la photo{% else %}Ajouter une photo{% endif %}
+                        </label>
+                        <input type="file" id="avatar-input-animal" name="avatar" accept="image/*" style="display:none;"
+                               onchange="previewAnimalAvatar(this)">
+                        <div id="avatar-filename" style="font-size:.8rem;color:#888;margin:.4rem 0 .8rem;display:none;"></div>
+                        <button type="submit" class="btn-profile-save" style="width:100%;">Enregistrer la photo</button>
+                    </form>
+                </div>
+
+                {# Fiches santé #}
+                {% if animal.healthRecords|length > 0 %}
+                <div class="profile-card profile-card--full">
+                    <h2 style="display:flex;align-items:center;gap:.5rem;">
+                        <i class="fa fa-heart-pulse" style="color:var(--color-primary, #7d8c6f);"></i>
+                        Suivi santé
+                    </h2>
+                    <div class="health-records-list">
+                        {% for record in animal.healthRecords %}
+                        <div class="health-record-item">
+                            <div class="health-record-icon">
+                                <i class="fa {{ record.type.icon() }}"></i>
+                            </div>
+                            <div class="health-record-body">
+                                <strong>{{ record.title }}</strong>
+                                <span class="health-record-type">{{ record.type.label() }}</span>
+                                {% if record.recordedAt %}
+                                    <span class="health-record-date">{{ record.recordedAt|date('d/m/Y') }}</span>
+                                {% endif %}
+                                {% if record.nextDueAt %}
+                                    <span class="health-record-next">Prochain : {{ record.nextDueAt|date('d/m/Y') }}</span>
+                                {% endif %}
+                                {% if record.notes %}
+                                    <p class="health-record-notes">{{ record.notes }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html.twig' %}
+</div>
+
+<script>
+function previewAnimalAvatar(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const preview = document.getElementById('avatar-preview');
+    const label = document.getElementById('avatar-filename');
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+    label.textContent = file.name;
+    label.style.display = 'block';
+}
+</script>
+{% endblock %}

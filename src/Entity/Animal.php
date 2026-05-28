@@ -55,6 +55,9 @@ class Animal
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $healthNotes = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatarFilename = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -102,7 +105,16 @@ class Animal
     public function getHealthNotes(): ?string { return $this->healthNotes; }
     public function setHealthNotes(?string $healthNotes): static { $this->healthNotes = $healthNotes; return $this; }
 
+    public function getAvatarFilename(): ?string { return $this->avatarFilename; }
+    public function setAvatarFilename(?string $f): static { $this->avatarFilename = $f; return $this; }
+
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
+    public function getAge(): ?int
+    {
+        if (!$this->birthDate) return null;
+        return (new \DateTimeImmutable())->diff($this->birthDate)->y;
+    }
 
     public function __toString(): string { return $this->name . ' (' . $this->species->label() . ')'; }
 }

@@ -6,6 +6,7 @@ use App\Entity\Animal;
 use App\Enum\AnimalSex;
 use App\Enum\AnimalSpecies;
 use App\Repository\AnimalRepository;
+use App\Service\ImageResizerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,8 +18,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 class AnimalController extends AbstractController
 {
+    #[Route('/{id}/profil', name: 'profile', methods: ['GET'])]
+    public function profile(Animal $animal): Response
+    {
+        /** @var \App\Entity\Member $member */
+        $member = $this->getUser();
+        if ($animal->getOwner() !== $member) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('animal/profile.html.twig', [
+            'animal' => $animal,
+            'member' => $member,
+        ]);
+    }
+
     #[Route('/nouveau', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
+    public function new(Request $request, EntityManagerInterface $em, ImageResizerService $resizer): Response
     {
         /** @var \App\Entity\Member $member */
         $member = $this->getUser();
@@ -36,8 +52,11 @@ class AnimalController extends AbstractController
             $em->persist($animal);
             $em->flush();
 
-            $this->addFlash('success', $animal->getName() . ' a bien été ajouté à votre liste d\'animaux.');
-            return $this->redirectToRoute('app_profile');
+            $this->handleAvatarUpload($animal, $request, $resizer);
+            $em->flush();
+
+            $this->addFlash('success', $animal->getName() . ' a bien été ajouté.');
+            return $this->redirectToRoute('app_animal_profile', ['id' => $animal->getId()]);
         }
 
         return $this->render('animal/new.html.twig', [
@@ -48,7 +67,7 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}/modifier', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Animal $animal, Request $request, EntityManagerInterface $em): Response
+    public function edit(Animal $animal, Request $request, EntityManagerInterface $em, ImageResizerService $resizer): Response
     {
         /** @var \App\Entity\Member $member */
         $member = $this->getUser();
@@ -63,10 +82,11 @@ class AnimalController extends AbstractController
             }
 
             $this->fillAnimalFromRequest($animal, $request);
+            $this->handleAvatarUpload($animal, $request, $resizer);
             $em->flush();
 
             $this->addFlash('success', $animal->getName() . ' a bien été mis à jour.');
-            return $this->redirectToRoute('app_profile');
+            return $this->redirectToRoute('app_animal_profile', ['id' => $animal->getId()]);
         }
 
         return $this->render('animal/edit.html.twig', [
@@ -97,6 +117,33 @@ class AnimalController extends AbstractController
 
         $this->addFlash('success', $name . ' a bien été supprimé.');
         return $this->redirectToRoute('app_profile');
+    }
+
+    private function handleAvatarUpload(Animal $animal, Request $request, ImageResizerService $resizer): void
+    {
+        $file = $request->files->get('avatar');
+        if (!$file) return;
+
+        $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/bmp'];
+        if (!in_array($file->getMimeType(), $allowed)) {
+            $this->addFlash('error', 'Format d\'image non supporté.');
+            return;
+        }
+        if ($file->getSize() > 10 * 1024 * 1024) {
+            $this->addFlash('error', 'L\'image ne doit pas dépasser 10 Mo.');
+            return;
+        }
+
+        $dir = $this->getParameter('kernel.project_dir') . '/public/uploads/animals/';
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        $filename = 'animal_' . $animal->getId() . '_' . uniqid() . '.jpg';
+        if ($resizer->resizeToSquare($file->getPathname(), $dir . $filename, 400)) {
+            if ($animal->getAvatarFilename()) {
+                @unlink($dir . $animal->getAvatarFilename());
+            }
+            $animal->setAvatarFilename($filename);
+        }
     }
 
     private function fillAnimalFromRequest(Animal $animal, Request $request): void

@@ -84,10 +84,44 @@
                 </div>
             </div>
 
+            {# Tabs nav #}
+            <div class="profile-tabs">
+                <button class="profile-tab" data-tab="profil">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Mon profil
+                </button>
+                {% if not is_granted('ROLE_ADMIN') %}
+                <button class="profile-tab" data-tab="animaux">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309"/></svg>
+                    Mes animaux
+                    {% if member.animals|length > 0 %}
+                    <span class="tab-badge">{{ member.animals|length }}</span>
+                    {% endif %}
+                </button>
+                <button class="profile-tab" data-tab="reservations">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Réservations
+                </button>
+                {% set allInvoices = [] %}
+                {% for booking in member.bookings %}
+                    {% for inv in booking.invoices %}
+                        {% set allInvoices = allInvoices|merge([inv]) %}
+                    {% endfor %}
+                {% endfor %}
+                {% if allInvoices|length > 0 %}
+                <button class="profile-tab" data-tab="factures">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Factures
+                </button>
+                {% endif %}
+                {% endif %}
+            </div>
+
             {# Grid #}
             <div class="profile-grid">
 
-                {# Mon compte #}
+                {# === ONGLET MON PROFIL === #}
+                <div class="profile-tab-panel" data-panel="profil">
                 <div class="profile-card">
                     <h2>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -188,8 +222,45 @@
                     </form>
                 </div>
 
+                {# Déconnexion #}
+                <div class="profile-card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Déconnexion
+                    </h2>
+                    <p style="color:#6b7768;font-size:0.9rem;margin-bottom:1.25rem;line-height:1.6;">
+                        Vous serez redirigé vers la page d'accueil après déconnexion.
+                    </p>
+                    <a href="{{ path('app_member_logout') }}" class="btn-logout">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Se déconnecter
+                    </a>
+                </div>
+
                 {% if not is_granted('ROLE_ADMIN') %}
-                {# Mes animaux #}
+                <div class="profile-card profile-card--danger">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Supprimer mon compte
+                    </h2>
+                    <p style="color:#6b7768;font-size:0.9rem;margin-bottom:1.25rem;line-height:1.6;">
+                        Cette action est définitive et irréversible. Toutes vos données seront supprimées immédiatement.
+                    </p>
+                    <form method="post" action="{{ path('app_profile_delete') }}" id="delete-account-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token('profile-delete') }}">
+                        <button type="button" class="btn-danger" onclick="confirmDelete()">Supprimer mon compte</button>
+                    </form>
+                </div>
+                {% endif %}
+                </div>{# fin panel profil #}
+
+                {# === ONGLET MES ANIMAUX === #}
+                {% if not is_granted('ROLE_ADMIN') %}
+                <div class="profile-tab-panel" data-panel="animaux">
                 <div class="profile-card profile-card--full">
                     <h2>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5"/></svg>
@@ -201,18 +272,27 @@
                     <div class="animals-list">
                         {% for animal in animals %}
                         <div class="animal-card">
+                            <a href="{{ path('app_animal_profile', {id: animal.id}) }}" class="animal-card-avatar-link">
+                                {% if animal.avatarFilename %}
+                                    <img src="{{ asset('uploads/animals/' ~ animal.avatarFilename) }}" alt="{{ animal.name }}" class="animal-card-avatar">
+                                {% else %}
+                                    <div class="animal-card-avatar animal-card-avatar--placeholder">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5"/></svg>
+                                    </div>
+                                {% endif %}
+                            </a>
                             <div class="animal-card-header">
                                 <span class="animal-species-badge">{{ animal.species.label() }}</span>
                                 <strong class="animal-name">{{ animal.name }}</strong>
                                 {% if animal.breed %}<span class="animal-breed">{{ animal.breed }}</span>{% endif %}
                             </div>
                             <div class="animal-card-details">
+                                {% if animal.age is not null %}<span>{{ animal.age }} an{{ animal.age > 1 ? 's' : '' }}</span>{% endif %}
                                 {% if animal.sex %}<span>{{ animal.sex.label() }}</span>{% endif %}
-                                {% if animal.birthDate %}<span>Né(e) le {{ animal.birthDate|date('d/m/Y') }}</span>{% endif %}
                                 {% if animal.sterilized %}<span class="animal-sterilized">Stérilisé(e)</span>{% endif %}
                             </div>
                             <div class="animal-card-actions">
-                                <a href="{{ path('app_animal_edit', { id: animal.id }) }}" class="btn-animal-edit">Modifier</a>
+                                <a href="{{ path('app_animal_profile', {id: animal.id}) }}" class="btn-animal-edit">Voir le profil</a>
                                 <form method="post" action="{{ path('app_animal_delete', { id: animal.id }) }}" class="inline-form" onsubmit="return confirm('Supprimer {{ animal.name }} ?')">
                                     <input type="hidden" name="_token" value="{{ csrf_token('animal-delete-' ~ animal.id) }}">
                                     <button type="submit" class="btn-animal-delete">Supprimer</button>
@@ -237,7 +317,10 @@
                     </div>
                 </div>
 
-                {# Mes réservations #}
+                </div>{# fin panel animaux #}
+
+                {# === ONGLET RÉSERVATIONS === #}
+                <div class="profile-tab-panel" data-panel="reservations">
                 <div class="profile-card profile-card--full">
                     <h2>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -294,7 +377,10 @@
                     </div>
                 </div>
                 {% endif %}
+                </div>{# fin panel reservations #}
 
+                {# === ONGLET FACTURES === #}
+                <div class="profile-tab-panel" data-panel="factures">
                 {# Mes factures #}
                 {% set allInvoices = [] %}
                 {% for booking in member.bookings %}
@@ -327,59 +413,59 @@
                     </div>
                 </div>
                 {% endif %}
+                </div>{# fin panel factures #}
 
-                {# Déconnexion #}
-                <div class="profile-card">
-                    <h2>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                        Déconnexion
-                    </h2>
-                    <p style="color:#6b7768;font-size:0.9rem;margin-bottom:1.25rem;line-height:1.6;">
-                        Vous serez redirigé vers la page d'accueil après déconnexion.
-                    </p>
-                    <a href="{{ path('app_member_logout') }}" class="btn-logout">
-                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                            <polyline points="16 17 21 12 16 7"/>
-                            <line x1="21" y1="12" x2="9" y2="12"/>
-                        </svg>
-                        Se déconnecter
-                    </a>
-                </div>
+                {% endif %}{# fin not ROLE_ADMIN #}
 
-                {% if not is_granted('ROLE_ADMIN') %}
-                {# Zone de danger #}
-                <div class="profile-card profile-card--danger">
-                    <h2>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-icon"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        Supprimer mon compte
-                    </h2>
-                    <p style="color:#6b7768;font-size:0.9rem;margin-bottom:1.25rem;line-height:1.6;">
-                        Cette action est définitive et irréversible. Toutes vos données seront supprimées immédiatement.
-                    </p>
-                    <form method="post" action="{{ path('app_profile_delete') }}" id="delete-account-form">
-                        <input type="hidden" name="_token" value="{{ csrf_token('profile-delete') }}">
-                        <button type="button" class="btn-danger" onclick="confirmDelete()">Supprimer mon compte</button>
-                    </form>
-                </div>
-                {% endif %}
-
-            </div>
+            </div>{# fin profile-grid #}
         </div>
     {% include 'partials/_footer.html.twig' %}
 </div>
 
 <script>
 (function () {
-    document.querySelectorAll('.btn-eye').forEach(function (btn) {
+    // Onglets
+    const tabs   = document.querySelectorAll('.profile-tab');
+    const panels = document.querySelectorAll('.profile-tab-panel');
+
+    function activate(name) {
+        tabs.forEach(t => t.classList.toggle('profile-tab--active', t.dataset.tab === name));
+        panels.forEach(p => p.classList.toggle('profile-tab-panel--active', p.dataset.panel === name));
+    }
+
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+        history.replaceState(null, '', '#' + tab.dataset.tab);
+        activate(tab.dataset.tab);
+    }));
+
+    const hash = location.hash.replace('#', '');
+    const valid = [...tabs].some(t => t.dataset.tab === hash);
+    activate(valid ? hash : (tabs[0]?.dataset.tab || 'profil'));
+
+    // Eye toggles
+    document.querySelectorAll('.btn-eye').forEach(btn => {
         btn.addEventListener('click', function () {
-            var input = document.getElementById(this.dataset.target);
-            var isPassword = input.type === 'password';
+            const input = document.getElementById(this.dataset.target);
+            const isPassword = input.type === 'password';
             input.type = isPassword ? 'text' : 'password';
-            this.querySelector('.eye-open').style.display = isPassword ? 'none' : '';
+            this.querySelector('.eye-open').style.display  = isPassword ? 'none' : '';
             this.querySelector('.eye-closed').style.display = isPassword ? '' : 'none';
         });
     });
+
+    // Preview avatar membre
+    const avatarInput = document.getElementById('avatar-file-input');
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function () {
+            if (!this.files || !this.files[0]) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const wrap = document.getElementById('avatar-preview-wrap');
+                wrap.innerHTML = '<img id="avatar-preview-img" src="' + e.target.result + '" alt="" class="avatar-upload-preview">';
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+    }
 })();
 
 function confirmDelete() {
@@ -387,19 +473,5 @@ function confirmDelete() {
         document.getElementById('delete-account-form').submit();
     }
 }
-
-(function () {
-    const input = document.getElementById('avatar-file-input');
-    if (!input) return;
-    input.addEventListener('change', function () {
-        if (!this.files || !this.files[0]) return;
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const wrap = document.getElementById('avatar-preview-wrap');
-            wrap.innerHTML = '<img id="avatar-preview-img" src="' + e.target.result + '" alt="Preview" class="avatar-upload-preview">';
-        };
-        reader.readAsDataURL(this.files[0]);
-    });
-})();
 </script>
 {% endblock %}
