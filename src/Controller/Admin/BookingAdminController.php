@@ -4,12 +4,14 @@ namespace App\Controller\Admin;
 
 use App\Entity\Booking;
 use App\Enum\BookingStatus;
+use App\Service\IcsGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -36,7 +38,7 @@ class BookingAdminController extends AbstractController
     }
 
     #[Route('/{id}/confirmer', name: 'confirm', methods: ['POST'])]
-    public function confirm(Booking $booking, Request $request, EntityManagerInterface $em, MailerInterface $mailer): Response
+    public function confirm(Booking $booking, Request $request, EntityManagerInterface $em, MailerInterface $mailer, IcsGeneratorService $ics): Response
     {
         if (!$this->isCsrfTokenValid('booking-confirm-' . $booking->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Token de sécurité invalide.');
@@ -63,7 +65,7 @@ class BookingAdminController extends AbstractController
 
         $em->flush();
 
-        $this->sendConfirmationEmail($mailer, $booking);
+        $this->sendConfirmationEmail($mailer, $booking, $ics);
 
         $this->addFlash('success', 'Réservation confirmée et email envoyé au client.');
         return $this->redirectToRoute('admin', ['crudControllerFqcn' => BookingCrudController::class, 'crudAction' => 'index']);
@@ -106,14 +108,16 @@ class BookingAdminController extends AbstractController
         return $this->redirectToRoute('admin', ['crudControllerFqcn' => BookingCrudController::class, 'crudAction' => 'index']);
     }
 
-    private function sendConfirmationEmail(MailerInterface $mailer, Booking $booking): void
+    private function sendConfirmationEmail(MailerInterface $mailer, Booking $booking, IcsGeneratorService $ics): void
     {
         $client = $booking->getClient();
+        $icsContent = $ics->generate($booking);
         $email = (new Email())
             ->from($_ENV['MAILER_FROM'] ?? 'noreply@lespatounesduglaizik.fr')
             ->to($client->getEmail())
             ->subject('Votre réservation est confirmée - Les patounes du glazik')
-            ->html($this->renderView('emails/booking_confirmed.html.twig', ['booking' => $booking, 'member' => $client]));
+            ->html($this->renderView('emails/booking_confirmed.html.twig', ['booking' => $booking, 'member' => $client]))
+            ->addPart(new DataPart($icsContent, 'reservation.ics', 'text/calendar; method=REQUEST; charset=UTF-8'));
         try { $mailer->send($email); } catch (\Throwable) {}
     }
 

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DejaVu Sans', sans-serif; font-size: 13px; color: #1a1a1a; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+  .brand-name { font-size: 20px; font-weight: bold; color: #7c5cbf; }
+  .brand-sub { font-size: 11px; color: #666; margin-top: 2px; }
+  .invoice-title { text-align: right; }
+  .invoice-title h1 { font-size: 24px; text-transform: uppercase; color: #7c5cbf; letter-spacing: 2px; }
+  .invoice-title .number { font-size: 13px; color: #444; margin-top: 4px; }
+  .divider { border: none; border-top: 2px solid #7c5cbf; margin: 1rem 0; }
+  .parties { display: flex; gap: 2rem; margin-bottom: 2rem; }
+  .party { flex: 1; }
+  .party-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 6px; }
+  .party-name { font-weight: bold; font-size: 14px; }
+  .party-info { font-size: 12px; color: #555; line-height: 1.5; margin-top: 4px; }
+  .meta-row { display: flex; gap: 3rem; margin-bottom: 1.5rem; }
+  .meta-item label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; display: block; margin-bottom: 2px; }
+  .meta-item span { font-size: 13px; font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+  thead { background: #7c5cbf; color: #fff; }
+  thead th { padding: 8px 12px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+  tbody tr:nth-child(even) { background: #f8f5ff; }
+  tbody td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #e8e0f5; }
+  .text-right { text-align: right; }
+  .totals { margin-left: auto; width: 260px; }
+  .totals-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 13px; }
+  .totals-total { font-size: 16px; font-weight: bold; color: #7c5cbf; border-top: 2px solid #7c5cbf; padding-top: 8px; margin-top: 4px; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 11px; color: #888; text-align: center; }
+  .badge-paid { display: inline-block; background: #10b981; color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="brand-name">Les patounes du glazik</div>
+    <div class="brand-sub">Pet-sitting &amp; Naturopathie animale</div>
+    <div class="brand-sub">2 Kerbiguet, 29510 Landudal</div>
+    <div class="brand-sub">SIRET : 982 097 362 00015</div>
+    <div class="brand-sub">sophielukomski.pro@gmail.com</div>
+  </div>
+  <div class="invoice-title">
+    <h1>Facture</h1>
+    <div class="number">N° {{ invoice.number }}</div>
+    {% if invoice.isPaid() %}
+      <div style="margin-top: 8px;"><span class="badge-paid">Payée</span></div>
+    {% endif %}
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="parties">
+  <div class="party">
+    <div class="party-label">Prestataire</div>
+    <div class="party-name">Sophie Lukomski</div>
+    <div class="party-info">
+      Les patounes du glazik<br>
+      2 Kerbiguet, 29510 Landudal<br>
+      Finistère, France<br>
+      TVA non applicable - art. 293 B du CGI
+    </div>
+  </div>
+  <div class="party">
+    <div class="party-label">Client</div>
+    <div class="party-name">{{ client.firstName }} {{ client.lastName }}</div>
+    <div class="party-info">{{ client.email }}</div>
+  </div>
+</div>
+
+<div class="meta-row">
+  <div class="meta-item">
+    <label>Date d'émission</label>
+    <span>{{ invoice.createdAt|date('d/m/Y') }}</span>
+  </div>
+  {% if invoice.paidAt %}
+  <div class="meta-item">
+    <label>Date de paiement</label>
+    <span>{{ invoice.paidAt|date('d/m/Y') }}</span>
+  </div>
+  {% endif %}
+  {% if booking.scheduledAt %}
+  <div class="meta-item">
+    <label>Date de la prestation</label>
+    <span>{{ booking.scheduledAt|date('d/m/Y à H:i') }}</span>
+  </div>
+  {% endif %}
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Animal</th>
+      <th class="text-right">Montant HT</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>{{ booking.serviceType.label() }}</strong><br>
+        <span style="font-size:11px;color:#666;">{{ booking.serviceType.description() }}</span>
+      </td>
+      <td>{{ booking.animal ? booking.animal.name : '-' }}</td>
+      <td class="text-right">{{ invoice.amount|number_format(2, ',', ' ') }} €</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="totals">
+  <div class="totals-row">
+    <span>Total HT</span>
+    <span>{{ invoice.amount|number_format(2, ',', ' ') }} €</span>
+  </div>
+  <div class="totals-row">
+    <span>TVA (0%)</span>
+    <span>0,00 €</span>
+  </div>
+  <div class="totals-row totals-total">
+    <span>Total TTC</span>
+    <span>{{ invoice.amount|number_format(2, ',', ' ') }} €</span>
+  </div>
+</div>
+
+<div class="footer">
+  Micro-entreprise - TVA non applicable en vertu de l'article 293 B du CGI<br>
+  Les patounes du glazik | SIRET 982 097 362 00015 | Sophie Lukomski | 2 Kerbiguet, 29510 Landudal
+</div>
+
+</body>
+</html>

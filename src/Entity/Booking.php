@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Enum\BookingStatus;
 use App\Enum\ServiceType;
 use App\Repository\BookingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -63,10 +65,16 @@ class Booking
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'booking', targetEntity: Invoice::class, cascade: ['persist', 'remove'])]
+    private Collection $invoices;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->invoices = new ArrayCollection();
     }
+
+    public function getInvoices(): Collection { return $this->invoices; }
 
     #[ORM\PreUpdate]
     public function onUpdate(): void

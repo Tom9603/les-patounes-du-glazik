@@ -204,10 +204,12 @@ class MemberController extends AbstractController
             }
         }
 
+        $phone = trim($request->request->get('phone', ''));
         $member->setFirstName($firstName);
         $member->setLastName($lastName ?: null);
         $member->setUsername($username ?: null);
         $member->setEmail($email);
+        $member->setPhone($phone ?: null);
 
         $avatarFile = $request->files->get('avatar');
         if ($avatarFile) {

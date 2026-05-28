@@ -1,0 +1,41 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Factures{% endblock %}
+
+{% block main %}
+<div style="padding: 1.5rem;">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>N° Facture</th>
+        <th>Client</th>
+        <th>Service</th>
+        <th>Montant</th>
+        <th>Statut</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for invoice in invoices %}
+      <tr>
+        <td><strong>{{ invoice.number }}</strong></td>
+        <td>{{ invoice.booking.client.firstName }} {{ invoice.booking.client.lastName }}</td>
+        <td>{{ invoice.booking.serviceType.label() }}</td>
+        <td>{{ invoice.amount|number_format(2, ',', ' ') }} €</td>
+        <td>
+          <span class="badge bg-{{ invoice.status.badgeClass() }}">{{ invoice.status.label() }}</span>
+        </td>
+        <td>{{ invoice.createdAt|date('d/m/Y') }}</td>
+        <td>
+          <a href="{{ path('app_admin_invoice_show', {id: invoice.id}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
+          <a href="{{ path('app_admin_invoice_pdf', {id: invoice.id}) }}" class="btn btn-sm btn-outline-secondary" target="_blank">PDF</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">Aucune facture pour le moment.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

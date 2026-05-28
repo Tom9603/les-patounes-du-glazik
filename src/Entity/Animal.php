@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Enum\AnimalSpecies;
 use App\Enum\AnimalSex;
 use App\Repository\AnimalRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -56,10 +58,17 @@ class Animal
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: HealthRecord::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['recordedAt' => 'DESC'])]
+    private Collection $healthRecords;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->healthRecords = new ArrayCollection();
     }
+
+    public function getHealthRecords(): Collection { return $this->healthRecords; }
 
     public function getId(): ?int { return $this->id; }
 

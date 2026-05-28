@@ -1,0 +1,29 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Créer une facture{% endblock %}
+
+{% block main %}
+<div style="padding: 1.5rem; max-width: 600px;">
+  <h3 class="mb-4">Créer une facture pour la réservation #{{ booking.id }}</h3>
+
+  <table class="table table-bordered mb-4">
+    <tr><th>Client</th><td>{{ booking.client.firstName }} {{ booking.client.lastName }}</td></tr>
+    <tr><th>Service</th><td>{{ booking.serviceType.label() }}</td></tr>
+    {% if booking.animal %}<tr><th>Animal</th><td>{{ booking.animal.name }}</td></tr>{% endif %}
+    {% if booking.scheduledAt %}<tr><th>RDV</th><td>{{ booking.scheduledAt|date('d/m/Y à H:i') }}</td></tr>{% endif %}
+    <tr><th>Montant</th><td><strong>{{ booking.price ? booking.price|number_format(2, ',', ' ') ~ ' €' : 'Non défini' }}</strong></td></tr>
+  </table>
+
+  <form method="post" action="{{ path('app_admin_invoice_create', {bookingId: booking.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('invoice-create-' ~ booking.id) }}">
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary">
+        <i class="fa fa-file-invoice"></i> Générer la facture
+      </button>
+      <a href="{{ path('admin', {crudControllerFqcn: 'App\\Controller\\Admin\\BookingCrudController', crudAction: 'index'}) }}" class="btn btn-outline-secondary">
+        Annuler
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement confirmé - Les patounes du glazik{% endblock %}
+
+{% block body %}
+<div class="container py-5 text-center" style="max-width: 500px;">
+  <div class="card shadow-sm p-5">
+    <div class="mb-4" style="font-size: 4rem; color: #10b981;">
+      <i class="fa fa-check-circle"></i>
+    </div>
+    <h2 class="mb-2">Paiement confirmé !</h2>
+    <p class="text-muted mb-4">Merci pour votre paiement. La facture {{ invoice.number }} a bien été reglée.</p>
+    <a href="{{ path('app_invoice_pdf', {id: invoice.id}) }}" class="btn btn-outline-secondary mb-3" target="_blank">
+      <i class="fa fa-file-pdf"></i> Télécharger la facture PDF
+    </a><br>
+    <a href="{{ path('app_profile') }}" class="btn btn-link">Retour à mon espace</a>
+  </div>
+</div>
+{% endblock %}

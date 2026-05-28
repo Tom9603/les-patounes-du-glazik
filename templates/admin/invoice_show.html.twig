@@ -1,0 +1,40 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Facture {{ invoice.number }}{% endblock %}
+
+{% block main %}
+<div style="padding: 1.5rem; max-width: 700px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3>Facture {{ invoice.number }}</h3>
+      <span class="badge bg-{{ invoice.status.badgeClass() }} fs-6">{{ invoice.status.label() }}</span>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{{ path('app_admin_invoice_pdf', {id: invoice.id}) }}" class="btn btn-outline-secondary" target="_blank">
+        <i class="fa fa-file-pdf"></i> Télécharger PDF
+      </a>
+      {% if invoice.status.value != 'paid' %}
+      <form method="post" action="{{ path('app_admin_invoice_mark_paid', {id: invoice.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('invoice-paid-' ~ invoice.id) }}">
+        <button class="btn btn-success" onclick="return confirm('Marquer comme payée ?')">
+          <i class="fa fa-check"></i> Marquer payée
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <table class="table table-bordered">
+    <tr><th>Client</th><td>{{ invoice.booking.client.firstName }} {{ invoice.booking.client.lastName }} &lt;{{ invoice.booking.client.email }}&gt;</td></tr>
+    <tr><th>Service</th><td>{{ invoice.booking.serviceType.label() }}</td></tr>
+    {% if invoice.booking.animal %}<tr><th>Animal</th><td>{{ invoice.booking.animal.name }}</td></tr>{% endif %}
+    {% if invoice.booking.scheduledAt %}<tr><th>Date prestation</th><td>{{ invoice.booking.scheduledAt|date('d/m/Y à H:i') }}</td></tr>{% endif %}
+    <tr><th>Montant</th><td><strong>{{ invoice.amount|number_format(2, ',', ' ') }} €</strong></td></tr>
+    <tr><th>Date émission</th><td>{{ invoice.createdAt|date('d/m/Y') }}</td></tr>
+    {% if invoice.paidAt %}<tr><th>Date paiement</th><td>{{ invoice.paidAt|date('d/m/Y') }}</td></tr>{% endif %}
+    {% if invoice.stripePaymentIntentId %}<tr><th>Stripe PI</th><td><code>{{ invoice.stripePaymentIntentId }}</code></td></tr>{% endif %}
+  </table>
+
+  <a href="{{ path('app_admin_invoice_index') }}" class="btn btn-link">Retour aux factures</a>
+</div>
+{% endblock %}

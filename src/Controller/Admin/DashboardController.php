@@ -36,8 +36,14 @@ class DashboardController extends AbstractDashboardController
         ]);
 
         yield MenuItem::section('Réservations');
+        yield MenuItem::linkToRoute('Agenda', 'fa fa-calendar-days', 'app_admin_calendar');
         yield MenuItem::linkTo(BookingCrudController::class, 'Réservations', 'fa fa-calendar-check');
+        yield MenuItem::linkToRoute('Factures', 'fa fa-file-invoice', 'app_admin_invoice_index');
         yield MenuItem::linkTo(AnimalCrudController::class, 'Animaux', 'fa fa-paw');
+        yield MenuItem::linkTo(HealthRecordCrudController::class, 'Fiches santé', 'fa fa-heart-pulse');
+
+        yield MenuItem::section('Analytique');
+        yield MenuItem::linkToRoute('Statistiques', 'fa fa-chart-line', 'app_admin_stats');
 
         yield MenuItem::section('Paramètres');
         yield MenuItem::linkTo(MemberCrudController::class, 'Utilisateurs', 'fa fa-users');

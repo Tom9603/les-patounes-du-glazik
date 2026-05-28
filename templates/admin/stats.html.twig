@@ -1,0 +1,65 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Statistiques{% endblock %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    <style>
+        .stat-card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); text-align: center; }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: #7c5cbf; }
+        .stat-card .label { font-size: .85rem; color: #666; margin-top: 4px; }
+        .chart-card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+        .chart-card h5 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #333; }
+    </style>
+{% endblock %}
+
+{% block main %}
+<div style="padding: 1.5rem;">
+
+    {# KPIs #}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="stat-card">
+            <div class="value">{{ totalRevenue|number_format(0, ',', ' ') }} €</div>
+            <div class="label">Chiffre d'affaires total</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">{{ totalBookings }}</div>
+            <div class="label">Réservations totales</div>
+        </div>
+        <div class="stat-card">
+            <div class="value">{{ totalMembers }}</div>
+            <div class="label">Membres inscrits</div>
+        </div>
+        <div class="stat-card">
+            <div class="value" style="color: #f59e0b;">{{ pendingCount }}</div>
+            <div class="label">Demandes en attente</div>
+        </div>
+    </div>
+
+    {# Charts #}
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+        <div class="chart-card">
+            <h5><i class="fa fa-chart-bar me-2"></i>Chiffre d'affaires mensuel ({{ "now"|date("Y") }})</h5>
+            {% if revenueChart.labels is empty %}
+                <p class="text-muted text-center py-4">Aucune donnée pour cette année.</p>
+            {% else %}
+                <canvas id="chart-revenue" data-chart="{{ revenueChart|json_encode }}"></canvas>
+            {% endif %}
+        </div>
+        <div class="chart-card">
+            <h5><i class="fa fa-chart-pie me-2"></i>Réservations par service</h5>
+            {% if bookingsChart.labels is empty %}
+                <p class="text-muted text-center py-4">Aucune réservation.</p>
+            {% else %}
+                <canvas id="chart-bookings" data-chart="{{ bookingsChart|json_encode }}"></canvas>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/admin-stats.js') }}"></script>
+{% endblock %}

@@ -44,6 +44,9 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarFilename = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $phone = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleId = null;
 
@@ -98,7 +101,7 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
-        if (!in_array('ROLE_ADMIN', $roles)) {
+        if (!in_array('ROLE_ADMIN', $roles) && !in_array('ROLE_STAFF', $roles)) {
             $roles[] = 'ROLE_MEMBER';
         }
         return array_unique($roles);
@@ -128,8 +131,13 @@ class Member implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoleLabel(): string
     {
-        return in_array('ROLE_ADMIN', $this->getRoles()) ? 'Administrateur' : 'Utilisateur';
+        if (in_array('ROLE_ADMIN', $this->getRoles())) return 'Administrateur';
+        if (in_array('ROLE_STAFF', $this->getRoles())) return 'Collaboratrice';
+        return 'Utilisateur';
     }
+
+    public function getPhone(): ?string { return $this->phone; }
+    public function setPhone(?string $phone): static { $this->phone = $phone; return $this; }
 
     public function getAvatarFilename(): ?string { return $this->avatarFilename; }
     public function setAvatarFilename(?string $avatarFilename): static { $this->avatarFilename = $avatarFilename; return $this; }

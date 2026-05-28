@@ -2,6 +2,10 @@ security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
+    role_hierarchy:
+        ROLE_STAFF: [ROLE_USER]
+        ROLE_ADMIN: [ROLE_STAFF]
+
     providers:
         app_member_provider:
             entity: { class: App\Entity\Member, property: email }
@@ -31,10 +35,12 @@ security:
                 target: /
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/facture/webhook/stripe, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_STAFF }
         - { path: ^/profil, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/reserver, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/animaux, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/facture, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

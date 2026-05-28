@@ -54,10 +54,16 @@ class BookingCrudController extends AbstractCrudController
             ->displayIf(fn(Booking $b) => $b->getStatus() === BookingStatus::Confirmed)
             ->addCssClass('btn btn-secondary btn-sm');
 
+        $invoice = Action::new('invoice', 'Facture', 'fa fa-file-invoice')
+            ->linkToRoute('app_admin_invoice_create_form', fn(Booking $b) => ['bookingId' => $b->getId()])
+            ->displayIf(fn(Booking $b) => in_array($b->getStatus(), [BookingStatus::Confirmed, BookingStatus::Completed]) && $b->getInvoices()->isEmpty())
+            ->addCssClass('btn btn-outline-primary btn-sm');
+
         return $actions
             ->add(Crud::PAGE_INDEX, $confirm)
             ->add(Crud::PAGE_INDEX, $refuse)
             ->add(Crud::PAGE_INDEX, $complete)
+            ->add(Crud::PAGE_INDEX, $invoice)
             ->disable(Action::NEW);
     }
 

@@ -7,6 +7,8 @@ export default defineConfig({
             input: {
                 animations: './assets/js/animations.js',
                 app: './assets/styles/app.scss',
+                'admin-calendar': './assets/js/admin-calendar.js',
+                'admin-stats': './assets/js/admin-stats.js',
             },
             output: {
                 entryFileNames: '[name].js',
