@@ -4,15 +4,28 @@
 
 {% block main %}
 <div style="padding: 1.5rem; max-width: 700px;">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
       <h3>Facture {{ invoice.number }}</h3>
-      <span class="badge bg-{{ invoice.status.badgeClass() }} fs-6">{{ invoice.status.label() }}</span>
+      <span class="badge bg-{{ invoice.status.badgeClass() }} fs-6 me-1">{{ invoice.status.label() }}</span>
+      {% if invoice.isSigned() %}
+        <span class="badge bg-success fs-6"><i class="fa fa-pen-to-square"></i> Signée le {{ invoice.signedAt|date('d/m/Y à H:i') }}</span>
+      {% else %}
+        <span class="badge bg-secondary fs-6">Non signée</span>
+      {% endif %}
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 flex-wrap justify-content-end">
       <a href="{{ path('app_admin_invoice_pdf', {id: invoice.id}) }}" class="btn btn-outline-secondary" target="_blank">
-        <i class="fa fa-file-pdf"></i> Télécharger PDF
+        <i class="fa fa-file-pdf"></i> PDF
       </a>
+      {% if not invoice.isSigned() %}
+      <form method="post" action="{{ path('app_admin_invoice_request_signature', {id: invoice.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('invoice-sign-' ~ invoice.id) }}">
+        <button class="btn btn-outline-primary" onclick="return confirm('Envoyer le lien de signature à ' ~ invoice.booking.client.email ~ ' ?')">
+          <i class="fa fa-pen-nib"></i> Demander signature
+        </button>
+      </form>
+      {% endif %}
       {% if invoice.status.value != 'paid' %}
       <form method="post" action="{{ path('app_admin_invoice_mark_paid', {id: invoice.id}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('invoice-paid-' ~ invoice.id) }}">

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document déjà signé</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f5ff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+  .card { background: #fff; border-radius: 16px; padding: 2.5rem 2rem; max-width: 440px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,.08); text-align: center; }
+  .icon { font-size: 3.5rem; margin-bottom: 1rem; }
+  h1 { font-size: 1.3rem; color: #1a1a2e; margin-bottom: .5rem; }
+  p { color: #666; font-size: .9rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">📝</div>
+  <h1>Document déjà signé</h1>
+  <p>La facture <strong>{{ invoice.number }}</strong> a déjà été signée le {{ invoice.signedAt|date('d/m/Y à H:i') }}.<br>Ce lien n'est plus utilisable.</p>
+</div>
+</body>
+</html>

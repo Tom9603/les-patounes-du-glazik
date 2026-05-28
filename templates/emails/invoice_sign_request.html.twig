@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Signature demandée</title></head>
+<body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: #7c5cbf; padding: 24px; border-radius: 10px 10px 0 0; text-align: center;">
+    <h1 style="color: #fff; margin: 0; font-size: 1.3rem;">Bon pour accord - Les patounes du glazik</h1>
+  </div>
+  <div style="background: #fff; padding: 24px; border: 1px solid #e8e0f5; border-top: none; border-radius: 0 0 10px 10px;">
+    <p>Bonjour {{ invoice.booking.client.firstName }},</p>
+    <p style="margin-top: 12px;">
+      Merci pour votre confiance ! Veuillez signer le bon pour accord pour valider votre prestation.
+    </p>
+    <table style="width:100%; border-collapse:collapse; margin: 16px 0;">
+      <tr style="background:#f8f5ff;"><td style="padding:8px 12px; font-weight:600;">Facture</td><td style="padding:8px 12px;">{{ invoice.number }}</td></tr>
+      <tr><td style="padding:8px 12px; font-weight:600;">Service</td><td style="padding:8px 12px;">{{ invoice.booking.serviceType.label() }}</td></tr>
+      {% if invoice.booking.scheduledAt %}<tr style="background:#f8f5ff;"><td style="padding:8px 12px; font-weight:600;">Date</td><td style="padding:8px 12px;">{{ invoice.booking.scheduledAt|date('d/m/Y à H:i') }}</td></tr>{% endif %}
+      <tr><td style="padding:8px 12px; font-weight:600;">Montant TTC</td><td style="padding:8px 12px;"><strong>{{ invoice.amount|number_format(2, ',', ' ') }} €</strong></td></tr>
+    </table>
+    <div style="text-align: center; margin: 24px 0;">
+      <a href="{{ signUrl }}" style="background: #7c5cbf; color: #fff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; display: inline-block;">
+        Signer le bon pour accord
+      </a>
+    </div>
+    <p style="color: #888; font-size: .8rem;">Ce lien est personnel et sécurisé. Il ne peut être utilisé qu'une seule fois.</p>
+    <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+    <p style="font-size: .85rem; color: #666;">Sophie Lukomski - Les patounes du glazik<br>2 Kerbiguet, 29510 Landudal<br>SIRET : 982 097 362 00015</p>
+  </div>
+</body>
+</html>

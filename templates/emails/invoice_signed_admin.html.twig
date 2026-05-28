@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Facture signée</title></head>
+<body style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: #7c5cbf; padding: 24px; border-radius: 10px 10px 0 0; text-align: center;">
+    <h1 style="color: #fff; margin: 0; font-size: 1.3rem;">Bon pour accord reçu !</h1>
+  </div>
+  <div style="background: #fff; padding: 24px; border: 1px solid #e8e0f5; border-top: none; border-radius: 0 0 10px 10px;">
+    <p>Bonjour Sophie,</p>
+    <p style="margin-top: 12px;">
+      <strong>{{ invoice.booking.client.firstName }} {{ invoice.booking.client.lastName }}</strong> vient de signer la facture <strong>{{ invoice.number }}</strong>.
+    </p>
+    <table style="width:100%; border-collapse:collapse; margin: 16px 0;">
+      <tr style="background:#f8f5ff;"><td style="padding:8px 12px; font-weight:600;">Service</td><td style="padding:8px 12px;">{{ invoice.booking.serviceType.label() }}</td></tr>
+      {% if invoice.booking.animal %}<tr><td style="padding:8px 12px; font-weight:600;">Animal</td><td style="padding:8px 12px;">{{ invoice.booking.animal.name }}</td></tr>{% endif %}
+      <tr style="background:#f8f5ff;"><td style="padding:8px 12px; font-weight:600;">Montant</td><td style="padding:8px 12px;">{{ invoice.amount|number_format(2, ',', ' ') }} €</td></tr>
+      <tr><td style="padding:8px 12px; font-weight:600;">Signé le</td><td style="padding:8px 12px;">{{ invoice.signedAt|date('d/m/Y à H:i') }}</td></tr>
+    </table>
+    <p style="color: #888; font-size: .85rem; margin-top: 16px;">Vous pouvez télécharger la facture signée depuis l'interface d'administration.</p>
+  </div>
+</body>
+</html>

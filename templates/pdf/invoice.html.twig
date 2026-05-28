@@ -126,6 +126,16 @@
   </div>
 </div>
 
+{% if invoice.isSigned() %}
+<div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+  <div style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; min-width: 200px; text-align: center;">
+    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px;">Signature client</div>
+    <img src="{{ invoice.signatureData }}" alt="Signature" style="max-width: 180px; max-height: 80px; display: block; margin: 0 auto;">
+    <div style="font-size: 10px; color: #aaa; margin-top: 6px;">Signé le {{ invoice.signedAt|date('d/m/Y à H:i') }}</div>
+  </div>
+</div>
+{% endif %}
+
 <div class="footer">
   Micro-entreprise - TVA non applicable en vertu de l'article 293 B du CGI<br>
   Les patounes du glazik | SIRET 982 097 362 00015 | Sophie Lukomski | 2 Kerbiguet, 29510 Landudal

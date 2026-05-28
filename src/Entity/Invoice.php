@@ -37,6 +37,15 @@ class Invoice
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $paidAt = null;
 
+    #[ORM\Column(length: 64, unique: true, nullable: true)]
+    private ?string $signatureToken = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $signatureData = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $signedAt = null;
+
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
@@ -44,6 +53,7 @@ class Invoice
     public function onPrePersist(): void
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->signatureToken = bin2hex(random_bytes(32));
     }
 
     public function getId(): ?int { return $this->id; }
@@ -72,4 +82,11 @@ class Invoice
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 
     public function isPaid(): bool { return $this->status === InvoiceStatus::Paid; }
+    public function isSigned(): bool { return $this->signedAt !== null; }
+
+    public function getSignatureToken(): ?string { return $this->signatureToken; }
+    public function getSignatureData(): ?string { return $this->signatureData; }
+    public function setSignatureData(?string $data): static { $this->signatureData = $data; return $this; }
+    public function getSignedAt(): ?\DateTimeImmutable { return $this->signedAt; }
+    public function setSignedAt(?\DateTimeImmutable $d): static { $this->signedAt = $d; return $this; }
 }

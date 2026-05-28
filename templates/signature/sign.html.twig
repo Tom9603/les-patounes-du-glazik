@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signature - Facture {{ invoice.number }}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f5ff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+  .card { background: #fff; border-radius: 16px; padding: 2rem; max-width: 520px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+  .brand { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; }
+  .brand-name { font-size: 1.1rem; font-weight: 700; color: #7c5cbf; }
+  .brand-sub { font-size: .8rem; color: #888; }
+  h1 { font-size: 1.3rem; color: #1a1a2e; margin-bottom: .25rem; }
+  .subtitle { font-size: .9rem; color: #666; margin-bottom: 1.5rem; }
+  .summary { background: #f8f5ff; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; font-size: .9rem; }
+  .summary-row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .summary-row:last-child { font-weight: 700; font-size: 1rem; color: #7c5cbf; border-top: 1px solid #e0d8f5; padding-top: 8px; margin-top: 4px; }
+  .canvas-wrap { border: 2px dashed #c4b5e8; border-radius: 10px; background: #fff; position: relative; margin-bottom: .75rem; touch-action: none; }
+  canvas { display: block; width: 100%; height: 180px; border-radius: 8px; cursor: crosshair; }
+  .canvas-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #c4b5e8; font-size: .85rem; pointer-events: none; text-align: center; }
+  .actions { display: flex; gap: .75rem; margin-bottom: 1.5rem; }
+  .btn-clear { flex: 1; padding: .6rem; border: 1px solid #c4b5e8; background: #fff; border-radius: 8px; color: #7c5cbf; font-size: .9rem; cursor: pointer; }
+  .btn-submit { flex: 2; padding: .6rem 1.2rem; background: #7c5cbf; color: #fff; border: none; border-radius: 8px; font-size: .95rem; font-weight: 600; cursor: pointer; }
+  .btn-submit:hover { background: #6a4aad; }
+  .legal { font-size: .75rem; color: #999; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">
+    <div>
+      <div class="brand-name">Les patounes du glazik</div>
+      <div class="brand-sub">Sophie Lukomski - Pet-sitting & Naturopathie animale</div>
+    </div>
+  </div>
+
+  <h1>Bon pour accord</h1>
+  <p class="subtitle">Facture {{ invoice.number }} - Signez pour valider votre bon pour accord.</p>
+
+  <div class="summary">
+    <div class="summary-row"><span>Service</span><span>{{ invoice.booking.serviceType.label() }}</span></div>
+    {% if invoice.booking.animal %}<div class="summary-row"><span>Animal</span><span>{{ invoice.booking.animal.name }}</span></div>{% endif %}
+    {% if invoice.booking.scheduledAt %}<div class="summary-row"><span>Date</span><span>{{ invoice.booking.scheduledAt|date('d/m/Y à H:i') }}</span></div>{% endif %}
+    <div class="summary-row"><span>Total TTC</span><span>{{ invoice.amount|number_format(2, ',', ' ') }} €</span></div>
+  </div>
+
+  <form id="signature-form" method="post">
+    <div class="canvas-wrap">
+      <canvas id="signature-canvas"></canvas>
+      <div class="canvas-hint" id="canvas-hint">Signez ici avec votre doigt ou votre souris</div>
+    </div>
+    <input type="hidden" name="signature_data" id="signature-data">
+    <div class="actions">
+      <button type="button" id="btn-clear" class="btn-clear">Effacer</button>
+      <button type="submit" class="btn-submit">Valider ma signature</button>
+    </div>
+  </form>
+
+  <p class="legal">En signant, vous reconnaissez avoir pris connaissance du devis et acceptez les conditions de la prestation. Cette signature électronique a valeur contractuelle.</p>
+</div>
+
+<script>
+  // Masquer le hint dès le premier trait
+  document.getElementById('signature-canvas').addEventListener('pointerdown', () => {
+    const hint = document.getElementById('canvas-hint');
+    if (hint) hint.style.display = 'none';
+  });
+</script>
+<script src="{{ asset('build/signature.js') }}"></script>
+</body>
+</html>

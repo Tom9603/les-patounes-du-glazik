@@ -17,6 +17,7 @@
     "@fullcalendar/interaction": "^6.1.20",
     "@fullcalendar/list": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
-    "chart.js": "^4.5.1"
+    "chart.js": "^4.5.1",
+    "signature_pad": "^5.1.3"
   }
 }

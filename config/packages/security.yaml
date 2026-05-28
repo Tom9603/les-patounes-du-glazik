@@ -36,6 +36,7 @@ security:
 
     access_control:
         - { path: ^/facture/webhook/stripe, roles: PUBLIC_ACCESS }
+        - { path: ^/signer, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_STAFF }
         - { path: ^/profil, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/reserver, roles: IS_AUTHENTICATED_FULLY }
