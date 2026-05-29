@@ -113,12 +113,15 @@ body {
 .navbar-brand {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 .logo-circle {
-    width: 5rem;
-    height: 5rem;
+    width: 3.25rem;
+    height: 3.25rem;
+    flex-shrink: 0;
     background-color: $color-white;
     border-radius: 50%;
     display: flex;
@@ -156,19 +159,22 @@ body {
 .brand-text {
     display: flex;
     flex-direction: column;
+    white-space: nowrap;
 }
 
 .brand-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     color: $color-foreground;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
 .brand-subtitle {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: $color-muted-foreground;
     line-height: 1.2;
+    white-space: nowrap;
 }
 
 // Buttons
