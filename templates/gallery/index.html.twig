@@ -23,7 +23,17 @@
             {% else %}
                 <div class="gallery-grid-full animate-on-scroll">
                     {% for photo in photos %}
-                        <div class="gallery-item-full animate-on-scroll" style="--delay: {{ loop.index0 * 0.05 }}s">
+                        <div
+                            class="gallery-item-full animate-on-scroll"
+                            style="--delay: {{ loop.index0 * 0.05 }}s"
+                            data-lightbox
+                            data-src="{{ asset('uploads/photos/' ~ photo.filename) }}"
+                            data-alt="{{ photo.alt ?? 'Photo - Les patounes du glazik' }}"
+                            data-caption="{{ photo.caption ?? '' }}"
+                            role="button"
+                            tabindex="0"
+                            aria-label="Agrandir la photo{% if photo.caption %} : {{ photo.caption }}{% endif %}"
+                        >
                             <img
                                 src="{{ asset('uploads/photos/' ~ photo.filename) }}"
                                 alt="{{ photo.alt ?? 'Photo - Les patounes du glazik' }}"
@@ -39,6 +49,23 @@
         </div>
     </div>
 
+    {# Lightbox #}
+    <div class="lightbox" id="lightbox" aria-modal="true" role="dialog" aria-hidden="true">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Fermer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button class="lightbox-prev" id="lightboxPrev" aria-label="Photo précédente">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="lightbox-next" id="lightboxNext" aria-label="Photo suivante">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="lightbox-content" id="lightboxContent">
+            <img id="lightboxImg" src="" alt="">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+    </div>
+
     {% include 'partials/_footer.html.twig' %}
 </div>
 {% endblock %}
@@ -46,4 +73,95 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('build/animations.js') }}"></script>
+    <script>
+    (function () {
+        const items = Array.from(document.querySelectorAll('[data-lightbox]'));
+        if (!items.length) return;
+
+        const lb      = document.getElementById('lightbox');
+        const lbImg   = document.getElementById('lightboxImg');
+        const lbCap   = document.getElementById('lightboxCaption');
+        const lbClose = document.getElementById('lightboxClose');
+        const lbPrev  = document.getElementById('lightboxPrev');
+        const lbNext  = document.getElementById('lightboxNext');
+
+        let current = 0;
+
+        function open(index) {
+            current = index;
+            show(current);
+            lb.classList.add('is-open');
+            lb.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            lbClose.focus();
+        }
+
+        function close() {
+            lb.classList.remove('is-open');
+            lb.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            items[current].focus();
+        }
+
+        function show(index) {
+            const el = items[index];
+            lbImg.src = el.dataset.src;
+            lbImg.alt = el.dataset.alt || '';
+            lbCap.textContent = el.dataset.caption || '';
+            // Boutons précédent / suivant visibles seulement s'il y a plusieurs photos
+            lbPrev.style.display = items.length > 1 ? '' : 'none';
+            lbNext.style.display = items.length > 1 ? '' : 'none';
+        }
+
+        function prev() {
+            current = (current - 1 + items.length) % items.length;
+            show(current);
+        }
+
+        function next() {
+            current = (current + 1) % items.length;
+            show(current);
+        }
+
+        // Ouverture au clic sur chaque item
+        items.forEach(function (el, i) {
+            el.addEventListener('click', function () { open(i); });
+            el.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
+            });
+        });
+
+        // Fermeture
+        lbClose.addEventListener('click', close);
+
+        // Clic sur le fond sombre (pas sur l'image)
+        lb.addEventListener('click', function (e) {
+            if (e.target === lb) close();
+        });
+
+        // Navigation
+        lbPrev.addEventListener('click', function (e) { e.stopPropagation(); prev(); });
+        lbNext.addEventListener('click', function (e) { e.stopPropagation(); next(); });
+
+        // Clavier
+        document.addEventListener('keydown', function (e) {
+            if (!lb.classList.contains('is-open')) return;
+            if (e.key === 'Escape')      close();
+            if (e.key === 'ArrowLeft')  prev();
+            if (e.key === 'ArrowRight') next();
+        });
+
+        // Swipe tactile
+        let touchStartX = null;
+        lb.addEventListener('touchstart', function (e) {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+        lb.addEventListener('touchend', function (e) {
+            if (touchStartX === null) return;
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
+            touchStartX = null;
+        }, { passive: true });
+    })();
+    </script>
 {% endblock %}
