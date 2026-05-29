@@ -32,7 +32,7 @@ class DistanceController extends AbstractController
             return $this->json(['error' => 'Adresse trop courte'], 400);
         }
 
-        // Geocode client address — requires at least street precision
+        // Geocode de l'adresse client : précision à la rue requise
         $clientCoords = $this->geocodeFR($address, strict: true);
         if ($clientCoords === null) {
             return $this->json(['found' => false], 200);
@@ -98,7 +98,7 @@ class DistanceController extends AbstractController
     }
 
     /**
-     * Geocode using Nominatim (OpenStreetMap) — handles Breton toponymy well.
+     * Geocode via Nominatim (OpenStreetMap), adapté à la toponymie bretonne.
      *
      * @return array{lat:float,lng:float,label:string}|null
      */

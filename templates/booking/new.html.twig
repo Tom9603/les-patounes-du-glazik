@@ -136,7 +136,7 @@
                         <div class="form-group form-group--full">
                             <label>Animal concerné <span class="field-hint-inline">(optionnel)</span></label>
 
-                            {# Species chips — one per type Sophie accepts #}
+                            {# Species chips : un par type d'animal accepté #}
                             <div class="species-grid" id="species-grid">
                                 {% for species in speciesList %}
                                 <button type="button" class="species-chip" data-species="{{ species.value }}" data-category="{{ species.pricingCategory() }}" data-pricing="{{ species.pricingHint() }}">
@@ -161,7 +161,7 @@
                                 {% endfor %}
                             </div>
 
-                            {# Named animal sub-chips — shown when the client has animals of the selected species #}
+                            {# Sous-chips animaux nommés : affichés quand le client a des animaux de l'espèce sélectionnée #}
                             <div class="named-animals-row" id="named-animals-row" hidden>
                                 <span class="named-animals-label">Votre animal :</span>
                                 <div class="animal-chips" id="animal-chips">
@@ -385,8 +385,8 @@
         if (kmTotalEl) kmTotalEl.textContent=fmtEur(total);
         if (kmBlock) kmBlock.hidden=false;
         if (summaryNoteEl) summaryNoteEl.textContent=hasKm
-            ?'Tarif estimé — tarif définitif confirmé par Sophie.'
-            :'Tarif estimé — frais de déplacement non calculés.';
+            ?'Tarif estimé, le tarif définitif sera confirmé par Sophie.'
+            :'Tarif estimé (frais de déplacement non encore calculés).';
     }
 
     function clearKmInfo() {
@@ -408,7 +408,7 @@
                 if (!data.found) {
                     if (distanceStatusEl) {
                         distanceStatusEl.className = 'address-distance-status address-distance-status--warn';
-                        distanceStatusEl.textContent = 'Adresse non trouvée ou trop imprécise — précisez le numéro et la rue.';
+                        distanceStatusEl.textContent = 'Adresse non trouvée ou trop imprécise. Précisez le numéro et la rue.';
                         distanceStatusEl.hidden = false;
                     }
                     currentKmFee=null; currentDistanceKm=0;
