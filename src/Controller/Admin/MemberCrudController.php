@@ -18,7 +18,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ArrayFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -98,6 +101,14 @@ class MemberCrudController extends AbstractCrudController
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters->add(BooleanFilter::new('isVerified')->setLabel('Email vérifié'));
+        return $filters
+            ->add(TextFilter::new('email')->setLabel('Email'))
+            ->add(TextFilter::new('firstName')->setLabel('Prénom'))
+            ->add(ArrayFilter::new('roles')->setLabel('Rôle')->setChoices([
+                'Administrateur' => 'ROLE_ADMIN',
+                'Utilisateur'    => 'ROLE_MEMBER',
+            ]))
+            ->add(BooleanFilter::new('isVerified')->setLabel('Email vérifié'))
+            ->add(DateTimeFilter::new('createdAt')->setLabel('Inscrit le'));
     }
 }

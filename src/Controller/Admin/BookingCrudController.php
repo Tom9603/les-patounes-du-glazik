@@ -21,6 +21,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 class BookingCrudController extends AbstractCrudController
 {
     public function persistEntity(EntityManagerInterface $em, mixed $entityInstance): void
@@ -152,6 +155,10 @@ class BookingCrudController extends AbstractCrudController
     {
         return $filters
             ->add(ChoiceFilter::new('status')->setLabel('Statut')->setChoices(BookingStatus::choices()))
-            ->add(ChoiceFilter::new('serviceType')->setLabel('Service')->setChoices(ServiceType::choices()));
+            ->add(ChoiceFilter::new('serviceType')->setLabel('Service')->setChoices(ServiceType::choices()))
+            ->add(EntityFilter::new('client')->setLabel('Client'))
+            ->add(DateTimeFilter::new('preferredDate')->setLabel('Date souhaitée'))
+            ->add(DateTimeFilter::new('scheduledAt')->setLabel('RDV fixé'))
+            ->add(NumericFilter::new('price')->setLabel('Prix (€)'));
     }
 }
