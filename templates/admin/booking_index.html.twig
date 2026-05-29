@@ -5,3 +5,86 @@
 {% block main %}
     {{ parent() }}
 {% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+
+    {# Modale de confirmation pour les actions destructives (Refuser / Annuler) #}
+    <div id="ea-confirm-backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:center;justify-content:center;">
+        <div role="dialog" aria-modal="true" aria-labelledby="ea-confirm-title"
+             style="background:#16213e;border:1px solid #2a2a4a;border-radius:10px;padding:1.75rem 2rem;max-width:430px;width:92%;color:#e0e0e0;box-shadow:0 12px 40px rgba(0,0,0,.6);">
+            <h5 id="ea-confirm-title" style="margin:0 0 .6rem;font-size:1rem;font-weight:700;"></h5>
+            <p id="ea-confirm-body" style="font-size:.875rem;color:#b0b8d0;margin:0 0 1.4rem;line-height:1.55;"></p>
+            <div style="display:flex;gap:.6rem;justify-content:flex-end;">
+                <button id="ea-confirm-cancel" type="button"
+                        style="padding:.45rem 1.1rem;background:transparent;border:1px solid #3a4a6a;border-radius:6px;color:#9aaccf;cursor:pointer;font-size:.855rem;">
+                    Non, annuler
+                </button>
+                <a id="ea-confirm-ok" href="#"
+                   style="padding:.45rem 1.1rem;background:#dc2626;border-radius:6px;color:#fff;cursor:pointer;font-size:.855rem;text-decoration:none;font-weight:600;">
+                    Confirmer
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        var backdrop = document.getElementById('ea-confirm-backdrop');
+        var titleEl  = document.getElementById('ea-confirm-title');
+        var bodyEl   = document.getElementById('ea-confirm-body');
+        var okBtn    = document.getElementById('ea-confirm-ok');
+        var cancelBtn = document.getElementById('ea-confirm-cancel');
+        if (!backdrop) return;
+
+        var configs = {
+            annuler: {
+                title : 'Annuler la réservation',
+                body  : 'Cette action annulera la réservation et notifiera le client par email. Si une facture est déjà payée, le remboursement Stripe sera déclenché automatiquement.',
+                label : 'Oui, annuler',
+            },
+            refuser: {
+                title : 'Refuser la demande',
+                body  : 'Cette action refusera la demande de réservation et notifiera le client par email.',
+                label : 'Oui, refuser',
+            },
+        };
+
+        function openModal(url, type) {
+            var cfg = configs[type];
+            titleEl.textContent = cfg.title;
+            bodyEl.textContent  = cfg.body;
+            okBtn.textContent   = cfg.label;
+            okBtn.href          = url;
+            backdrop.style.display = 'flex';
+            cancelBtn.focus();
+        }
+
+        function closeModal() {
+            backdrop.style.display = 'none';
+            okBtn.href = '#';
+        }
+
+        cancelBtn.addEventListener('click', closeModal);
+        backdrop.addEventListener('click', function (e) {
+            if (e.target === backdrop) closeModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Intercepte les boutons Refuser et Annuler dans la liste
+        // (EasyAdmin génère des URLs ?routeName=... pour les actions linkToRoute)
+        document.querySelectorAll(
+            'a[href*="/refuser/formulaire"], a[href*="/annuler/formulaire"], a[href*="cancel_form"], a[href*="refuse_form"]'
+        ).forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                var url  = this.getAttribute('href');
+                var type = (url.includes('/annuler/') || url.includes('cancel_form')) ? 'annuler' : 'refuser';
+                openModal(url, type);
+            });
+        });
+    })();
+    </script>
+{% endblock %}

@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,9 +16,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class CalendarController extends AbstractController
 {
+    public function __construct(private AdminContextProvider $adminContextProvider) {}
+
     #[Route('/agenda', name: 'calendar')]
     public function calendar(): Response
     {
+        if ($this->adminContextProvider->getContext() === null) {
+            return $this->redirect('/admin?routeName=app_admin_calendar');
+        }
+
         return $this->render('admin/calendar.html.twig');
     }
 

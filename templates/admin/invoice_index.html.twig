@@ -24,11 +24,10 @@
         <td>{{ invoice.booking.serviceType.label() }}</td>
         <td>{{ invoice.amount|number_format(2, ',', ' ') }} €</td>
         <td>
-          <span class="badge bg-{{ invoice.status.badgeClass() }}">{{ invoice.status.label() }}</span>
+          <span class="badge text-bg-{{ invoice.status.badgeClass() }}">{{ invoice.status.label() }}</span>
         </td>
         <td>{{ invoice.createdAt|date('d/m/Y') }}</td>
         <td>
-          <a href="{{ path('app_admin_invoice_show', {id: invoice.id}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
           <a href="{{ path('app_admin_invoice_pdf', {id: invoice.id}) }}" class="btn btn-sm btn-outline-secondary" target="_blank">PDF</a>
         </td>
       </tr>

@@ -50,6 +50,16 @@ class StripeService
         ]);
     }
 
+    public function createRefund(string $paymentIntentId, int $invoiceId, ?float $amount = null): void
+    {
+        $params = ['payment_intent' => $paymentIntentId];
+        if ($amount !== null) {
+            $params['amount'] = (int) round($amount * 100);
+        }
+
+        $this->stripe->refunds->create($params, ['idempotency_key' => 'refund-' . $invoiceId]);
+    }
+
     public function getPublicKey(): string
     {
         return $this->publicKey;

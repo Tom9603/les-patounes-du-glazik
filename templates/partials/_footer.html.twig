@@ -1,51 +1,77 @@
 <footer class="footer">
     <div class="container">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <div class="logo-circle logo-circle-small">
-                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+        <div class="footer-inner">
+
+            {# Ligne principale : brand centré #}
+            <div class="footer-brand-block">
+                <div class="footer-brand">
+                    <div class="logo-circle logo-circle-small">
+                        <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+                    </div>
+                    <span class="footer-brand-name">Les patounes du glazik</span>
                 </div>
-                <h4 class="footer-title">Les patounes du glazik</h4>
-            </div>
-            <p class="footer-text">Petsitting & Naturopathie animalière</p>
-            <p class="footer-text-small">Landudal et alentours (rayon 20 km), disponible 7j/7</p>
-
-            <a href="mailto:sophielukomski.pro@gmail.com" class="footer-email">
-                sophielukomski.pro@gmail.com
-            </a>
-
-            <div class="footer-social">
-                <a href="#" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                    </svg>
-                </a>
-                <a href="#" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                        <circle cx="12" cy="12" r="4"/>
-                        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
-                    </svg>
-                </a>
+                <p class="footer-tagline">Petsitting &amp; Naturopathie animalière &middot; Landudal &middot; rayon 20&nbsp;km &middot; 7j/7</p>
+                <div class="footer-social">
+                    <a href="https://www.facebook.com/p/Sophie-Lukomski-Pet-Sitting-et-naturopathie-61553239394499/" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/naturo_n_co/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
+                    </a>
+                </div>
             </div>
 
-            <div class="footer-legal-links">
-                <a href="{{ path('app_legal_mentions') }}">Mentions légales</a>
-                <span>·</span>
-                <a href="{{ path('app_legal_privacy') }}">Confidentialité</a>
-                <span>·</span>
-                <a href="{{ path('app_legal_cgu') }}">CGU</a>
-                <span>·</span>
-                <a href="{{ path('app_legal_cgv') }}">CGV</a>
+            {# Séparateur #}
+            <div class="footer-divider"></div>
+
+            {# Ligne secondaire : contact + liens #}
+            <div class="footer-links-row">
+                <div class="footer-links-group">
+                    <p class="footer-col-title">Contact</p>
+                    <a href="tel:+33767473251" class="footer-link footer-link--icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.07 6.07l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+                        07 67 47 32 51
+                    </a>
+                    <a href="mailto:sophielukomski.pro@gmail.com" class="footer-link footer-link--icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        sophielukomski.pro@gmail.com
+                    </a>
+                    <span class="footer-link footer-link--icon footer-link--muted">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        4 Créach Galliec, 29510 Landudal
+                    </span>
+                </div>
+
+                <div class="footer-links-group footer-links-group--2col">
+                    <p class="footer-col-title footer-col-title--span">Navigation</p>
+                    <a href="{{ path('app_home') }}#a-propos" class="footer-link">À propos</a>
+                    <a href="{{ path('app_home') }}#services" class="footer-link">Services</a>
+                    <a href="{{ path('app_gallery') }}" class="footer-link">Galerie</a>
+                    <a href="{{ path('app_blog') }}" class="footer-link">Blog</a>
+                    <a href="{{ path('app_home') }}#tarifs" class="footer-link">Tarifs</a>
+                    <a href="{{ path('app_booking_new') }}" class="footer-link">Réservation</a>
+                    <a href="{{ path('app_home') }}#contact" class="footer-link">Contact</a>
+                    {% if app.user %}
+                        <a href="{{ path('app_profile') }}" class="footer-link">Profil</a>
+                    {% else %}
+                        <a href="{{ path('app_member_login') }}" class="footer-link">Connexion</a>
+                    {% endif %}
+                </div>
+
+                <div class="footer-links-group">
+                    <p class="footer-col-title">Informations légales</p>
+                    <a href="{{ path('app_legal_mentions') }}" class="footer-link">Mentions légales</a>
+                    <a href="{{ path('app_legal_privacy') }}" class="footer-link">Confidentialité</a>
+                    <a href="{{ path('app_legal_cgu') }}" class="footer-link">CGU</a>
+                    <a href="{{ path('app_legal_cgv') }}" class="footer-link">CGV</a>
+                </div>
             </div>
 
-            <div class="footer-legal">
-                <span>© 2026 Les patounes du Glazik - Tous droits réservés</span>
-            </div>
+        </div>
 
-            <div class="footer-bytom">
-                Site réalisé par <a href="https://by-tom.fr/" target="_blank" rel="noopener noreferrer">byTom</a>
-            </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Les patounes du Glazik</span>
+            <span>Site réalisé par <a href="https://by-tom.fr/" target="_blank" rel="noopener noreferrer">byTom</a></span>
         </div>
     </div>
 </footer>

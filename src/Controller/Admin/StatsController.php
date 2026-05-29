@@ -6,6 +6,7 @@ use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use App\Repository\InvoiceRepository;
 use App\Repository\MemberRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,26 +16,22 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class StatsController extends AbstractController
 {
+    public function __construct(private AdminContextProvider $adminContextProvider) {}
+
     #[Route('', name: '')]
     public function index(
         BookingRepository $bookingRepo,
         InvoiceRepository $invoiceRepo,
         MemberRepository $memberRepo,
     ): Response {
+        if ($this->adminContextProvider->getContext() === null) {
+            return $this->redirect('/admin?routeName=app_admin_stats');
+        }
         $now = new \DateTimeImmutable();
         $yearStart = $now->modify('first day of January this year')->setTime(0, 0);
 
         // Revenue per month (current year)
-        $monthlyRevenue = $invoiceRepo->createQueryBuilder('i')
-            ->select("DATE_FORMAT(i.createdAt, '%Y-%m') as month, SUM(i.amount) as total")
-            ->where('i.status = :paid')
-            ->andWhere('i.createdAt >= :yearStart')
-            ->setParameter('paid', 'paid')
-            ->setParameter('yearStart', $yearStart)
-            ->groupBy('month')
-            ->orderBy('month', 'ASC')
-            ->getQuery()
-            ->getArrayResult();
+        $monthlyRevenue = $invoiceRepo->getMonthlyRevenue($yearStart);
 
         $monthLabels = [];
         $monthValues = [];

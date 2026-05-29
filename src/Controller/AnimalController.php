@@ -39,6 +39,10 @@ class AnimalController extends AbstractController
         /** @var \App\Entity\Member $member */
         $member = $this->getUser();
 
+        // returnUrl must be an internal path (starts with /) to prevent open redirects
+        $returnUrl = $request->query->get('returnUrl', '');
+        $safeReturn = ($returnUrl && str_starts_with($returnUrl, '/')) ? $returnUrl : null;
+
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('animal-new', $request->request->get('_token'))) {
                 $this->addFlash('error', 'Token de sécurité invalide.');
@@ -56,6 +60,10 @@ class AnimalController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', $animal->getName() . ' a bien été ajouté.');
+
+            if ($safeReturn) {
+                return $this->redirect($safeReturn);
+            }
             return $this->redirectToRoute('app_animal_profile', ['id' => $animal->getId()]);
         }
 

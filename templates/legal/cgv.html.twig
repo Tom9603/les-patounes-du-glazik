@@ -4,25 +4,7 @@
 
 {% block body %}
 <div class="page-wrapper">
-    <nav class="navbar">
-        <div class="container navbar-content">
-            <div class="navbar-brand">
-                <div class="logo-circle">
-                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
-                </div>
-                <div class="brand-text">
-                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
-                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
-                </div>
-            </div>
-            <nav class="nav-links">
-                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
-                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
-                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
-                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
-            </nav>
-        </div>
-    </nav>
+    {% include 'partials/_navbar.html.twig' %}
 
     <div class="legal-page">
         <div class="container">
@@ -49,19 +31,65 @@
             <p>Les services sont dispensés par Sophie Lukomski sur Landudal et dans un rayon d'environ 20 km (Briec, Quimper, Rosporden, Fouesnant, etc.).</p>
 
             <h2>3. Tarifs</h2>
+
+            <h3>Animaux de compagnie <small>(chiens, chats, NAC)</small></h3>
+            <p>3 animaux inclus dans le tarif de base ; chaque animal supplémentaire à partir du 4e : + 1 €.</p>
             <table class="legal-table">
-                <thead>
-                    <tr><th>Prestation</th><th>Tarif</th></tr>
-                </thead>
+                <thead><tr><th>Prestation</th><th>Tarif</th></tr></thead>
                 <tbody>
                     <tr><td>Visite à domicile 30 min</td><td>12 €</td></tr>
-                    <tr><td>Visite à domicile 45 min</td><td>20 €</td></tr>
-                    <tr><td>Majoration dimanche / jours fériés</td><td>+ 3 €</td></tr>
-                    <tr><td>Naturopathie animalière (présentiel)</td><td>70 €</td></tr>
-                    <tr><td>Naturopathie animalière (en ligne)</td><td>60 €</td></tr>
-                    <tr><td>Frais kilométriques</td><td>0,52 € / km (5 premiers offerts)</td></tr>
+                    <tr><td>Visite à domicile 45 min</td><td>15 €</td></tr>
+                    <tr><td>Visite à domicile 60 min</td><td>18 €</td></tr>
                 </tbody>
             </table>
+
+            <h3>Mini-ferme / Famille mixte <small>(hors équidés)</small></h3>
+            <p>Tarif sur devis pour les familles mixtes. Animal supplémentaire : + 1 €.</p>
+            <table class="legal-table">
+                <thead><tr><th>Prestation</th><th>Tarif</th></tr></thead>
+                <tbody>
+                    <tr><td>Visite à domicile 30 min</td><td>15 €</td></tr>
+                    <tr><td>Visite à domicile 45 min</td><td>20 €</td></tr>
+                    <tr><td>Visite à domicile 60 min</td><td>25 €</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Equidés <small>(chevaux, poneys, ânes)</small></h3>
+            <p>1 équidé inclus dans le tarif de base ; chaque équidé supplémentaire : + 3 €.</p>
+            <table class="legal-table">
+                <thead><tr><th>Prestation</th><th>Tarif</th></tr></thead>
+                <tbody>
+                    <tr><td>Visite à domicile 30 min</td><td>15 €</td></tr>
+                    <tr><td>Visite à domicile 60 min</td><td>25 €</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Naturopathie animalière</h3>
+            <table class="legal-table">
+                <thead><tr><th>Prestation</th><th>Tarif</th></tr></thead>
+                <tbody>
+                    <tr><td>Consultation en présentiel</td><td>70 €</td></tr>
+                    <tr><td>Consultation en ligne</td><td>60 €</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Suppléments et frais divers</h3>
+            <table class="legal-table">
+                <thead><tr><th>Prestation</th><th>Tarif</th></tr></thead>
+                <tbody>
+                    <tr><td>Majoration dimanche / jours fériés</td><td>+ 3 €</td></tr>
+                    <tr><td>Frais kilométriques</td><td>0,52 € / km (5 premiers offerts)</td></tr>
+                    <tr><td>Pré-visite (obligatoire nouveau client)</td><td>10 €</td></tr>
+                    <tr><td>Rendu des clés (à la demande du client)</td><td>5 €</td></tr>
+                    <tr><td>Curage abri et enclos</td><td>+ 5 €</td></tr>
+                    <tr><td>Pansage et soins</td><td>+ 5 €</td></tr>
+                    <tr><td>Gestion des textiles (couvertures, masques...)</td><td>+ 3 €</td></tr>
+                    <tr><td>Entrée et sortie box et abri</td><td>+ 5 €</td></tr>
+                    <tr><td>Réduction moyenne durée (6e au 10e passage consécutif)</td><td>- 1 € / passage</td></tr>
+                    <tr><td>Réduction longue durée (dès le 11e passage consécutif)</td><td>- 2 € / passage</td></tr>
+                </tbody>
+            </table>
+
             <p>Les tarifs sont exprimés en euros TTC. Sophie Lukomski n'est pas soumise à TVA (article 293 B du CGI).</p>
 
             <h2>4. Réservation et prise en charge</h2>

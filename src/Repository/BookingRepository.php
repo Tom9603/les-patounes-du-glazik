@@ -25,6 +25,23 @@ class BookingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /** @return Booking[] */
+    public function findConfirmedOnDate(\DateTimeInterface $date): array
+    {
+        $dayStart = \DateTimeImmutable::createFromInterface($date)->setTime(0, 0, 0);
+        $dayEnd   = $dayStart->modify('+1 day');
+
+        return $this->createQueryBuilder('b')
+            ->where('b.status = :status')
+            ->andWhere('b.scheduledAt IS NOT NULL')
+            ->andWhere('b.scheduledAt >= :dayStart AND b.scheduledAt < :dayEnd')
+            ->setParameter('status', BookingStatus::Confirmed)
+            ->setParameter('dayStart', $dayStart)
+            ->setParameter('dayEnd', $dayEnd)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function hasActivBookings(Member $member): bool
     {
         $count = $this->createQueryBuilder('b')

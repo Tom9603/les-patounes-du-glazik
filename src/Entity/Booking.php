@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\AnimalSpecies;
 use App\Enum\BookingStatus;
 use App\Enum\ServiceType;
 use App\Repository\BookingRepository;
@@ -26,6 +27,9 @@ class Booking
     #[ORM\ManyToOne(targetEntity: Animal::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Animal $animal = null;
+
+    #[ORM\Column(enumType: AnimalSpecies::class, nullable: true)]
+    private ?AnimalSpecies $animalSpecies = null;
 
     #[ORM\Column(enumType: ServiceType::class)]
     private ServiceType $serviceType;
@@ -90,8 +94,19 @@ class Booking
     public function getAnimal(): ?Animal { return $this->animal; }
     public function setAnimal(?Animal $animal): static { $this->animal = $animal; return $this; }
 
+    public function getAnimalSpecies(): ?AnimalSpecies { return $this->animalSpecies; }
+    public function setAnimalSpecies(?AnimalSpecies $animalSpecies): static { $this->animalSpecies = $animalSpecies; return $this; }
+
     public function getServiceType(): ServiceType { return $this->serviceType; }
     public function setServiceType(ServiceType $serviceType): static { $this->serviceType = $serviceType; return $this; }
+
+    public function getServiceTypeLabel(): string { return $this->serviceType->label(); }
+
+    public function getClientPhone(): ?string { return $this->client->getPhone(); }
+
+    public function getClientEmail(): string { return $this->client->getEmail(); }
+
+    public function getStatusLabel(): string { return $this->status->label(); }
 
     public function getPreferredDate(): \DateTimeInterface { return $this->preferredDate; }
     public function setPreferredDate(\DateTimeInterface $preferredDate): static { $this->preferredDate = $preferredDate; return $this; }

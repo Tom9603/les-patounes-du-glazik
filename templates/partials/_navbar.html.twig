@@ -1,0 +1,50 @@
+{% set _route = app.request.attributes.get('_route') %}
+<nav class="navbar">
+    <div class="container navbar-content">
+        <div class="navbar-brand">
+            <div class="logo-circle">
+                <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
+            </div>
+            <div class="brand-text">
+                <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
+                <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ path('app_home') }}#a-propos" class="nav-link">À propos</a>
+            <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
+            <a href="{{ path('app_gallery') }}" class="nav-link {{ _route == 'app_gallery' ? 'nav-link--active' }}">Galerie</a>
+            <a href="{{ path('app_blog') }}" class="nav-link {{ (_route starts with 'app_blog' or _route starts with 'app_article') ? 'nav-link--active' }}">Blog</a>
+            <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
+            <a href="{{ path('app_booking_new') }}" class="nav-link {{ _route starts with 'app_booking' ? 'nav-link--active' }}">Réservation</a>
+            <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
+        </nav>
+        <div class="navbar-actions">
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin') }}" class="btn btn-admin">Administrer</a>
+            {% endif %}
+            {% if app.user %}
+                <a href="{{ path('app_profile') }}" class="btn btn-profile {{ (_route starts with 'app_profile' or _route starts with 'app_animal' or (_route starts with 'app_member' and _route != 'app_member_login')) ? 'btn-profile--active' }}">
+                    {% if app.user.avatarFilename is defined and app.user.avatarFilename %}
+                        <img src="{{ asset('uploads/avatars/' ~ app.user.avatarFilename) }}" alt="" class="avatar-mini">
+                    {% else %}
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    {% endif %}
+                    <span>Profil</span>
+                </a>
+            {% else %}
+                <a href="{{ path('app_member_login') }}" class="btn btn-login">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    <span>Connexion</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

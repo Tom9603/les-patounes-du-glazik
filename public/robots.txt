@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /reserver
+Disallow: /mon-profil
+
+Sitemap: https://lespatounesduglaizik.fr/sitemap.xml

@@ -9,7 +9,7 @@
       <div class="d-flex justify-content-between align-items-start mb-4">
         <div>
           <h2 class="mb-1">Facture {{ invoice.number }}</h2>
-          <span class="badge bg-{{ invoice.status.badgeClass() }} fs-6">{{ invoice.status.label() }}</span>
+          <span class="badge text-bg-{{ invoice.status.badgeClass() }} fs-6">{{ invoice.status.label() }}</span>
         </div>
         <a href="{{ path('app_invoice_pdf', {id: invoice.id}) }}" class="btn btn-outline-secondary" target="_blank">
           <i class="fa fa-file-pdf"></i> Télécharger PDF

@@ -15,6 +15,7 @@
         {% endif %}
 
         <form method="post" class="login-form">
+            <input type="hidden" name="_token" value="{{ csrf_token('register') }}">
             <div class="form-row">
                 <div class="form-group">
                     <label for="firstName">Prénom *</label>
@@ -28,6 +29,11 @@
             <div class="form-group">
                 <label for="email">Email *</label>
                 <input type="email" id="email" name="email" required placeholder="votre@email.com">
+            </div>
+            <div class="form-group">
+                <label for="phone">Téléphone *</label>
+                <input type="tel" id="phone" name="phone" required placeholder="06 12 34 56 78" autocomplete="tel">
+                <p class="register-field-hint">Utilisé par Sophie pour vous recontacter lors de vos réservations (SMS, appel ou WhatsApp). Aucune newsletter ne sera envoyée. Votre numéro n'est jamais partagé.</p>
             </div>
             <div class="form-group">
                 <label for="username">Pseudo *</label>

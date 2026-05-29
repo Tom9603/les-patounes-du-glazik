@@ -113,7 +113,7 @@ class Animal
     public function getAge(): ?int
     {
         if (!$this->birthDate) return null;
-        return (new \DateTimeImmutable())->diff($this->birthDate)->y;
+        return $this->birthDate->diff(new \DateTimeImmutable())->y;
     }
 
     public function __toString(): string { return $this->name . ' (' . $this->species->label() . ')'; }

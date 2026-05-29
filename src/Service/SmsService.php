@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twilio\Rest\Client;
 
@@ -16,6 +17,7 @@ class SmsService
         private string $authToken,
         #[Autowire('%env(TWILIO_FROM)%')]
         private string $from,
+        private LoggerInterface $logger,
     ) {}
 
     public function send(string $to, string $message): bool
@@ -29,7 +31,11 @@ class SmsService
                 'body' => $message,
             ]);
             return true;
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            $this->logger->error('SMS send failed', [
+                'to'    => $to,
+                'error' => $e->getMessage(),
+            ]);
             return false;
         }
     }

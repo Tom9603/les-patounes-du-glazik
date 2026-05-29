@@ -149,6 +149,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Pricing accordion (each section toggles independently)
+    var pricingBtns = document.querySelectorAll('.pricing-acc-btn');
+    pricingBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var body = this.nextElementSibling;
+            var isOpen = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            body.hidden = isOpen;
+        });
+    });
+
     // Nav scroll spy
     var navLinks = document.querySelectorAll('.nav-link[href^="#"]');
     var sections = Array.from(navLinks).map(function(link) {

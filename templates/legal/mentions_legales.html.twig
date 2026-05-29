@@ -4,25 +4,7 @@
 
 {% block body %}
 <div class="page-wrapper">
-    <nav class="navbar">
-        <div class="container navbar-content">
-            <div class="navbar-brand">
-                <div class="logo-circle">
-                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
-                </div>
-                <div class="brand-text">
-                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
-                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
-                </div>
-            </div>
-            <nav class="nav-links">
-                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
-                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
-                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
-                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
-            </nav>
-        </div>
-    </nav>
+    {% include 'partials/_navbar.html.twig' %}
 
     <div class="legal-page">
         <div class="container">

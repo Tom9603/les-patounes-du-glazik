@@ -41,7 +41,7 @@ class AnimalCrudController extends AbstractCrudController
         yield ChoiceField::new('species')
             ->setLabel('Espèce')
             ->setChoices(AnimalSpecies::choices())
-            ->renderBadges(false);
+            ->renderAsBadges(false);
         yield TextField::new('breed')->setLabel('Race')->setRequired(false);
         yield ChoiceField::new('sex')
             ->setLabel('Sexe')

@@ -10,53 +10,7 @@
 {% block body %}
 <div class="page-wrapper">
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container navbar-content">
-            <div class="navbar-brand">
-                <div class="logo-circle">
-                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
-                </div>
-                <div class="brand-text">
-                    <h1 class="brand-title">Les patounes du glazik</h1>
-                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
-                </div>
-            </div>
-            <nav class="nav-links">
-                <a href="#a-propos" class="nav-link">À propos</a>
-                <a href="#services" class="nav-link">Services</a>
-                <a href="#tarifs" class="nav-link">Tarifs</a>
-                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </nav>
-            <div class="navbar-actions">
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('admin') }}" class="btn btn-admin">Administrer</a>
-                {% endif %}
-                {% if app.user %}
-                    <a href="{{ path('app_profile') }}" class="btn btn-profile">
-                        {% if app.user.avatarFilename %}
-                            <img src="{{ asset('uploads/avatars/' ~ app.user.avatarFilename) }}" alt="" class="avatar-mini">
-                        {% else %}
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
-                        {% endif %}
-                        <span>Profil</span>
-                    </a>
-                {% else %}
-                    <a href="{{ path('app_member_login') }}" class="btn btn-login">
-                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                            <polyline points="10 17 15 12 10 7"/>
-                            <line x1="15" y1="12" x2="3" y2="12"/>
-                        </svg>
-                        <span>Connexion</span>
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
+    {% include 'partials/_navbar.html.twig' %}
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
@@ -84,8 +38,31 @@
                                 <circle cx="12" cy="12" r="10"/>
                                 <polyline points="12 6 12 12 16 14"/>
                             </svg>
-                            <span>Disponible 7j/7</span>
+                            <span>Disponible 7j/7 &middot; 8h30&ndash;19h30</span>
                         </div>
+                    </div>
+                    <div class="hero-tags">
+                        <span class="hero-tag">Chiens & chats</span>
+                        <span class="hero-tag">NAC</span>
+                        <span class="hero-tag">Equidés</span>
+                        <span class="hero-tag">Mini-ferme</span>
+                        <span class="hero-tag hero-tag--accent">Assurance professionnelle</span>
+                        <span class="hero-tag hero-tag--accent">ACACED certifiée</span>
+                        <span class="hero-tag hero-tag--accent">Naturopathie animale</span>
+                    </div>
+                    <div class="hero-socials">
+                        <a href="https://www.facebook.com/p/Sophie-Lukomski-Pet-Sitting-et-naturopathie-61553239394499/" target="_blank" rel="noopener noreferrer" class="hero-social-link" aria-label="Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/naturo_n_co/" target="_blank" rel="noopener noreferrer" class="hero-social-link" aria-label="Instagram">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
                 <div class="hero-image fade-in-right">
@@ -109,7 +86,7 @@
         </div>
     </section>
 
-    <!-- À propos -->
+    <!-- À propos + Présentation condensée -->
     <section class="about-section" id="a-propos">
         <div class="container">
             <div class="about-grid">
@@ -118,14 +95,62 @@
                 </div>
                 <div class="about-content animate-on-scroll">
                     <h3 class="section-title">Qui suis-je ?</h3>
-                    <p class="about-text">Je m'appelle Sophie, passionnée par les animaux depuis toujours. Basée à Landudal en Finistère, je me déplace chez vous pour prendre soin de vos compagnons, parce qu'un animal est toujours mieux dans son environnement familier.</p>
-                    <p class="about-text">Formée en naturopathie animalière, j'accompagne aussi vos animaux avec des solutions naturelles adaptées à chaque individu : stress, troubles du comportement, convalescence, bien-être au quotidien...</p>
+                    <p class="about-text">Je m'appelle Sophie, passionnée par les animaux depuis toujours. Basée à Landudal en Finistère, je me déplace chez vous pour prendre soin de vos compagnons - parce qu'un animal est toujours mieux dans son environnement familier.</p>
+                    <p class="about-text">Titulaire de l'ACACED (chien, chat, NAC) et formée en naturopathie animale à l'ENA MNC, j'interviens avec les garanties d'une professionnelle : assurée en responsabilité civile, déclarée auprès de la DDPP, avec médiateur agréé.</p>
                     <div class="about-badges">
-                        <span class="about-badge">Formée en naturopathie animalière</span>
-                        <span class="about-badge">Déplacement à domicile uniquement</span>
-                        <span class="about-badge">Toutes espèces acceptées</span>
+                        <span class="about-badge">ACACED chien, chat, NAC</span>
+                        <span class="about-badge">ENA MNC</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bloc condensé : 3 piliers -->
+    <section class="features-strip">
+        <div class="container">
+            <div class="features-strip-grid">
+
+                {# Rangée 1 : icônes #}
+                <div class="feature-strip-icon animate-on-scroll">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/></svg>
+                </div>
+                <div class="feature-strip-icon animate-on-scroll" style="--delay:.08s">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div class="feature-strip-icon animate-on-scroll" style="--delay:.16s">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+
+                {# Rangée 2 : titres #}
+                <h4 class="feature-strip-title">Pour tous vos animaux</h4>
+                <h4 class="feature-strip-title">A votre domicile</h4>
+                <h4 class="feature-strip-title">En toute sécurité</h4>
+
+                {# Rangée 3 : listes #}
+                <ul class="feature-strip-list">
+                    <li>Chiens & chats</li>
+                    <li>NAC : lapins, reptiles...</li>
+                    <li>Equidés</li>
+                    <li>Mini-ferme : poules, chèvres...</li>
+                </ul>
+                <ul class="feature-strip-list">
+                    <li>Vacances & week-end</li>
+                    <li>Journées de travail</li>
+                    <li>Hospitalisation</li>
+                </ul>
+                <ul class="feature-strip-list">
+                    <li>ACACED, assurance, médiateur</li>
+                    <li>Déclarée DDPP & BNO</li>
+                    <li>Comportements équin & félin</li>
+                    <li>Nutrition & naturopathie animale</li>
+                </ul>
+
+                {# Rangée 4 : notes — toujours à la même hauteur #}
+                <p class="feature-strip-note">Je m'adapte à leur personnalité, leur âge et leurs besoins.</p>
+                <p class="feature-strip-note">Vos animaux gardent leurs repères, sans stress.</p>
+                <p class="feature-strip-note">Toutes les garanties d'une professionnelle.</p>
+
             </div>
         </div>
     </section>
@@ -150,13 +175,13 @@
                         title: "Petsitting multi-espèce",
                         description: "Équidés, animaux de mini-ferme, basse-cour… Je m'adapte à tous vos animaux, même les plus atypiques, avec le même soin et la même attention.",
                         price: "Tarif selon espèce",
-                        icon: 'heart'
+                        icon: 'farm'
                     },
                     {
                         title: "Naturopathie animalière",
                         description: "Accompagnement naturel pour le bien-être de vos animaux. Consultations en présentiel ou en ligne, avec conseils personnalisés en phytothérapie et nutrition.",
                         price: "70€ présentiel / 60€ en ligne",
-                        icon: 'leaf'
+                        icon: 'heart'
                     }
                 ] %}
 
@@ -171,6 +196,14 @@
                                     <path d="M16 14v.5"/>
                                     <path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/>
                                     <path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/>
+                                </svg>
+                            {% elseif service.icon == 'farm' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 22V10.5L12 3l9 7.5V22H3z"/>
+                                    <path d="M9 22v-6h6v6"/>
+                                    <path d="M12 3v4"/>
+                                    <path d="M7 13h2"/>
+                                    <path d="M15 13h2"/>
                                 </svg>
                             {% elseif service.icon == 'heart' %}
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -209,8 +242,8 @@
                     },
                     {
                         number: "2",
-                        title: "Visite découverte",
-                        text: "Je viens chez vous faire connaissance avec vos animaux. C'est gratuit, sans engagement, et ça permet à tout le monde d'être à l'aise."
+                        title: "Pré-visite",
+                        text: "Je viens chez vous faire connaissance avec vos animaux et prendre connaissance de leurs habitudes. Une pré-visite est obligatoire pour les nouveaux clients (10€). Elle permet à tout le monde d'être à l'aise."
                     },
                     {
                         number: "3",
@@ -237,26 +270,99 @@
                 <p class="section-subtitle">Prestations claires et transparentes</p>
             </div>
 
-            <div class="pricing-table animate-on-scroll">
-                {% set pricing = [
-                    { service: "Visite à domicile (30 min)", price: "12€" },
-                    { service: "Visite à domicile (45 min)", price: "20€" },
-                    { service: "Majoration dimanche / jours fériés", price: "+3€" },
-                    { service: "Consultation naturopathie (présentiel)", price: "70€" },
-                    { service: "Consultation naturopathie (en ligne)", price: "60€" },
-                    { service: "Frais kilométriques", price: "0,52€/km (5 premiers offerts)" }
-                ] %}
+            <div class="pricing-accordion animate-on-scroll">
 
-                {% for item in pricing %}
-                    <div class="pricing-row animate-on-scroll" style="--delay: {{ loop.index0 * 0.05 }}s">
-                        <span class="pricing-service">{{ item.service }}</span>
-                        <span class="pricing-price">{{ item.price }}</span>
+                <!-- Animaux de compagnie -->
+                <div class="pricing-acc-item">
+                    <button class="pricing-acc-btn" aria-expanded="false">
+                        <span class="pricing-acc-label">Animaux de compagnie <small>chiens, chats, NAC</small></span>
+                        <span class="pricing-acc-from">à partir de 12€</span>
+                        <svg class="pricing-acc-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="pricing-acc-body" hidden>
+                        <p class="pricing-acc-note">3 animaux inclus dans le tarif de base. Animal supplémentaire à partir du 4e : +1€.</p>
+                        <div class="pricing-acc-rows">
+                            <div class="pricing-acc-row"><span>Visite à domicile 30 min</span><span>12€</span></div>
+                            <div class="pricing-acc-row"><span>Visite à domicile 45 min</span><span>15€</span></div>
+                            <div class="pricing-acc-row"><span>Visite à domicile 60 min</span><span>18€</span></div>
+                        </div>
                     </div>
-                {% endfor %}
+                </div>
+
+                <!-- Mini-ferme -->
+                <div class="pricing-acc-item">
+                    <button class="pricing-acc-btn" aria-expanded="false">
+                        <span class="pricing-acc-label">Mini-ferme / Famille mixte <small>hors équidés</small></span>
+                        <span class="pricing-acc-from">à partir de 15€</span>
+                        <svg class="pricing-acc-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="pricing-acc-body" hidden>
+                        <p class="pricing-acc-note">Tarif sur devis pour les familles mixtes. Animal supplémentaire : +1€.</p>
+                        <div class="pricing-acc-rows">
+                            <div class="pricing-acc-row"><span>Visite à domicile 30 min</span><span>15€</span></div>
+                            <div class="pricing-acc-row"><span>Visite à domicile 45 min</span><span>20€</span></div>
+                            <div class="pricing-acc-row"><span>Visite à domicile 60 min</span><span>25€</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equidés -->
+                <div class="pricing-acc-item">
+                    <button class="pricing-acc-btn" aria-expanded="false">
+                        <span class="pricing-acc-label">Equidés <small>chevaux, poneys, ânes</small></span>
+                        <span class="pricing-acc-from">à partir de 15€</span>
+                        <svg class="pricing-acc-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="pricing-acc-body" hidden>
+                        <p class="pricing-acc-note">1 équidé inclus dans le tarif de base. Equidé supplémentaire : +3€.</p>
+                        <div class="pricing-acc-rows">
+                            <div class="pricing-acc-row"><span>Visite à domicile 30 min</span><span>15€</span></div>
+                            <div class="pricing-acc-row"><span>Visite à domicile 60 min</span><span>25€</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Naturopathie -->
+                <div class="pricing-acc-item">
+                    <button class="pricing-acc-btn" aria-expanded="false">
+                        <span class="pricing-acc-label">Naturopathie animalière</span>
+                        <span class="pricing-acc-from">à partir de 60€</span>
+                        <svg class="pricing-acc-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="pricing-acc-body" hidden>
+                        <div class="pricing-acc-rows">
+                            <div class="pricing-acc-row"><span>Consultation en présentiel</span><span>70€</span></div>
+                            <div class="pricing-acc-row"><span>Consultation en ligne</span><span>60€</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suppléments et frais divers -->
+                <div class="pricing-acc-item">
+                    <button class="pricing-acc-btn" aria-expanded="false">
+                        <span class="pricing-acc-label">Suppléments et frais divers</span>
+                        <svg class="pricing-acc-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="pricing-acc-body" hidden>
+                        <div class="pricing-acc-rows">
+                            <div class="pricing-acc-row"><span>Majoration dimanche / jours fériés / soirées (22h-00h)</span><span>+3€</span></div>
+                            <div class="pricing-acc-row"><span>Frais kilométriques</span><span>0,52€/km (5 premiers offerts)</span></div>
+                            <div class="pricing-acc-row"><span>Pré-visite (obligatoire nouveau client)</span><span>10€</span></div>
+                            <div class="pricing-acc-row"><span>Rendu des clés (à la demande du client)</span><span>5€</span></div>
+                            <div class="pricing-acc-row"><span>Curage abri et enclos</span><span>+5€</span></div>
+                            <div class="pricing-acc-row"><span>Pansage et soins</span><span>+5€</span></div>
+                            <div class="pricing-acc-row"><span>Gestion des textiles (couvertures, masques...)</span><span>+3€</span></div>
+                            <div class="pricing-acc-row"><span>Entrée et sortie box et abri</span><span>+5€</span></div>
+                            <div class="pricing-acc-row"><span>Réduction moyenne durée (6e au 10e passage)</span><span>-1€/passage</span></div>
+                            <div class="pricing-acc-row"><span>Réduction longue durée (dès le 11e passage)</span><span>-2€/passage</span></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <p class="pricing-note animate-on-scroll">
-                * Tarif selon espèce pour les équidés et animaux de ferme. N'hésitez pas à me contacter pour un devis personnalisé.
+                Les tarifs sont exprimés en euros TTC. Sophie Lukomski n'est pas soumise à TVA (article 293 B du CGI).
             </p>
         </div>
     </section>
@@ -343,19 +449,32 @@
                 </div>
                 <div class="zone-info">
                     <p class="zone-intro">Je me déplace notamment vers :</p>
-                    <ul class="zone-cities">
-                        <li>Landudal</li>
-                        <li>Briec</li>
-                        <li>Quimper</li>
-                        <li>Rosporden</li>
-                        <li>Fouesnant</li>
-                        <li>Ergué-Gabéric</li>
-                        <li>Elliant</li>
-                        <li>Coray</li>
-                        <li>Saint-Évarzec</li>
-                        <li>Guengat</li>
-                        <li>Plonéis</li>
-                    </ul>
+                    <div class="zone-cities-grid">
+                        <ul class="zone-cities">
+                            <li><strong>Landudal</strong> <span class="zone-village">(mon village)</span></li>
+                            <li><strong>Briec</strong></li>
+                            <li>Landrévarzec</li>
+                            <li>Quéménéven</li>
+                            <li>Edern</li>
+                            <li>Langolen</li>
+                            <li><strong>Coray</strong></li>
+                            <li>Elliant</li>
+                            <li>Tregourez</li>
+                            <li>Rosporden</li>
+                        </ul>
+                        <ul class="zone-cities">
+                            <li>Gouezec</li>
+                            <li>Saint-Thois</li>
+                            <li>Lestonan</li>
+                            <li>Ergué-Gabéric</li>
+                            <li><strong>Quimper</strong></li>
+                            <li>Fouesnant</li>
+                            <li>La Forêt-Fouesnant</li>
+                            <li>Saint-Ivy</li>
+                            <li>Pluguffan</li>
+                            <li><strong>Plonéis</strong></li>
+                        </ul>
+                    </div>
                     <p class="zone-note">Hors zone ? Contactez-moi, on peut trouver un arrangement !</p>
                 </div>
             </div>
@@ -379,8 +498,12 @@
                         a: "Oui ! Chiens, chats, NACs, équidés, animaux de basse-cour et de mini-ferme. Si vous avez un doute sur votre espèce, contactez-moi directement."
                     },
                     {
+                        q: "C'est quoi un NAC ?",
+                        a: "NAC signifie Nouveaux Animaux de Compagnie. Ce sont tous les animaux qui ne sont ni chiens ni chats : lapins, cobayes, furets, reptiles, oiseaux, rongeurs... Si votre compagnon sort de l'ordinaire, il y a de grandes chances qu'il soit un NAC !"
+                    },
+                    {
                         q: "Comment se passe la première visite ?",
-                        a: "Je viens chez vous gratuitement et sans engagement pour rencontrer vos animaux, prendre connaissance de leurs habitudes et répondre à toutes vos questions."
+                        a: "Je viens chez vous pour rencontrer vos animaux, prendre connaissance de leurs habitudes et répondre à toutes vos questions. Cette pré-visite est obligatoire pour les nouveaux clients et coûte 10€. Elle est aussi demandée en cas de déménagement ou de changement dans le foyer."
                     },
                     {
                         q: "Que se passe-t-il en cas d'urgence ?",
@@ -393,6 +516,26 @@
                     {
                         q: "La naturopathie, c'est pour quels cas ?",
                         a: "Elle peut aider dans de nombreuses situations : stress, troubles digestifs, problèmes de peau, convalescence, prévention... Les consultations se font en présentiel ou en ligne."
+                    },
+                    {
+                        q: "La naturopathie est-elle adaptée à tous les animaux ?",
+                        a: "Oui, pour tous les animaux ayant un suivi vétérinaire adapté. Chiot, chat, cheval, animal de basse-cour... La naturopathie peut compléter le suivi vétérinaire en place, jamais le remplacer."
+                    },
+                    {
+                        q: "Comment se passe une consultation en naturopathie ?",
+                        a: "En ligne ou à domicile, je prends notes de l'historique de votre animal. Pendant 1h à 1h30, nous échangeons sur ses habitudes de vie, son alimentation, ses antécédents et ses relations au sein du foyer. Si votre animal est là, je prends le temps de l'observer. Je ne force jamais un animal qui ne souhaite pas être touché."
+                    },
+                    {
+                        q: "Qu'est-ce qu'un protocole naturopathique ?",
+                        a: "C'est un ensemble de compléments alimentaires naturels à donner sur une période déterminée : plantes, huiles essentielles, bourgeons, fleurs de Bach... Il est construit spécialement pour votre animal et adapté à ses besoins. La naturopathie s'intéresse aux causes, bien au-delà des symptômes."
+                    },
+                    {
+                        q: "Combien de temps avant de recevoir le protocole ?",
+                        a: "Il me faut en général entre une et deux semaines pour mettre mon compte-rendu au propre et construire le protocole. Je vous envoie ensuite le tout par email. Je reste disponible pour vos questions à la lecture."
+                    },
+                    {
+                        q: "Quand est-il conseillé de consulter en naturopathie ?",
+                        a: "A tout moment de la vie de votre animal : à son arrivée dans le foyer, lors d'un changement de vie, en prévention, ou au printemps et en automne pour les protocoles de drainage. La naturopathie accompagne aussi les animaux en convalescence ou sous traitement médical."
                     }
                 ] %}
                 {% for item in faqs %}
@@ -419,6 +562,28 @@
                 <h3 class="section-title">Me contacter</h3>
                 <p class="section-subtitle">Je vous réponds sous 24h</p>
             </div>
+            <p class="contact-intro animate-on-scroll">Des questions sur mon activité de petsitter ou au sujet de la naturopathie ? Prenez contact, je serai ravie d'échanger avec vous !</p>
+            <div class="contact-social animate-on-scroll">
+                <a href="https://www.facebook.com/p/Sophie-Lukomski-Pet-Sitting-et-naturopathie-61553239394499/" target="_blank" rel="noopener noreferrer" class="contact-social-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                    </svg>
+                    Facebook
+                </a>
+                <a href="https://www.instagram.com/naturo_n_co/" target="_blank" rel="noopener noreferrer" class="contact-social-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    </svg>
+                    Instagram
+                </a>
+            </div>
+            <div class="contact-or animate-on-scroll">
+                <span class="contact-or-line"></span>
+                <span class="contact-or-text">ou</span>
+                <span class="contact-or-line"></span>
+            </div>
             <form class="contact-form animate-on-scroll" action="mailto:sophielukomski.pro@gmail.com" method="POST" enctype="text/plain">
                 <div class="form-row">
                     <div class="form-group">
@@ -428,39 +593,6 @@
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="marie@email.com" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="phone">Téléphone</label>
-                        <input type="tel" id="phone" name="telephone" placeholder="06 xx xx xx xx">
-                    </div>
-                    <div class="form-group">
-                        <label for="animal">Type d'animal</label>
-                        <select id="animal" name="animal">
-                            <option value="">Choisir...</option>
-                            <option>Chien</option>
-                            <option>Chat</option>
-                            <option>NAC</option>
-                            <option>Équidé</option>
-                            <option>Animal de ferme</option>
-                            <option>Autre</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="service">Prestation souhaitée</label>
-                        <select id="service" name="service">
-                            <option value="">Choisir...</option>
-                            <option>Petsitting à domicile</option>
-                            <option>Naturopathie animalière (présentiel)</option>
-                            <option>Naturopathie animalière (en ligne)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="dates">Dates souhaitées</label>
-                        <input type="text" id="dates" name="dates" placeholder="Ex : du 15 au 20 juillet">
                     </div>
                 </div>
                 <div class="form-group">

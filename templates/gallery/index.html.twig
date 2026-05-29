@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Galerie - Les patounes du glazik{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    {% include 'partials/_navbar.html.twig' %}
+
+    <div class="gallery-page">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h1 class="section-title">Galerie</h1>
+                <p class="section-subtitle">Quelques moments partagés avec nos compagnons</p>
+            </div>
+
+            {% if photos is empty %}
+                <p class="gallery-empty">Les photos arrivent bientôt !</p>
+            {% else %}
+                <div class="gallery-grid-full animate-on-scroll">
+                    {% for photo in photos %}
+                        <div class="gallery-item-full animate-on-scroll" style="--delay: {{ loop.index0 * 0.05 }}s">
+                            <img
+                                src="{{ asset('uploads/photos/' ~ photo.filename) }}"
+                                alt="{{ photo.alt ?? 'Photo - Les patounes du glazik' }}"
+                                loading="lazy"
+                            >
+                            {% if photo.caption %}
+                                <div class="gallery-caption-full">{{ photo.caption }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'partials/_footer.html.twig' %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/animations.js') }}"></script>
+{% endblock %}

@@ -8,6 +8,7 @@ use App\Enum\ServiceType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -18,9 +19,31 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 class BookingCrudController extends AbstractCrudController
 {
+    public function persistEntity(EntityManagerInterface $em, mixed $entityInstance): void
+    {
+        $this->autoFillEndTime($entityInstance);
+        parent::persistEntity($em, $entityInstance);
+    }
+
+    public function updateEntity(EntityManagerInterface $em, mixed $entityInstance): void
+    {
+        $this->autoFillEndTime($entityInstance);
+        parent::updateEntity($em, $entityInstance);
+    }
+
+    private function autoFillEndTime(Booking $booking): void
+    {
+        if ($booking->getScheduledAt() && !$booking->getScheduledEndAt()) {
+            $booking->setScheduledEndAt(
+                (clone $booking->getScheduledAt())
+                    ->modify('+' . $booking->getServiceType()->durationMinutes() . ' minutes')
+            );
+        }
+    }
 
     public static function getEntityFqcn(): string
     {
@@ -59,11 +82,17 @@ class BookingCrudController extends AbstractCrudController
             ->displayIf(fn(Booking $b) => in_array($b->getStatus(), [BookingStatus::Confirmed, BookingStatus::Completed]) && $b->getInvoices()->isEmpty())
             ->addCssClass('btn btn-outline-primary btn-sm');
 
+        $cancel = Action::new('cancel', 'Annuler', 'fa fa-ban')
+            ->linkToRoute('app_booking_admin_cancel_form', fn(Booking $b) => ['id' => $b->getId()])
+            ->displayIf(fn(Booking $b) => in_array($b->getStatus(), [BookingStatus::Pending, BookingStatus::Confirmed], true))
+            ->addCssClass('btn btn-outline-danger btn-sm');
+
         return $actions
             ->add(Crud::PAGE_INDEX, $confirm)
             ->add(Crud::PAGE_INDEX, $refuse)
             ->add(Crud::PAGE_INDEX, $complete)
             ->add(Crud::PAGE_INDEX, $invoice)
+            ->add(Crud::PAGE_INDEX, $cancel)
             ->disable(Action::NEW);
     }
 
@@ -71,26 +100,48 @@ class BookingCrudController extends AbstractCrudController
     {
         yield IdField::new('id')->onlyOnIndex();
         yield AssociationField::new('client')->setLabel('Client');
+        yield TextField::new('clientPhone')->setLabel('Téléphone')->hideOnForm()->setRequired(false);
+        yield TextField::new('clientEmail')->setLabel('Email client')->hideOnForm()->setRequired(false)->onlyOnDetail();
         yield AssociationField::new('animal')->setLabel('Animal')->setRequired(false);
+        yield TextField::new('serviceTypeLabel')->setLabel('Service')->hideOnForm();
         yield ChoiceField::new('serviceType')
             ->setLabel('Service')
-            ->setChoices(ServiceType::choices());
+            ->setChoices(array_combine(
+                array_map(fn(ServiceType $c) => $c->label(), ServiceType::cases()),
+                ServiceType::cases()
+            ))
+            ->onlyOnForms();
         yield DateField::new('preferredDate')->setLabel('Date souhaitée');
         yield TextField::new('preferredTime')->setLabel('Heure souhaitée')->setRequired(false);
         yield DateTimeField::new('scheduledAt')->setLabel('RDV fixé')->setRequired(false);
         yield DateTimeField::new('scheduledEndAt')->setLabel('Fin RDV')->setRequired(false);
         yield TextField::new('address')->setLabel('Adresse')->setRequired(false);
         yield NumberField::new('price')->setLabel('Prix (€)')->setNumDecimals(2)->setRequired(false);
+        yield TextField::new('statusLabel')
+            ->setLabel('Statut')
+            ->formatValue(function ($value) {
+                $colors = [
+                    'En attente' => '#d97706',
+                    'Confirmé'   => '#16a34a',
+                    'Refusé'     => '#dc2626',
+                    'Terminé'    => '#0891b2',
+                    'Annulé'     => '#6b7280',
+                ];
+                $bg = $colors[$value] ?? '#6b7280';
+                return \sprintf(
+                    '<span style="background:%s;color:#fff;padding:2px 9px;border-radius:12px;font-size:.78em;font-weight:600;">%s</span>',
+                    $bg, htmlspecialchars((string) $value)
+                );
+            })
+            ->renderAsHtml()
+            ->hideOnForm();
         yield ChoiceField::new('status')
             ->setLabel('Statut')
-            ->setChoices(BookingStatus::choices())
-            ->renderAsBadges([
-                BookingStatus::Pending->value => 'warning',
-                BookingStatus::Confirmed->value => 'success',
-                BookingStatus::Refused->value => 'danger',
-                BookingStatus::Completed->value => 'info',
-                BookingStatus::Cancelled->value => 'secondary',
-            ]);
+            ->setChoices(array_combine(
+                array_map(fn(BookingStatus $c) => $c->label(), BookingStatus::cases()),
+                BookingStatus::cases()
+            ))
+            ->onlyOnForms();
         yield TextareaField::new('clientNotes')->setLabel('Notes client')->setRequired(false)->onlyOnDetail();
         yield TextareaField::new('adminNotes')->setLabel('Notes admin')->setRequired(false)->onlyOnForms();
         yield DateTimeField::new('createdAt')->setLabel('Créée le')->onlyOnIndex();

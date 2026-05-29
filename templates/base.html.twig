@@ -4,7 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Les patounès du glazik{% endblock %}</title>
-    <meta name="description" content="Services animaliers professionnels - Garde d'animaux, promenades canines et naturopathie animalière à Quimper">
+
+    {# SEO #}
+    <meta name="description" content="{% block meta_description %}Petsitting, promenades canines et naturopathie animalière à Quimper et alentours. Garde d'animaux à domicile avec Sophie, passionnée du bien-être animal.{% endblock %}">
+    <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
+    <link rel="canonical" href="{% block canonical %}{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}{% endblock %}">
+
+    {# Open Graph #}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Les patounes du glazik">
+    <meta property="og:title" content="{{ block('title') }}">
+    <meta property="og:description" content="{{ block('meta_description') }}">
+    <meta property="og:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
+    <meta property="og:image" content="{{ absolute_url(asset('images/logo.png')) }}">
+    <meta property="og:locale" content="fr_FR">
+
+    {# Twitter Card #}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ block('title') }}">
+    <meta name="twitter:description" content="{{ block('meta_description') }}">
+
+    {# Schema.org LocalBusiness #}
+    {% block schema_org %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Les patounes du glazik",
+      "description": "Petsitting, promenades canines et naturopathie animalière à Quimper et alentours",
+      "url": "{{ app.request.schemeAndHttpHost }}",
+      "telephone": "+33767473251",
+      "email": "sophielukomski.pro@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "4 Créach Galliec",
+        "addressLocality": "Landudal",
+        "postalCode": "29510",
+        "addressCountry": "FR"
+      },
+      "priceRange": "€€",
+      "openingHours": "Mo-Su 08:30-19:30"
+    }
+    </script>
+    {% endblock %}
+
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
@@ -23,6 +66,66 @@
         </button>
     </div>
 
+    {# Bandeau RGPD #}
+    <div class="cookie-banner" id="cookie-banner" role="region" aria-label="Consentement cookies" aria-live="polite" style="display:none">
+        <div class="cookie-banner-inner">
+            <div class="cookie-banner-main">
+                <div class="cookie-banner-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="5.5" cy="10" rx="2" ry="2.6" transform="rotate(-15 5.5 10)"/>
+                        <ellipse cx="9.5" cy="7" rx="2" ry="2.6"/>
+                        <ellipse cx="14.5" cy="7" rx="2" ry="2.6"/>
+                        <ellipse cx="18.5" cy="10" rx="2" ry="2.6" transform="rotate(15 18.5 10)"/>
+                        <ellipse cx="12" cy="16.5" rx="5" ry="4.5"/>
+                    </svg>
+                </div>
+                <div class="cookie-banner-text">
+                    <strong>Ce site comporte des cookies, mais ils ne sont pas pour votre chien !</strong>
+                    <button class="cookie-details-toggle" id="cookie-details-btn" type="button">Quels sont ces cookies ?</button>
+                </div>
+                <div class="cookie-banner-actions">
+                    <button class="cookie-btn cookie-btn--accept" id="cookie-accept" type="button">Tout accepter</button>
+                    <button class="cookie-btn cookie-btn--refuse" id="cookie-refuse" type="button">Tout refuser</button>
+                </div>
+            </div>
+
+            <div class="cookie-details" id="cookie-details" hidden>
+                <div class="cookie-categories">
+                    <div class="cookie-category">
+                        <div class="cookie-category-info">
+                            <strong>Essentiels</strong>
+                            <span>Session, sécurité des formulaires, mémorisation de connexion. Nécessaires au fonctionnement du site.</span>
+                        </div>
+                        <span class="cookie-always-active">Toujours actif</span>
+                    </div>
+                    <div class="cookie-category">
+                        <div class="cookie-category-info">
+                            <strong>Connexion sociale</strong>
+                            <span>Google et Facebook, pour la connexion rapide à votre espace client.</span>
+                        </div>
+                        <label class="cookie-toggle-label" aria-label="Connexion sociale">
+                            <input type="checkbox" id="cookie-social" checked>
+                            <span class="cookie-toggle-switch"></span>
+                        </label>
+                    </div>
+                    <div class="cookie-category">
+                        <div class="cookie-category-info">
+                            <strong>Paiement en ligne</strong>
+                            <span>Stripe, pour le traitement sécurisé des paiements en ligne.</span>
+                        </div>
+                        <label class="cookie-toggle-label" aria-label="Paiement en ligne">
+                            <input type="checkbox" id="cookie-payment" checked>
+                            <span class="cookie-toggle-switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="cookie-details-actions">
+                    <button class="cookie-btn cookie-btn--save" id="cookie-save" type="button">Enregistrer mes préférences</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% block javascripts %}{% endblock %}
     <script>
     (function () {
@@ -33,6 +136,64 @@
         }, { passive: true });
         btn.addEventListener('click', function () {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+    (function () {
+        var banner = document.getElementById('cookie-banner');
+        if (!banner) return;
+        if (localStorage.getItem('cookie_consent')) return;
+        banner.style.display = '';
+        setTimeout(function () { banner.classList.add('is-visible'); }, 80);
+
+        function dismiss(prefs) {
+            localStorage.setItem('cookie_consent', JSON.stringify(prefs));
+            banner.classList.remove('is-visible');
+            setTimeout(function () { banner.style.display = 'none'; }, 400);
+        }
+
+        document.getElementById('cookie-accept').addEventListener('click', function () {
+            dismiss({ essential: true, social: true, payment: true });
+        });
+        document.getElementById('cookie-refuse').addEventListener('click', function () {
+            dismiss({ essential: true, social: false, payment: false });
+        });
+        document.getElementById('cookie-save').addEventListener('click', function () {
+            dismiss({
+                essential: true,
+                social: document.getElementById('cookie-social').checked,
+                payment: document.getElementById('cookie-payment').checked
+            });
+        });
+        document.getElementById('cookie-details-btn').addEventListener('click', function () {
+            var details = document.getElementById('cookie-details');
+            var opening = details.hidden;
+            details.hidden = !opening;
+            this.classList.toggle('is-open', opening);
+            this.textContent = opening ? 'Masquer les détails' : 'Quels sont ces cookies ?';
+        });
+    })();
+    (function () {
+        var navLinks = document.querySelector('.nav-links');
+        if (!navLinks) return;
+        var btn = document.createElement('button');
+        btn.className = 'menu-hamburger';
+        btn.setAttribute('aria-label', 'Menu');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.innerHTML = '<span></span><span></span><span></span>';
+        navLinks.parentNode.insertBefore(btn, navLinks);
+        btn.addEventListener('click', function () {
+            var open = this.classList.toggle('is-open');
+            this.setAttribute('aria-expanded', open ? 'true' : 'false');
+            navLinks.classList.toggle('nav-links--mobile-open');
+            var h = document.querySelector('.navbar').offsetHeight;
+            navLinks.style.top = h + 'px';
+        });
+        navLinks.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                btn.classList.remove('is-open');
+                btn.setAttribute('aria-expanded', 'false');
+                navLinks.classList.remove('nav-links--mobile-open');
+            });
         });
     })();
     </script>

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\Table(name: 'invoice', indexes: [new ORM\Index(name: 'idx_invoice_stripe_pi', columns: ['stripe_payment_intent_id'])])]
 class Invoice
 {
     #[ORM\Id]

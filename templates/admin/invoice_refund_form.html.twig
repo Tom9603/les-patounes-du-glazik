@@ -1,0 +1,53 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Rembourser la facture {{ invoice.number }}{% endblock %}
+
+{% block main %}
+<div style="padding: 1.5rem; max-width: 600px;">
+  <h3 class="mb-1">Rembourser la facture {{ invoice.number }}</h3>
+  <p class="text-muted mb-4">Client : {{ invoice.booking.client.firstName }} {{ invoice.booking.client.lastName }}</p>
+
+  <table class="table table-bordered mb-4">
+    <tr><th>Service</th><td>{{ invoice.booking.serviceType.label() }}</td></tr>
+    <tr><th>Montant payé</th><td><strong>{{ invoice.amount|number_format(2, ',', ' ') }} €</strong></td></tr>
+    <tr><th>Date de paiement</th><td>{{ invoice.paidAt ? invoice.paidAt|date('d/m/Y') : '-' }}</td></tr>
+    {% if invoice.stripePaymentIntentId %}
+    <tr><th>Stripe PI</th><td><code>{{ invoice.stripePaymentIntentId }}</code></td></tr>
+    {% endif %}
+  </table>
+
+  <form method="post" action="{{ path('app_admin_invoice_refund', {id: invoice.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('invoice-refund-' ~ invoice.id) }}">
+
+    <div class="mb-3">
+      <label for="amount" class="form-label fw-semibold">Montant à rembourser (€)</label>
+      <input
+        type="number"
+        id="amount"
+        name="amount"
+        class="form-control"
+        step="0.01"
+        min="0.01"
+        max="{{ invoice.amount }}"
+        value="{{ invoice.amount|number_format(2, '.', '') }}"
+        required
+      >
+      <div class="form-text">Laissez le montant complet pour un remboursement intégral. Réduisez-le pour un remboursement partiel.</div>
+    </div>
+
+    <div class="alert alert-warning py-2">
+      <i class="fa fa-triangle-exclamation"></i>
+      Cette action est <strong>irréversible</strong>. Le remboursement sera traité par Stripe et un email sera envoyé au client.
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-warning">
+        <i class="fa fa-rotate-left"></i> Confirmer le remboursement
+      </button>
+      <a href="{{ path('app_admin_invoice_show', {id: invoice.id}) }}" class="btn btn-outline-secondary">
+        Annuler
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

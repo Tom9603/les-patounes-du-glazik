@@ -6,22 +6,113 @@
 <div class="card">
     <div class="card-header">
         <h2>Confirmer la réservation #{{ booking.id }}</h2>
-        <p class="text-muted">Client : {{ booking.client }} &mdash; Service : {{ booking.serviceType.label() }}</p>
+        <p class="text-muted">
+            Client : {{ booking.client }}
+            {% if booking.client.phone %} &mdash; <a href="tel:{{ booking.client.phone }}">{{ booking.client.phone }}</a>{% endif %}
+            {% if booking.client.email %} &mdash; <a href="mailto:{{ booking.client.email }}">{{ booking.client.email }}</a>{% endif %}
+            &mdash; Service : {{ booking.serviceType.label() }}
+        </p>
     </div>
     <div class="card-body">
+
+        {# Travel info block #}
+        {% if fromBaseMinutes is not null or sameDayBookings|length > 0 %}
+        <div class="mb-4">
+            {% if fromBaseMinutes is not null %}
+            <div class="alert alert-info py-2 d-flex align-items-center gap-2 mb-2" style="font-size:.88rem;">
+                <i class="fa fa-route"></i>
+                <span>Trajet estimé depuis Landudal (domicile) jusqu'à l'adresse du client : <strong>~{{ fromBaseMinutes }} min</strong></span>
+            </div>
+            {% elseif booking.address %}
+            <div class="alert alert-secondary py-2 d-flex align-items-center gap-2 mb-2" style="font-size:.88rem;">
+                <i class="fa fa-map-marker-alt"></i>
+                <span>Adresse du client : <strong>{{ booking.address }}</strong> (calcul de trajet indisponible)</span>
+            </div>
+            {% else %}
+            <div class="alert alert-secondary py-2 d-flex align-items-center gap-2 mb-2" style="font-size:.88rem;">
+                <i class="fa fa-map-marker-alt"></i>
+                <span>Aucune adresse renseignée &mdash; impossible d'estimer le trajet.</span>
+            </div>
+            {% endif %}
+
+            {% if sameDayBookings|length > 0 %}
+            <div class="card border-warning mb-0">
+                <div class="card-header bg-warning bg-opacity-10 py-2 d-flex align-items-center gap-2" style="font-size:.88rem;">
+                    <i class="fa fa-calendar-check text-warning"></i>
+                    <strong>{{ sameDayBookings|length }} autre(s) RDV confirmé(s) ce jour-là</strong>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for item in travelInfo %}
+                    {% set other = item.booking %}
+                    <li class="list-group-item py-2 d-flex align-items-center gap-3" style="font-size:.85rem;">
+                        <div class="flex-grow-1">
+                            <strong>{{ other.client.firstName }}</strong>
+                            &mdash; {{ other.serviceType.label() }}
+                            &mdash; {{ other.scheduledAt ? other.scheduledAt|date('H:i') : 'heure à définir' }}
+                            {% if other.address %}
+                            <br><span class="text-muted" style="font-size:.8rem;"><i class="fa fa-map-marker-alt"></i> {{ other.address }}</span>
+                            {% endif %}
+                        </div>
+                        {% if item.minutes is not null %}
+                            {% if not item.sufficient %}
+                            <span class="badge text-bg-danger" title="Trajet insuffisant entre les deux RDV">
+                                <i class="fa fa-exclamation-triangle"></i> ~{{ item.minutes }} min de trajet
+                            </span>
+                            {% else %}
+                            <span class="badge text-bg-success">
+                                <i class="fa fa-check"></i> ~{{ item.minutes }} min de trajet
+                            </span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge text-bg-secondary">Adresse manquante</span>
+                        {% endif %}
+                    </li>
+                    {% else %}
+                    {% for other in sameDayBookings %}
+                    <li class="list-group-item py-2" style="font-size:.85rem;">
+                        <strong>{{ other.client.firstName }}</strong>
+                        &mdash; {{ other.serviceType.label() }}
+                        &mdash; {{ other.scheduledAt ? other.scheduledAt|date('H:i') : 'heure à définir' }}
+                        <span class="badge text-bg-secondary ms-2">Adresses manquantes</span>
+                    </li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
         <form method="post" action="{{ path('app_booking_admin_confirm', { id: booking.id }) }}">
             <input type="hidden" name="_token" value="{{ csrf_token('booking-confirm-' ~ booking.id) }}">
 
             <div class="mb-3">
                 <label class="form-label">Date et heure du RDV</label>
-                <input type="datetime-local" name="scheduledAt" class="form-control"
+                <input type="datetime-local" name="scheduledAt" id="scheduledAt" class="form-control"
                        value="{{ booking.preferredDate|date('Y-m-d') }}T{{ booking.preferredTime ?? '09:00' }}">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Heure de fin (optionnel)</label>
-                <input type="datetime-local" name="scheduledEndAt" class="form-control">
+                <label class="form-label">Heure de fin <small class="text-muted">(calculée automatiquement - {{ booking.serviceType.durationMinutes() }} min)</small></label>
+                <input type="datetime-local" name="scheduledEndAt" id="scheduledEndAt" class="form-control">
             </div>
+
+            <script>
+            (function() {
+                var duration = {{ booking.serviceType.durationMinutes() }};
+                var startInput = document.getElementById('scheduledAt');
+                var endInput   = document.getElementById('scheduledEndAt');
+                function updateEnd() {
+                    if (!startInput.value) return;
+                    var d = new Date(startInput.value);
+                    d.setMinutes(d.getMinutes() + duration);
+                    var pad = function(n) { return String(n).padStart(2, '0'); };
+                    endInput.value = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+                }
+                startInput.addEventListener('change', updateEnd);
+                updateEnd();
+            })();
+            </script>
 
             <div class="mb-3">
                 <label class="form-label">Prix confirmé (€)</label>

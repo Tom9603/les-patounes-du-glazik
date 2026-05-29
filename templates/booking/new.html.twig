@@ -5,35 +5,7 @@
 {% block body %}
 <div class="page-wrapper">
 
-    <nav class="navbar">
-        <div class="container navbar-content">
-            <div class="navbar-brand">
-                <div class="logo-circle">
-                    <img src="{{ asset('images/logo.png') }}" alt="Les patounes du glazik" class="logo-img">
-                </div>
-                <div class="brand-text">
-                    <a href="{{ path('app_home') }}" class="brand-title" style="text-decoration:none;color:inherit;">Les patounes du glazik</a>
-                    <p class="brand-subtitle">Petsitting & Naturopathie animalière</p>
-                </div>
-            </div>
-            <nav class="nav-links">
-                <a href="{{ path('app_home') }}#services" class="nav-link">Services</a>
-                <a href="{{ path('app_home') }}#tarifs" class="nav-link">Tarifs</a>
-                <a href="{{ path('app_blog') }}" class="nav-link">Blog</a>
-                <a href="{{ path('app_home') }}#contact" class="nav-link">Contact</a>
-            </nav>
-            <div class="navbar-actions">
-                <a href="{{ path('app_profile') }}" class="btn btn-profile">
-                    {% if member.avatarFilename %}
-                        <img src="{{ asset('uploads/avatars/' ~ member.avatarFilename) }}" alt="" class="avatar-mini">
-                    {% else %}
-                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    {% endif %}
-                    <span>Profil</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+    {% include 'partials/_navbar.html.twig' %}
 
     <div class="booking-page">
         <div class="container">
@@ -75,11 +47,62 @@
                     {% endfor %}
                 </div>
 
+                {# Grille tarifaire #}
+                <details class="pricing-ref">
+                    <summary class="pricing-ref-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        Grille tarifaire complète
+                        <span class="pricing-ref-chevron"></span>
+                    </summary>
+                    <div class="pricing-ref-body">
+                        <div class="pricing-ref-cats">
+                            <div class="pricing-ref-cat" data-cat="compagnie">
+                                <div class="pricing-ref-cat-title">Animaux de compagnie</div>
+                                <div class="pricing-ref-cat-sub">Chiens, chats, NAC &mdash; 3 inclus dans le tarif, +1&nbsp;€/animal supp.</div>
+                                <div class="pricing-ref-rows">
+                                    <span class="pricing-ref-dur">30 min</span><span class="pricing-ref-price">12,00&nbsp;€</span>
+                                    <span class="pricing-ref-dur">45 min</span><span class="pricing-ref-price">15,00&nbsp;€</span>
+                                    <span class="pricing-ref-dur">60 min</span><span class="pricing-ref-price">18,00&nbsp;€</span>
+                                </div>
+                            </div>
+                            <div class="pricing-ref-cat" data-cat="minifarm">
+                                <div class="pricing-ref-cat-title">Mini-ferme / Famille mixte</div>
+                                <div class="pricing-ref-cat-sub">Sur devis &mdash; hors équidés &mdash; +1&nbsp;€/animal supp.</div>
+                                <div class="pricing-ref-rows">
+                                    <span class="pricing-ref-dur">30 min</span><span class="pricing-ref-price">15,00&nbsp;€</span>
+                                    <span class="pricing-ref-dur">45 min</span><span class="pricing-ref-price">20,00&nbsp;€</span>
+                                    <span class="pricing-ref-dur">60 min</span><span class="pricing-ref-price">25,00&nbsp;€</span>
+                                </div>
+                            </div>
+                            <div class="pricing-ref-cat" data-cat="equide">
+                                <div class="pricing-ref-cat-title">Equidés</div>
+                                <div class="pricing-ref-cat-sub">Chevaux, poneys, ânes &mdash; 1 inclus dans le tarif, +3&nbsp;€/équidé supp.</div>
+                                <div class="pricing-ref-rows">
+                                    <span class="pricing-ref-dur">30 min</span><span class="pricing-ref-price">15,00&nbsp;€</span>
+                                    <span class="pricing-ref-dur">60 min</span><span class="pricing-ref-price">25,00&nbsp;€</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pricing-ref-extras">
+                            <span>Frais km : 0,52&nbsp;€/km <em>(5 premiers offerts)</em></span>
+                            <span>Dimanche / fériés : +3,00&nbsp;€</span>
+                            <span>Pré-visite : 10,00&nbsp;€ <em>(obligatoire nouveau client)</em></span>
+                            <span>Remise fidélité : -1&nbsp;€/passage dès le 6e consécutif</span>
+                        </div>
+                    </div>
+                </details>
+
+                <div id="booking-form-section" hidden>
                 <form method="post" action="{{ path('app_booking_new') }}" class="booking-form" id="booking-form">
                     <input type="hidden" name="_token" value="{{ csrf_token('booking-new') }}">
                     <input type="hidden" name="serviceType" id="serviceType-hidden">
 
                     <div class="booking-form-grid">
+
+                        <div id="online-visio-notice" class="booking-online-notice" hidden>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                            Consultation en ligne : Sophie vous enverra un lien de visioconférence par email ou par SMS après confirmation de votre rendez-vous.
+                        </div>
 
                         <div class="form-group">
                             <label for="preferredDate">Date souhaitée <span class="required">*</span></label>
@@ -89,33 +112,86 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="preferredTime">Heure souhaitée</label>
-                            <input type="time" id="preferredTime" name="preferredTime" class="form-control">
-                            <span class="field-hint">Indicatif, Sophie confirmera l'heure exacte.</span>
+                            <label>Heure souhaitée</label>
+                            <input type="hidden" id="preferredTime" name="preferredTime">
+                            <div id="slots-container" class="slots-container" style="display:none">
+                                <div id="slots-loading" class="slots-loading" style="display:none">
+                                    <span class="slots-spinner"></span> Chargement des créneaux...
+                                </div>
+                                <div id="slots-grid" class="slots-grid"></div>
+                                <p id="slots-hint" class="field-hint" style="margin-top:.5rem;">
+                                    Cliquez sur un créneau disponible. Sophie confirmera l'heure exacte.
+                                </p>
+                            </div>
+                            <p id="slots-placeholder" class="field-hint">Sélectionnez d'abord un service et une date.</p>
                         </div>
 
                         <div class="form-group form-group--full">
                             <label for="address">Adresse d'intervention</label>
-                            <input type="text" id="address" name="address" placeholder="Ex : 12 rue des Fleurs, 29510 Landudal" class="form-control">
+                            <input type="text" id="address" name="address" placeholder="Ex : 12 rue des Fleurs, 29510 Landudal" class="form-control" autocomplete="street-address">
                             <span class="field-hint">Obligatoire pour le petsitting à domicile.</span>
+                            <span id="address-distance-status" class="address-distance-status" hidden></span>
                         </div>
 
-                        {% if animals|length > 0 %}
                         <div class="form-group form-group--full">
-                            <label for="animalId">Animal concerné</label>
-                            <select id="animalId" name="animalId" class="form-control">
-                                <option value="">-- Choisir un animal (optionnel) --</option>
-                                {% for animal in animals %}
-                                    <option value="{{ animal.id }}">{{ animal.name }} ({{ animal.species.label() }}{% if animal.breed %}, {{ animal.breed }}{% endif %})</option>
+                            <label>Animal concerné <span class="field-hint-inline">(optionnel)</span></label>
+
+                            {# Species chips — one per type Sophie accepts #}
+                            <div class="species-grid" id="species-grid">
+                                {% for species in speciesList %}
+                                <button type="button" class="species-chip" data-species="{{ species.value }}" data-category="{{ species.pricingCategory() }}" data-pricing="{{ species.pricingHint() }}">
+                                    <span class="species-chip-icon">
+                                        {% set sp = species.value %}
+                                        {% if sp == 'dog' %}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="2.6"/><circle cx="15.5" cy="8.5" r="2.6"/><circle cx="12" cy="13" r="5.5"/><circle cx="9.8" cy="12" r=".7" fill="currentColor" stroke="none"/><circle cx="14.2" cy="12" r=".7" fill="currentColor" stroke="none"/><ellipse cx="12" cy="13.9" rx="1.3" ry=".85" fill="currentColor" stroke="none"/></svg>
+                                        {% elseif sp == 'cat' %}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 9.5 L6 5.5 L11 8.5"/><path d="M16.5 9.5 L18 5.5 L13 8.5"/><circle cx="12" cy="13.5" r="5.5"/><circle cx="9.8" cy="12.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.2" cy="12.5" r=".7" fill="currentColor" stroke="none"/><path d="M11 14.5 L12 15.5 L13 14.5" stroke-width="1.2"/><path d="M6.5 13.8 L9.8 13.2 M17.5 13.8 L14.2 13.2" stroke-width=".9"/></svg>
+                                        {% elseif sp == 'horse' %}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="13" rx="5.5" ry="7"/><path d="M8.5 7 L7 4 L10.5 6.5"/><path d="M15.5 7 L17 4 L13.5 6.5"/><circle cx="9.8" cy="11" r=".7" fill="currentColor"/><circle cx="14.2" cy="11" r=".7" fill="currentColor"/><ellipse cx="10.5" cy="17" rx=".9" ry=".6" fill="currentColor" stroke="none"/><ellipse cx="13.5" cy="17" rx=".9" ry=".6" fill="currentColor" stroke="none"/></svg>
+                                        {% elseif sp == 'nac' %}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="9" cy="6.5" rx="1.8" ry="3.8"/><ellipse cx="15" cy="6.5" rx="1.8" ry="3.8"/><circle cx="12" cy="14.5" r="5.5"/><circle cx="10" cy="13.5" r=".7" fill="currentColor"/><circle cx="14" cy="13.5" r=".7" fill="currentColor"/><ellipse cx="12" cy="15.8" rx="1.1" ry=".7" fill="currentColor" stroke="none"/></svg>
+                                        {% elseif sp == 'poultry' %}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11.5" cy="13" r="5.5"/><path d="M9.5 7.5 Q11 5 12.5 7.5 Q13.5 5.5 14.5 7.5"/><path d="M17 13 L19.5 13.5 L17 15"/><circle cx="10" cy="12.5" r=".7" fill="currentColor"/><path d="M17 15 Q18 17 16.5 18" stroke-width="1.2"/></svg>
+                                        {% else %}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="15.5" cy="8.5" r="2"/><path d="M7 15 Q7 11.5 12 13 Q17 11.5 17 15 Q17 19 12 20 Q7 19 7 15Z"/></svg>
+                                        {% endif %}
+                                    </span>
+                                    <span class="species-chip-label">{{ species.label() }}</span>
+                                </button>
                                 {% endfor %}
-                            </select>
-                            <span class="field-hint">Vous pouvez <a href="{{ path('app_animal_new') }}">ajouter un animal depuis votre profil</a>.</span>
+                            </div>
+
+                            {# Named animal sub-chips — shown when the client has animals of the selected species #}
+                            <div class="named-animals-row" id="named-animals-row" hidden>
+                                <span class="named-animals-label">Votre animal :</span>
+                                <div class="animal-chips" id="animal-chips">
+                                    {% for animal in animals %}
+                                    <button type="button" class="animal-chip" data-id="{{ animal.id }}" data-species="{{ animal.species.value }}">
+                                        <span class="animal-chip-icon">
+                                            {% set sp = animal.species.value %}
+                                            {% if sp == 'dog' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="2.6"/><circle cx="15.5" cy="8.5" r="2.6"/><circle cx="12" cy="13" r="5.5"/><circle cx="9.8" cy="12" r=".7" fill="currentColor" stroke="none"/><circle cx="14.2" cy="12" r=".7" fill="currentColor" stroke="none"/><ellipse cx="12" cy="13.9" rx="1.3" ry=".85" fill="currentColor" stroke="none"/></svg>
+                                            {% elseif sp == 'cat' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 9.5 L6 5.5 L11 8.5"/><path d="M16.5 9.5 L18 5.5 L13 8.5"/><circle cx="12" cy="13.5" r="5.5"/><circle cx="9.8" cy="12.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.2" cy="12.5" r=".7" fill="currentColor" stroke="none"/><path d="M11 14.5 L12 15.5 L13 14.5" stroke-width="1.2"/><path d="M6.5 13.8 L9.8 13.2 M17.5 13.8 L14.2 13.2" stroke-width=".9"/></svg>
+                                            {% elseif sp == 'horse' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="13" rx="5.5" ry="7"/><path d="M8.5 7 L7 4 L10.5 6.5"/><path d="M15.5 7 L17 4 L13.5 6.5"/><circle cx="9.8" cy="11" r=".7" fill="currentColor"/><circle cx="14.2" cy="11" r=".7" fill="currentColor"/></svg>
+                                            {% else %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="15.5" cy="8.5" r="2"/><path d="M7 15 Q7 11.5 12 13 Q17 11.5 17 15 Q17 19 12 20 Q7 19 7 15Z"/></svg>{% endif %}
+                                        </span>
+                                        <span class="animal-chip-name">{{ animal.name }}</span>
+                                    </button>
+                                    {% endfor %}
+                                </div>
+                                <a href="{{ path('app_animal_new', {'returnUrl': app.request.uri}) }}" class="named-animals-add">+ Ajouter</a>
+                            </div>
+
+                            <div id="other-species-field" class="other-species-field" hidden>
+                                <input type="text" id="animalOtherSpecies" name="animalOtherSpecies"
+                                       class="form-control" maxlength="80" autocomplete="off"
+                                       placeholder="Précisez l'espèce (ex : lapin, tortue, serpent...)">
+                            </div>
+
+                            <div id="animal-pricing-info" class="animal-pricing-info" hidden></div>
+                            <input type="hidden" name="animalSpecies" id="animalSpecies-hidden">
+                            <input type="hidden" name="animalId" id="animalId">
+                            <span class="field-hint">Cliquez sur l'espèce concernée, recliquez pour désélectionner.</span>
                         </div>
-                        {% else %}
-                        <div class="form-group form-group--full">
-                            <p class="field-hint">Vous n'avez pas encore d'animal enregistré. <a href="{{ path('app_animal_new') }}">Ajouter un animal</a> pour faciliter vos prochaines réservations.</p>
-                        </div>
-                        {% endif %}
 
                         <div class="form-group form-group--full">
                             <label for="clientNotes">Message / précisions</label>
@@ -129,7 +205,22 @@
                         <h3>Récapitulatif</h3>
                         <p id="summary-service"></p>
                         <p id="summary-price" class="booking-summary-price"></p>
-                        <small style="color:#6b7768;">Le tarif final sera confirmé par Sophie (frais km éventuels, majoration dimanche/fériés).</small>
+                        <div id="summary-km-block" class="booking-summary-km-block" hidden>
+                            <div id="summary-km-row" class="booking-summary-km-row" hidden>
+                                <span>Frais de déplacement</span>
+                                <span id="summary-km-fee"></span>
+                            </div>
+                            <div id="summary-surcharge-row" class="booking-summary-km-row booking-summary-surcharge-row" hidden>
+                                <span id="summary-surcharge-label">Majoration</span>
+                                <span>+3,00 €</span>
+                            </div>
+                            <div class="booking-summary-km-divider"></div>
+                            <div class="booking-summary-total-row">
+                                <span>Total estimé</span>
+                                <span id="summary-km-total" class="booking-summary-total-price"></span>
+                            </div>
+                        </div>
+                        <small id="summary-note" class="booking-summary-note">Le tarif final sera confirmé par Sophie (frais km, majoration dimanche/fériés).</small>
                     </div>
 
                     <div class="booking-form-actions">
@@ -142,6 +233,8 @@
 
                 </form>
 
+                </div>{# /booking-form-section #}
+
             </div>
         </div>
     </div>
@@ -149,35 +242,434 @@
     {% include 'partials/_footer.html.twig' %}
 </div>
 
+{# Modale indisponibilités #}
+{% if upcomingBlocks|length > 0 %}
+<div class="avail-modal-overlay" id="avail-modal" role="dialog" aria-modal="true">
+    <div class="avail-modal">
+        <div class="avail-modal-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+        </div>
+        <h2 class="avail-modal-title">Périodes d'indisponibilité</h2>
+        <p class="avail-modal-intro">Sophie sera absente sur les périodes suivantes. Les créneaux correspondants apparaîtront comme non disponibles.</p>
+        <ul class="avail-modal-list">
+            {% for block in upcomingBlocks %}
+            <li class="avail-modal-item">
+                <span class="avail-modal-reason">{{ block.reason }}</span>
+                <span class="avail-modal-dates">
+                    {% if block.allDay %}
+                        {{ block.startAt|date('d/m/Y') }}{% if block.startAt|date('Y-m-d') != block.endAt|date('Y-m-d') %} &rarr; {{ block.endAt|date('d/m/Y') }}{% endif %}
+                    {% else %}
+                        {{ block.startAt|date('d/m/Y') }}{% if block.startAt|date('Y-m-d') != block.endAt|date('Y-m-d') %} &rarr; {{ block.endAt|date('d/m/Y') }}{% endif %}
+                    {% endif %}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        <button class="avail-modal-close" id="avail-modal-close">J'ai compris</button>
+    </div>
+</div>
+{% endif %}
+
 <script>
 (function () {
-    const radios = document.querySelectorAll('.service-radio');
-    const hiddenInput = document.getElementById('serviceType-hidden');
-    const submitBtn = document.getElementById('btn-submit');
-    const summary = document.getElementById('booking-summary');
+    const radios       = document.querySelectorAll('.service-radio');
+    const hiddenInput  = document.getElementById('serviceType-hidden');
+    const submitBtn    = document.getElementById('btn-submit');
+    const summary      = document.getElementById('booking-summary');
     const summaryService = document.getElementById('summary-service');
-    const summaryPrice = document.getElementById('summary-price');
+    const summaryPrice   = document.getElementById('summary-price');
+    const dateInput    = document.getElementById('preferredDate');
+    const timeInput    = document.getElementById('preferredTime');
+    const slotsContainer  = document.getElementById('slots-container');
+    const slotsPlaceholder = document.getElementById('slots-placeholder');
+    const slotsLoading = document.getElementById('slots-loading');
+    const slotsGrid    = document.getElementById('slots-grid');
 
     const serviceLabels = {
         {% for service in services %}
-        '{{ service.value }}': { label: '{{ service.label() }}', price: '{{ service.basePrice()|number_format(2, ',', ' ') }} €' },
+        '{{ service.value }}': { label: '{{ service.label() }}', price: '{{ service.basePrice()|number_format(2, ',', ' ') }} €', rawPrice: {{ service.basePrice() }}, duration: {{ service.durationMinutes() }} },
         {% endfor %}
     };
+
+    let selectedService   = '';
+    let currentDuration   = 30;
+    let currentBasePrice  = 0;
+    let abortController   = null;
+    let distanceTimer     = null;
+    let currentKmFee      = null;   // null = not computed
+    let currentDistanceKm = 0;
+    let currentSurcharge  = 0;
+    let surchargeReason   = '';
+
+    function parseTimeToMinutes(t) {
+        var p = t.split(':');
+        return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+    }
+    function highlightRange(startTime, duration) {
+        var startMin = parseTimeToMinutes(startTime);
+        var endMin   = startMin + duration;
+        document.querySelectorAll('.slot-btn').forEach(function(b) {
+            if (!b.dataset.time) return;
+            var bMin = parseTimeToMinutes(b.dataset.time);
+            if (bMin > startMin && bMin <= endMin) b.classList.add('slot-btn--range');
+        });
+    }
+    function getTimePeriod(time) {
+        var h = parseInt(time.split(':')[0], 10);
+        return h < 12 ? 'Matin' : h < 18 ? 'Après-midi' : 'Soir';
+    }
+
+    // ---- Distance / km fee + surcharge helpers ----
+    var addressInput       = document.getElementById('address');
+    var distanceStatusEl   = document.getElementById('address-distance-status');
+    var kmBlock            = document.getElementById('summary-km-block');
+    var kmFeeEl            = document.getElementById('summary-km-fee');
+    var kmTotalEl          = document.getElementById('summary-km-total');
+    var summaryNoteEl      = document.getElementById('summary-note');
+
+    function fmtEur(v) { return v.toFixed(2).replace('.', ',') + ' €'; }
+
+    // Jours fériés français (calcul côté client, aucune API nécessaire)
+    function easterSunday(y) {
+        var a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,
+            f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),
+            h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,
+            l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+            mo=Math.floor((h+l-7*m+114)/31),dy=((h+l-7*m+114)%31)+1;
+        return new Date(y,mo-1,dy);
+    }
+    function frenchHolidays(y) {
+        var e=easterSunday(y);
+        function add(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
+        function fmt(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+        return [new Date(y,0,1),add(e,1),new Date(y,4,1),new Date(y,4,8),
+                add(e,39),add(e,49),new Date(y,6,14),new Date(y,7,15),
+                new Date(y,10,1),new Date(y,10,11),new Date(y,11,25)].map(fmt);
+    }
+    function detectSurcharge(dateStr, timeStr) {
+        if (!dateStr) return null;
+        var d=new Date(dateStr+'T12:00:00'), isSun=d.getDay()===0,
+            isHol=frenchHolidays(d.getFullYear()).indexOf(dateStr)!==-1,
+            isEve=timeStr?parseInt(timeStr.split(':')[0],10)>=22:false;
+        if (!isSun && !isHol && !isEve) return null;
+        var r=[];
+        if (isSun) r.push('dimanche');
+        if (isHol) r.push('jour férié');
+        if (isEve) r.push('soirée (22h-00h)');
+        return {amount:3.0, reason:r.join(' + ')};
+    }
+    function updateSurcharge() {
+        var s=detectSurcharge(dateInput?dateInput.value:'', timeInput?timeInput.value:'');
+        currentSurcharge=s?s.amount:0; surchargeReason=s?s.reason:'';
+        rebuildTotal();
+    }
+    function rebuildTotal() {
+        var hasKm=currentKmFee!==null, hasSur=currentSurcharge>0;
+        var kmRow=document.getElementById('summary-km-row');
+        var surRow=document.getElementById('summary-surcharge-row');
+        var sLabel=document.getElementById('summary-surcharge-label');
+        if (kmRow) kmRow.hidden=!hasKm;
+        if (surRow) surRow.hidden=!hasSur;
+        if (hasKm && kmFeeEl) {
+            kmFeeEl.textContent = currentKmFee===0
+                ? '0,00 € (5 premiers km offerts)'
+                : fmtEur(currentKmFee)+' ('+currentDistanceKm+' km, 5 premiers offerts)';
+        }
+        if (hasSur && sLabel) sLabel.textContent='Majoration '+surchargeReason;
+        if (!hasKm && !hasSur) {
+            if (kmBlock) kmBlock.hidden=true;
+            if (summaryNoteEl) summaryNoteEl.textContent='Le tarif final sera confirmé par Sophie (frais km, majoration dimanche/fériés).';
+            return;
+        }
+        var total=currentBasePrice+(hasKm?currentKmFee:0)+currentSurcharge;
+        if (kmTotalEl) kmTotalEl.textContent=fmtEur(total);
+        if (kmBlock) kmBlock.hidden=false;
+        if (summaryNoteEl) summaryNoteEl.textContent=hasKm
+            ?'Tarif estimé — tarif définitif confirmé par Sophie.'
+            :'Tarif estimé — frais de déplacement non calculés.';
+    }
+
+    function clearKmInfo() {
+        currentKmFee=null; currentDistanceKm=0;
+        rebuildTotal();
+        if (distanceStatusEl) { distanceStatusEl.hidden=true; distanceStatusEl.textContent=''; distanceStatusEl.className='address-distance-status'; }
+    }
+
+    function fetchDistance(addr) {
+        if (!addr || addr.length < 10) { clearKmInfo(); return; }
+        if (distanceStatusEl) {
+            distanceStatusEl.hidden = false;
+            distanceStatusEl.className = 'address-distance-status address-distance-status--loading';
+            distanceStatusEl.textContent = 'Calcul de la distance en cours…';
+        }
+        fetch('/api/distance?address=' + encodeURIComponent(addr))
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (!data.found) {
+                    if (distanceStatusEl) {
+                        distanceStatusEl.className = 'address-distance-status address-distance-status--warn';
+                        distanceStatusEl.textContent = 'Adresse non trouvée ou trop imprécise — précisez le numéro et la rue.';
+                        distanceStatusEl.hidden = false;
+                    }
+                    currentKmFee=null; currentDistanceKm=0;
+                    rebuildTotal();
+                    return;
+                }
+                currentDistanceKm = data.distanceKm;
+                currentKmFee      = data.feeEuros;
+                if (distanceStatusEl) {
+                    distanceStatusEl.className = 'address-distance-status address-distance-status--ok';
+                    distanceStatusEl.textContent = data.distanceKm + ' km de Sophie · adresse vérifiée';
+                    distanceStatusEl.hidden = false;
+                }
+                rebuildTotal();
+            })
+            .catch(function() {
+                if (distanceStatusEl) {
+                    distanceStatusEl.className = 'address-distance-status address-distance-status--warn';
+                    distanceStatusEl.textContent = 'Distance non calculable pour le moment.';
+                    distanceStatusEl.hidden = false;
+                }
+                currentKmFee=null; currentDistanceKm=0;
+                rebuildTotal();
+            });
+    }
+
+    if (addressInput) {
+        addressInput.addEventListener('input', function() {
+            clearTimeout(distanceTimer);
+            var val = this.value.trim();
+            if (val.length >= 10) {
+                distanceTimer = setTimeout(function() { fetchDistance(val); }, 900);
+            } else {
+                clearKmInfo();
+            }
+        });
+    }
+    // ---- End distance / km fee + surcharge helpers ----
+
+    function updateSubmitState() {
+        const hasService = !!hiddenInput.value;
+        const hasDate    = !!dateInput.value;
+        submitBtn.disabled = !(hasService && hasDate);
+    }
+
+    function fetchSlots() {
+        if (!selectedService || !dateInput.value) return;
+
+        if (abortController) abortController.abort();
+        abortController = new AbortController();
+
+        slotsContainer.style.display = '';
+        slotsPlaceholder.style.display = 'none';
+        slotsLoading.style.display = '';
+        slotsGrid.innerHTML = '';
+        timeInput.value = '';
+
+        fetch('/api/creneaux?date=' + dateInput.value + '&service=' + selectedService, { signal: abortController.signal })
+            .then(r => r.json())
+            .then(data => {
+                slotsLoading.style.display = 'none';
+                if (!data.slots || data.slots.length === 0) {
+                    slotsGrid.innerHTML = '<p class="field-hint" style="color:#c0392b;">Aucun créneau disponible ce jour.</p>';
+                    return;
+                }
+                var lastPeriod = null;
+                data.slots.forEach(function(slot) {
+                    var period = getTimePeriod(slot.time);
+                    if (period !== lastPeriod) {
+                        var sep = document.createElement('div');
+                        sep.className = 'slots-period-separator';
+                        sep.textContent = period;
+                        slotsGrid.appendChild(sep);
+                        lastPeriod = period;
+                    }
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = slot.label;
+                    btn.dataset.time = slot.time;
+                    btn.className = 'slot-btn' + (slot.available ? ' slot-btn--available' : ' slot-btn--taken');
+                    btn.disabled = !slot.available;
+                    btn.title = slot.available ? 'Disponible' : 'Créneau indisponible';
+                    if (slot.available) {
+                        btn.addEventListener('click', function () {
+                            document.querySelectorAll('.slot-btn--selected, .slot-btn--range').forEach(function(b) {
+                                b.classList.remove('slot-btn--selected', 'slot-btn--range');
+                            });
+                            btn.classList.add('slot-btn--selected');
+                            timeInput.value = slot.time;
+                            highlightRange(slot.time, currentDuration);
+                            updateSurcharge();
+                        });
+                    }
+                    slotsGrid.appendChild(btn);
+                });
+            })
+            .catch(err => {
+                if (err.name === 'AbortError') return;
+                slotsLoading.style.display = 'none';
+                slotsGrid.innerHTML = '<p class="field-hint" style="color:#c0392b;">Erreur lors du chargement des créneaux.</p>';
+            });
+    }
+
+    const addressGroup = document.querySelector('[for="address"]')?.closest('.form-group');
+    const onlineNotice = document.getElementById('online-visio-notice');
+    const ONLINE_SERVICES = ['naturo_online'];
+
+    function toggleAddressField(serviceValue) {
+        var isOnline = ONLINE_SERVICES.includes(serviceValue);
+        if (addressGroup) addressGroup.style.display = isOnline ? 'none' : '';
+        if (onlineNotice) onlineNotice.hidden = !isOnline;
+        if (isOnline) clearKmInfo();
+    }
 
     radios.forEach(function (radio) {
         radio.addEventListener('change', function () {
             document.querySelectorAll('.service-card').forEach(c => c.classList.remove('service-card--selected'));
             this.closest('.service-card').classList.add('service-card--selected');
-            hiddenInput.value = this.value;
-            submitBtn.disabled = false;
-            const s = serviceLabels[this.value];
+            hiddenInput.value  = this.value;
+            selectedService    = this.value;
+            currentDuration    = (serviceLabels[this.value] || {}).duration || 30;
+            currentBasePrice   = (serviceLabels[this.value] || {}).rawPrice || 0;
+            var s = serviceLabels[this.value];
             if (s) {
                 summaryService.textContent = s.label;
-                summaryPrice.textContent = 'Tarif de base : ' + s.price;
+                summaryPrice.textContent   = 'Tarif de base : ' + s.price;
                 summary.style.display = '';
+            }
+            toggleAddressField(this.value);
+            // Re-evaluate km fee and surcharge for the selected date
+            clearKmInfo();
+            updateSurcharge();
+            if (!ONLINE_SERVICES.includes(this.value) && addressInput && addressInput.value.trim().length >= 10) {
+                fetchDistance(addressInput.value.trim());
+            }
+            // Reveal form section on first service selection
+            var formSection = document.getElementById('booking-form-section');
+            if (formSection && formSection.hidden) {
+                formSection.hidden = false;
+            }
+            updateSubmitState();
+            fetchSlots();
+            // Scroll vers le haut du formulaire (sous la grille tarifaire sticky)
+            setTimeout(function () {
+                var target = document.querySelector('.pricing-ref');
+                if (target) {
+                    var navH = 70;
+                    var top = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+                    window.scrollTo({ top: top, behavior: 'smooth' });
+                }
+            }, 80);
+        });
+    });
+
+    dateInput.addEventListener('change', function () {
+        timeInput.value = '';
+        document.querySelectorAll('.slot-btn--selected').forEach(b => b.classList.remove('slot-btn--selected'));
+        updateSubmitState();
+        fetchSlots();
+        updateSurcharge();
+    });
+
+    // Animal species + named animal chips
+    const speciesChips      = document.querySelectorAll('.species-chip');
+    const animalChips       = document.querySelectorAll('.animal-chip');
+    const animalSpeciesInput = document.getElementById('animalSpecies-hidden');
+    const animalIdInput     = document.getElementById('animalId');
+    const animalPricingInfo = document.getElementById('animal-pricing-info');
+    const namedAnimalsRow   = document.getElementById('named-animals-row');
+
+    // Animals grouped by species, injected from PHP
+    const animalsBySpecies = {{ animalsBySpecies|json_encode|raw }};
+
+    const pricingData = {
+        dog:     { cat: 'compagnie', label: 'Animaux de compagnie', slots: '30 min : 12,00 € · 45 min : 15,00 € · 60 min : 18,00 €', note: '+1 €/animal supp. (dès le 4e) · +3 € dimanche / fériés' },
+        cat:     { cat: 'compagnie', label: 'Animaux de compagnie', slots: '30 min : 12,00 € · 45 min : 15,00 € · 60 min : 18,00 €', note: '+1 €/animal supp. (dès le 4e) · +3 € dimanche / fériés' },
+        nac:     { cat: 'compagnie', label: 'Animaux de compagnie', slots: '30 min : 12,00 € · 45 min : 15,00 € · 60 min : 18,00 €', note: '+1 €/animal supp. (dès le 4e) · +3 € dimanche / fériés' },
+        horse:   { cat: 'equide',    label: 'Équidés',              slots: '30 min : 15,00 € · 60 min : 25,00 €', note: '+3 €/équidé supp. · +3 € dimanche / fériés' },
+        poultry: { cat: 'minifarm',  label: 'Mini-ferme / Basse-cour', slots: '30 min : 15,00 € · 45 min : 20,00 € · 60 min : 25,00 €', note: '+1 €/animal supp. · +3 € dimanche / fériés' },
+        other:   { cat: 'compagnie', label: 'Animaux de compagnie', slots: '30 min : 12,00 € · 45 min : 15,00 € · 60 min : 18,00 €', note: '+1 €/animal supp. (dès le 4e) · +3 € dimanche / fériés' },
+    };
+
+    const otherSpeciesField = document.getElementById('other-species-field');
+    const otherSpeciesInput = document.getElementById('animalOtherSpecies');
+
+    function clearAnimalSelection() {
+        speciesChips.forEach(c => c.classList.remove('species-chip--selected'));
+        animalChips.forEach(c => c.classList.remove('animal-chip--selected'));
+        if (animalSpeciesInput) animalSpeciesInput.value = '';
+        if (animalIdInput) animalIdInput.value = '';
+        if (animalPricingInfo) animalPricingInfo.hidden = true;
+        if (namedAnimalsRow) namedAnimalsRow.hidden = true;
+        if (otherSpeciesField) otherSpeciesField.hidden = true;
+        if (otherSpeciesInput) otherSpeciesInput.value = '';
+        document.querySelectorAll('.pricing-ref-cat').forEach(el => el.classList.remove('pricing-ref-cat--active'));
+    }
+
+    function showPricing(species) {
+        if (!animalPricingInfo) return;
+        const p = pricingData[species] || pricingData.other;
+        animalPricingInfo.innerHTML =
+            '<span class="animal-pricing-label">' + p.label + '</span>' +
+            '<span class="animal-pricing-slots">' + p.slots + '</span>' +
+            '<span class="animal-pricing-note">' + p.note + '</span>' +
+            '<span class="animal-pricing-previsit">Nouveau client ? Une pré-visite est obligatoire avant la première prestation (10 €).</span>';
+        animalPricingInfo.hidden = false;
+        document.querySelectorAll('.pricing-ref-cat').forEach(el =>
+            el.classList.toggle('pricing-ref-cat--active', el.dataset.cat === p.cat)
+        );
+    }
+
+    function showNamedAnimals(species) {
+        if (!namedAnimalsRow) return;
+        const ownedForSpecies = animalsBySpecies[species] || [];
+        // Hide all chips, show only those matching the species
+        animalChips.forEach(function (chip) {
+            chip.hidden = chip.dataset.species !== species;
+        });
+        if (ownedForSpecies.length > 0) {
+            namedAnimalsRow.hidden = false;
+        } else {
+            namedAnimalsRow.hidden = true;
+        }
+    }
+
+    speciesChips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+            const species = this.dataset.species;
+            const wasSelected = this.classList.contains('species-chip--selected');
+            clearAnimalSelection();
+            if (!wasSelected) {
+                this.classList.add('species-chip--selected');
+                if (animalSpeciesInput) animalSpeciesInput.value = species;
+                showPricing(species);
+                showNamedAnimals(species);
+                if (otherSpeciesField) {
+                    otherSpeciesField.hidden = (species !== 'other');
+                    if (species === 'other' && otherSpeciesInput) otherSpeciesInput.focus();
+                }
             }
         });
     });
+
+    animalChips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+            const wasSelected = this.classList.contains('animal-chip--selected');
+            animalChips.forEach(c => c.classList.remove('animal-chip--selected'));
+            if (animalIdInput) animalIdInput.value = '';
+            if (!wasSelected) {
+                this.classList.add('animal-chip--selected');
+                if (animalIdInput) animalIdInput.value = this.dataset.id;
+            }
+        });
+    });
+
+    // Modale indisponibilités
+    const modal = document.getElementById('avail-modal');
+    if (modal) {
+        document.getElementById('avail-modal-close').addEventListener('click', function () { modal.remove(); });
+        modal.addEventListener('click', function (e) { if (e.target === modal) modal.remove(); });
+    }
 })();
 </script>
 {% endblock %}

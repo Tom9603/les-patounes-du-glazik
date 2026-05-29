@@ -7,11 +7,11 @@
   <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
       <h3>Facture {{ invoice.number }}</h3>
-      <span class="badge bg-{{ invoice.status.badgeClass() }} fs-6 me-1">{{ invoice.status.label() }}</span>
+      <span class="badge text-bg-{{ invoice.status.badgeClass() }} fs-6 me-1">{{ invoice.status.label() }}</span>
       {% if invoice.isSigned() %}
-        <span class="badge bg-success fs-6"><i class="fa fa-pen-to-square"></i> Signée le {{ invoice.signedAt|date('d/m/Y à H:i') }}</span>
+        <span class="badge text-bg-success fs-6"><i class="fa fa-pen-to-square"></i> Signée le {{ invoice.signedAt|date('d/m/Y à H:i') }}</span>
       {% else %}
-        <span class="badge bg-secondary fs-6">Non signée</span>
+        <span class="badge text-bg-secondary fs-6">Non signée</span>
       {% endif %}
     </div>
     <div class="d-flex gap-2 flex-wrap justify-content-end">
@@ -26,13 +26,18 @@
         </button>
       </form>
       {% endif %}
-      {% if invoice.status.value != 'paid' %}
+      {% if invoice.status.value != 'paid' and invoice.status.value != 'refunded' %}
       <form method="post" action="{{ path('app_admin_invoice_mark_paid', {id: invoice.id}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('invoice-paid-' ~ invoice.id) }}">
         <button class="btn btn-success" onclick="return confirm('Marquer comme payée ?')">
           <i class="fa fa-check"></i> Marquer payée
         </button>
       </form>
+      {% endif %}
+      {% if invoice.status.value == 'paid' %}
+      <a href="{{ path('app_admin_invoice_refund_form', {id: invoice.id}) }}" class="btn btn-outline-warning">
+        <i class="fa fa-rotate-left"></i> Rembourser
+      </a>
       {% endif %}
     </div>
   </div>

@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -19,6 +20,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MemberController extends AbstractController
 {
+    public function __construct(
+        #[Autowire('%env(MAILER_FROM)%')]
+        private string $mailerFrom,
+    ) {}
+
     #[Route('/inscription', name: 'app_register')]
     public function register(
         Request $request,
@@ -35,15 +41,21 @@ class MemberController extends AbstractController
         $error = null;
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('register', $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide. Rechargez la page et réessayez.');
+                return $this->redirectToRoute('app_register');
+            }
+
             $firstName = trim($request->request->get('firstName', ''));
             $lastName  = trim($request->request->get('lastName', ''));
             $username  = trim($request->request->get('username', ''));
             $email     = trim($request->request->get('email', ''));
+            $phone     = trim($request->request->get('phone', ''));
             $password  = $request->request->get('password', '');
             $confirm   = $request->request->get('confirm', '');
             $acceptCgu = $request->request->get('acceptCgu');
 
-            if (!$firstName || !$lastName || !$username || !$email || !$password) {
+            if (!$firstName || !$lastName || !$username || !$email || !$phone || !$password) {
                 $error = 'Tous les champs obligatoires doivent être remplis.';
             } elseif (!$acceptCgu) {
                 $error = 'Vous devez accepter les CGU et la politique de confidentialité pour créer un compte.';
@@ -65,6 +77,7 @@ class MemberController extends AbstractController
                 $member->setLastName($lastName);
                 $member->setUsername($username);
                 $member->setEmail($email);
+                $member->setPhone($phone);
                 $member->setPassword($hasher->hashPassword($member, $password));
 
                 $em->persist($member);
@@ -75,7 +88,7 @@ class MemberController extends AbstractController
                 ], UrlGeneratorInterface::ABSOLUTE_URL);
 
                 $verificationEmail = (new TemplatedEmail())
-                    ->from($_ENV['MAILER_FROM'] ?? 'noreply@lespatounesduglaizik.fr')
+                    ->from($this->mailerFrom)
                     ->to($member->getEmail())
                     ->subject('Confirmez votre inscription - Les patounes du glazik')
                     ->htmlTemplate('emails/verify.html.twig')
@@ -301,6 +314,11 @@ class MemberController extends AbstractController
         $emailSent = false;
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('forgot-password', $request->request->get('_token'))) {
+                $this->addFlash('error', 'Token de sécurité invalide. Rechargez la page et réessayez.');
+                return $this->redirectToRoute('app_forgot_password');
+            }
+
             $email = trim($request->request->get('email', ''));
             if ($email) {
                 $member = $em->getRepository(Member::class)->findOneBy(['email' => $email]);
@@ -316,7 +334,7 @@ class MemberController extends AbstractController
 
                     $mailer->send(
                         (new TemplatedEmail())
-                            ->from($_ENV['MAILER_FROM'] ?? 'noreply@lespatounesduglaizik.fr')
+                            ->from($this->mailerFrom)
                             ->to($member->getEmail())
                             ->subject('Réinitialisation de votre mot de passe - Les patounes du glazik')
                             ->htmlTemplate('emails/reset_password.html.twig')
@@ -368,6 +386,56 @@ class MemberController extends AbstractController
         }
 
         return $this->render('member/reset_password.html.twig', ['error' => $error, 'token' => $token]);
+    }
+
+    #[Route('/profil/mes-donnees', name: 'app_member_gdpr_export', methods: ['GET'])]
+    public function gdprExport(BookingRepository $bookingRepo): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $bookings = array_map(function ($booking) {
+            return [
+                'service'        => $booking->getServiceType()->label(),
+                'date_souhaitee' => $booking->getPreferredDate()->format('Y-m-d'),
+                'date_confirmee' => $booking->getScheduledAt()?->format('Y-m-d H:i'),
+                'statut'         => $booking->getStatus()->label(),
+                'adresse'        => $booking->getAddress(),
+                'prix'           => $booking->getPrice(),
+                'notes_client'   => $booking->getClientNotes(),
+                'cree_le'        => $booking->getCreatedAt()->format('Y-m-d H:i'),
+            ];
+        }, $bookingRepo->findByMemberOrderedByDate($member));
+
+        $animals = array_map(function ($animal) {
+            return [
+                'nom'           => $animal->getName(),
+                'espece'        => $animal->getSpecies()->label(),
+                'race'          => $animal->getBreed(),
+                'date_naissance' => $animal->getBirthdate()?->format('Y-m-d'),
+            ];
+        }, $member->getAnimals()->toArray());
+
+        $data = [
+            'export_date' => (new \DateTimeImmutable())->format('Y-m-d H:i'),
+            'profil'      => [
+                'prenom'    => $member->getFirstName(),
+                'nom'       => $member->getLastName(),
+                'pseudo'    => $member->getUsername(),
+                'email'     => $member->getEmail(),
+                'telephone' => $member->getPhone(),
+                'inscrit_le' => $member->getCreatedAt()->format('Y-m-d'),
+            ],
+            'animaux'     => $animals,
+            'reservations' => $bookings,
+        ];
+
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        return new Response($json, 200, [
+            'Content-Type'        => 'application/json; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="mes-donnees-lespatounes-' . date('Y-m-d') . '.json"',
+        ]);
     }
 
     #[Route('/profil/delete', name: 'app_profile_delete', methods: ['POST'])]
