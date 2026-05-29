@@ -2,6 +2,9 @@
 
 {% block page_title %}Agenda{% endblock %}
 
+{# Supprime la contrainte max-width d'EasyAdmin sur cette page #}
+{% block body_class 'page-content ea-content-width-full' %}
+
 {% block head_stylesheets %}
     {{ parent() }}
     <style>
