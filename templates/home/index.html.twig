@@ -635,32 +635,6 @@
         </div>
     </section>
 
-    <!-- Galerie -->
-    {% if photos is not empty %}
-    <section class="gallery-section">
-        <div class="container">
-            <div class="section-header animate-on-scroll">
-                <h3 class="section-title">Galerie</h3>
-                <p class="section-subtitle">Quelques moments partagés</p>
-            </div>
-            <div class="gallery-grid">
-                {% for photo in photos %}
-                    <div class="gallery-item animate-on-scroll" style="--delay: {{ loop.index0 * 0.07 }}s">
-                        <img
-                            src="{{ asset('uploads/photos/' ~ photo.filename) }}"
-                            alt="{{ photo.alt ?? 'Photo galerie Les patounes du glazik' }}"
-                            loading="lazy"
-                        >
-                        {% if photo.caption %}
-                            <div class="gallery-caption">{{ photo.caption }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container-small">
