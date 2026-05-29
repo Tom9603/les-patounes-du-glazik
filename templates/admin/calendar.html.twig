@@ -5,28 +5,169 @@
 {% block head_stylesheets %}
     {{ parent() }}
     <style>
+        /* Fait prendre toute la hauteur disponible au calendrier */
+        .content-wrapper,
+        .content-wrapper > .content {
+            height: 100%;
+        }
+
+        #cal-page-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 56px);
+            padding: 1.25rem 1.5rem 1rem;
+            box-sizing: border-box;
+        }
+
+        .calendar-legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: .85rem;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+        .calendar-legend span {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: .82rem;
+            color: #6b7280;
+        }
+        .legend-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
         #admin-calendar {
+            flex: 1;
+            min-height: 0;
             background: #fff;
             border-radius: 10px;
-            padding: 1.5rem;
+            padding: 1.25rem 1.5rem;
             box-shadow: 0 1px 4px rgba(0,0,0,.08);
         }
+
         .fc-event { cursor: pointer; font-size: .82rem; }
-        .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 600; }
-        .calendar-legend { display: flex; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-        .calendar-legend span { display: flex; align-items: center; gap: .4rem; font-size: .85rem; }
-        .legend-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .fc-toolbar-title { font-size: 1.05rem !important; font-weight: 600; }
+        .fc .fc-toolbar { margin-bottom: .75rem; }
+
+        /* Modale */
+        #cal-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .65);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        #cal-modal {
+            background: #16213e;
+            border: 1px solid #2a2a4a;
+            border-radius: 10px;
+            padding: 1.6rem 2rem 1.5rem;
+            max-width: 500px;
+            width: 92%;
+            color: #e0e0e0;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .6);
+        }
+        #cal-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.1rem;
+        }
+        #cal-modal-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        #cal-modal-close {
+            background: none;
+            border: none;
+            color: #6b7a9a;
+            cursor: pointer;
+            font-size: 1.4rem;
+            line-height: 1;
+            padding: 0 0 0 1rem;
+            transition: color .15s;
+        }
+        #cal-modal-close:hover { color: #fff; }
+        #cal-modal-body {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: .45rem 1rem;
+            font-size: .875rem;
+            margin: 0;
+        }
+        #cal-modal-body dt {
+            color: #8896b0;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        #cal-modal-body dd {
+            margin: 0;
+            color: #e0e0e0;
+            word-break: break-word;
+        }
+        #cal-modal-footer {
+            margin-top: 1.35rem;
+            display: flex;
+            gap: .6rem;
+            justify-content: flex-end;
+        }
+        #cal-modal-link {
+            padding: .45rem 1.1rem;
+            background: #3b5bdb;
+            border-radius: 6px;
+            color: #fff;
+            text-decoration: none;
+            font-size: .855rem;
+            font-weight: 600;
+            transition: background .2s;
+        }
+        #cal-modal-link:hover { background: #2f4ac9; }
+        #cal-modal-cancel {
+            padding: .45rem 1.1rem;
+            background: transparent;
+            border: 1px solid #3a4a6a;
+            border-radius: 6px;
+            color: #9aaccf;
+            cursor: pointer;
+            font-size: .855rem;
+            transition: border-color .2s, color .2s;
+        }
+        #cal-modal-cancel:hover { border-color: #6b7a9a; color: #c0cce0; }
     </style>
 {% endblock %}
 
 {% block main %}
-<div style="padding: 1.5rem;">
+<div id="cal-page-wrapper">
     <div class="calendar-legend">
         <span><i class="legend-dot" style="background:#f59e0b"></i> En attente</span>
         <span><i class="legend-dot" style="background:#10b981"></i> Confirmée</span>
         <span><i class="legend-dot" style="background:#6b7280"></i> Terminée</span>
     </div>
     <div id="admin-calendar"></div>
+</div>
+
+<!-- Modale de détail réservation -->
+<div id="cal-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="cal-modal-title">
+    <div id="cal-modal">
+        <div id="cal-modal-header">
+            <h5 id="cal-modal-title"></h5>
+            <button id="cal-modal-close" aria-label="Fermer">&times;</button>
+        </div>
+        <dl id="cal-modal-body"></dl>
+        <div id="cal-modal-footer">
+            <a id="cal-modal-link" href="#">Voir la réservation</a>
+            <button id="cal-modal-cancel" type="button">Fermer</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
