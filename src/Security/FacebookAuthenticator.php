@@ -13,12 +13,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 class FacebookAuthenticator extends OAuth2Authenticator
 {
+    use TargetPathTrait;
+
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
         private readonly EntityManagerInterface $em,
@@ -80,9 +83,15 @@ class FacebookAuthenticator extends OAuth2Authenticator
     {
         $user = $token->getUser();
         if ($user instanceof Member && in_array('ROLE_ADMIN', $user->getRoles())) {
+            $this->removeTargetPath($request->getSession(), $firewallName);
             return new RedirectResponse($this->router->generate('admin'));
         }
-        return new RedirectResponse($this->router->generate('app_blog'));
+
+        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+            return new RedirectResponse($targetPath);
+        }
+
+        return new RedirectResponse($this->router->generate('app_home'));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response

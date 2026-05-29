@@ -18,15 +18,19 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
     {
+        $user = $token->getUser();
+
+        // Les admins vont toujours vers le panneau d'administration
+        if ($user instanceof Member && in_array('ROLE_ADMIN', $user->getRoles())) {
+            $this->removeTargetPath($request->getSession(), 'main');
+            return new RedirectResponse($this->router->generate('admin'));
+        }
+
+        // Pour les utilisateurs normaux : respecter la page demandée avant la redirection vers le login
         if ($targetPath = $this->getTargetPath($request->getSession(), 'main')) {
             return new RedirectResponse($targetPath);
         }
 
-        $user = $token->getUser();
-        if ($user instanceof Member && in_array('ROLE_ADMIN', $user->getRoles())) {
-            return new RedirectResponse($this->router->generate('admin'));
-        }
-
-        return new RedirectResponse($this->router->generate('app_blog'));
+        return new RedirectResponse($this->router->generate('app_home'));
     }
 }
