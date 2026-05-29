@@ -56,8 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `<dt style="color:#9aaccf;white-space:nowrap;">${label}</dt><dd style="margin:0;color:#e0e0e0;">${value}</dd>`
         ).join('');
 
-        const adminUrl = `/admin?crudControllerFqcn=App%5CController%5CAdmin%5CBookingCrudController&crudAction=detail&entityId=${p.bookingId}`;
-        modalLink.href = adminUrl;
+        modalLink.href = `/admin/booking/${p.bookingId}`;
 
         backdrop.style.display = 'flex';
         btnCancel.focus();
