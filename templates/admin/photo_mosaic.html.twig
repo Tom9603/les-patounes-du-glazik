@@ -58,7 +58,7 @@
 <style>
 .photo-mosaic {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1.25rem;
     padding: 0.25rem 0 1rem;
 }
@@ -121,16 +121,19 @@
 }
 .photo-mosaic-actions {
     display: flex;
-    gap: .4rem;
-    padding: .5rem .75rem .65rem;
+    gap: .5rem;
+    padding: .65rem .85rem .75rem;
     border-top: 1px solid #f3f4f6;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
 .photo-mosaic-actions a,
 .photo-mosaic-actions button {
-    font-size: .78rem;
-    padding: .3rem .7rem;
-    border-radius: 5px;
+    font-size: .82rem;
+    padding: .4rem .9rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 </style>
 
