@@ -40,12 +40,18 @@ class AnimalCrudController extends AbstractCrudController
         yield TextField::new('name')->setLabel('Nom');
         yield ChoiceField::new('species')
             ->setLabel('Espèce')
-            ->setChoices(AnimalSpecies::choices())
+            ->setChoices(array_combine(
+                array_map(fn(AnimalSpecies $c) => $c->label(), AnimalSpecies::cases()),
+                AnimalSpecies::cases()
+            ))
             ->renderAsBadges(false);
         yield TextField::new('breed')->setLabel('Race')->setRequired(false);
         yield ChoiceField::new('sex')
             ->setLabel('Sexe')
-            ->setChoices(AnimalSex::choices())
+            ->setChoices(array_combine(
+                array_map(fn(AnimalSex $c) => $c->label(), AnimalSex::cases()),
+                AnimalSex::cases()
+            ))
             ->setRequired(false);
         yield DateField::new('birthDate')->setLabel('Date de naissance')->setRequired(false);
         yield TextField::new('color')->setLabel('Couleur')->setRequired(false);
