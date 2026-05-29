@@ -921,14 +921,17 @@ body {
 .carousel-track {
     display: flex;
     height: 100%;
+    // La largeur totale = nombre de slides × 100% du carousel (via var CSS)
+    width: calc(var(--carousel-total, 1) * 100%);
     transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
 }
 
 .carousel-slide {
-    /* La largeur est calculée et appliquée en pixels par le JS */
     flex-shrink: 0;
     height: 100%;
+    // Chaque slide = 1/N de la track = exactement 100% du carousel
+    width: calc(100% / var(--carousel-total, 1));
 
     img {
         width: 100%;

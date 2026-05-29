@@ -711,14 +711,8 @@
         slides.forEach(function (s) { track.appendChild(s); });
         slides = Array.from(track.children);
 
-        // Dimensionnement en pixels : chaque slide = largeur exacte du carousel
-        function sizeSlides() {
-            var w = carousel.offsetWidth;
-            track.style.width = (total * w) + 'px';
-            slides.forEach(function (s) { s.style.width = w + 'px'; });
-        }
-        sizeSlides();
-        window.addEventListener('resize', function () { sizeSlides(); goTo(current); });
+        // Injecter le nombre de slides en variable CSS → le CSS calcule les largeurs
+        track.style.setProperty('--carousel-total', total);
 
         // Points de navigation
         slides.forEach(function (_, idx) {
@@ -737,7 +731,8 @@
 
         function goTo(n) {
             current = ((n % total) + total) % total;
-            track.style.transform = 'translateX(-' + (current * carousel.offsetWidth) + 'px)';
+            // translateX en % de la track : -current/total*100% = -current × largeur d'une slide
+            track.style.transform = 'translateX(calc(-' + current + ' / ' + total + ' * 100%))';
             dots.forEach(function (d, i) { d.classList.toggle('is-active', i === current); });
         }
 
