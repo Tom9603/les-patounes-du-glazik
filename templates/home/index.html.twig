@@ -739,8 +739,8 @@
         function next() { goTo(current + 1); }
         function prev() { goTo(current - 1); }
 
-        function startAuto() { autoTimer = setInterval(next, 3000); }
-        function stopAuto()  { clearInterval(autoTimer); }
+        function startAuto() { clearInterval(autoTimer); autoTimer = setInterval(next, 3000); }
+        function stopAuto()  { clearInterval(autoTimer); autoTimer = null; }
 
         document.getElementById('carouselNext').addEventListener('click', function () { stopAuto(); next(); startAuto(); });
         document.getElementById('carouselPrev').addEventListener('click', function () { stopAuto(); prev(); startAuto(); });
