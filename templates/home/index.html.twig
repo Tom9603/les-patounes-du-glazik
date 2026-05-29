@@ -696,16 +696,14 @@
     {% if photos is not empty %}
     <script>
     (function () {
-        var track   = document.getElementById('carouselTrack');
+        var track    = document.getElementById('carouselTrack');
         var dotsWrap = document.getElementById('carouselDots');
         var carousel = document.getElementById('photoCarousel');
         if (!track || !carousel) return;
 
-        // Collecte et mélange aléatoire des slides
+        // Mélange aléatoire (Fisher-Yates)
         var slides = Array.from(track.children);
         var total  = slides.length;
-        if (total < 2) return;
-
         for (var i = total - 1; i > 0; i--) {
             var j = Math.floor(Math.random() * (i + 1));
             var tmp = slides[i]; slides[i] = slides[j]; slides[j] = tmp;
@@ -713,7 +711,16 @@
         slides.forEach(function (s) { track.appendChild(s); });
         slides = Array.from(track.children);
 
-        // Génération des points de navigation
+        // Dimensionnement en pixels : chaque slide = largeur exacte du carousel
+        function sizeSlides() {
+            var w = carousel.offsetWidth;
+            track.style.width = (total * w) + 'px';
+            slides.forEach(function (s) { s.style.width = w + 'px'; });
+        }
+        sizeSlides();
+        window.addEventListener('resize', function () { sizeSlides(); goTo(current); });
+
+        // Points de navigation
         slides.forEach(function (_, idx) {
             var dot = document.createElement('button');
             dot.className = 'carousel-dot' + (idx === 0 ? ' is-active' : '');
@@ -724,20 +731,20 @@
             dotsWrap.appendChild(dot);
         });
 
-        var dots     = Array.from(dotsWrap.children);
-        var current  = 0;
+        var dots      = Array.from(dotsWrap.children);
+        var current   = 0;
         var autoTimer = null;
 
         function goTo(n) {
             current = ((n % total) + total) % total;
-            track.style.transform = 'translateX(-' + (current * 100) + '%)';
+            track.style.transform = 'translateX(-' + (current * carousel.offsetWidth) + 'px)';
             dots.forEach(function (d, i) { d.classList.toggle('is-active', i === current); });
         }
 
         function next() { goTo(current + 1); }
         function prev() { goTo(current - 1); }
 
-        function startAuto() { autoTimer = setInterval(next, 4500); }
+        function startAuto() { autoTimer = setInterval(next, 3000); }
         function stopAuto()  { clearInterval(autoTimer); }
 
         document.getElementById('carouselNext').addEventListener('click', function () { stopAuto(); next(); startAuto(); });
@@ -746,7 +753,7 @@
         carousel.addEventListener('mouseenter', stopAuto);
         carousel.addEventListener('mouseleave', startAuto);
 
-        // Support tactile / swipe
+        // Swipe tactile
         var touchStartX = 0;
         carousel.addEventListener('touchstart', function (e) {
             touchStartX = e.touches[0].clientX;

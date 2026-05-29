@@ -926,9 +926,9 @@ body {
 }
 
 .carousel-slide {
-    min-width: 100%;
-    height: 100%;
+    /* La largeur est calculée et appliquée en pixels par le JS */
     flex-shrink: 0;
+    height: 100%;
 
     img {
         width: 100%;
@@ -1067,7 +1067,7 @@ body {
 
 // About section : layout 3 colonnes avec carousel intégré
 .about-grid--carousel {
-    grid-template-columns: 1fr 1.2fr 1fr;
+    grid-template-columns: 1fr 1.15fr 1.15fr;
     align-items: center;
     gap: 2.5rem;
 }
