@@ -1065,43 +1065,25 @@ body {
     font-weight: 500;
 }
 
-// About section : layout avec carousel intégré
+// About section : layout 3 colonnes avec carousel intégré
 .about-grid--carousel {
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
-    gap: 3rem;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    align-items: center;
+    gap: 2.5rem;
 }
 
 .about-carousel-col {
     display: flex;
     flex-direction: column;
 
-    // Le carousel s'étire pour remplir toute la hauteur de la colonne
     .carousel {
-        flex: 1;
         aspect-ratio: unset;
-        min-height: 300px;
+        height: 420px;
     }
 
     .carousel-dots {
         flex-shrink: 0;
         margin-top: 0.85rem;
-    }
-}
-
-.about-right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-    justify-content: center;
-}
-
-.about-image--compact {
-    border-radius: $border-radius-xl;
-    overflow: hidden;
-
-    .about-img {
-        height: 260px;
     }
 }
 
@@ -2971,6 +2953,18 @@ body {
     }
 }
 
+// Tablette : 3 colonnes → 2 colonnes (carousel masqué)
+@media (min-width: 768px) and (max-width: 1023px) {
+    .about-grid--carousel {
+        grid-template-columns: 1fr 1.2fr;
+        gap: 2rem;
+    }
+
+    .about-carousel-col {
+        display: none;
+    }
+}
+
 // Responsive
 @media (max-width: 767px) {
     .navbar-content {
@@ -2991,13 +2985,8 @@ body {
     }
 
     .about-carousel-col .carousel {
-        min-height: 260px;
+        height: auto;
         aspect-ratio: 4 / 3;
-        flex: unset;
-    }
-
-    .about-image--compact .about-img {
-        height: 220px;
     }
 
     .gallery-grid {
