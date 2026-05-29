@@ -27,7 +27,8 @@ class PhotoCrudController extends AbstractCrudController
             ->setDefaultSort(['position' => 'ASC', 'createdAt' => 'DESC'])
             ->setPageTitle(Crud::PAGE_INDEX, 'Galerie photos')
             ->setPageTitle(Crud::PAGE_NEW, 'Ajouter une photo')
-            ->setPageTitle(Crud::PAGE_EDIT, 'Modifier la photo');
+            ->setPageTitle(Crud::PAGE_EDIT, 'Modifier la photo')
+            ->overrideTemplate('crud/index', 'admin/photo_mosaic.html.twig');
     }
 
     public function configureFields(string $pageName): iterable
@@ -42,7 +43,8 @@ class PhotoCrudController extends AbstractCrudController
         yield ImageField::new('filename')
             ->setLabel('Aperçu')
             ->setBasePath('/uploads/photos/')
-            ->onlyOnIndex();
+            ->onlyOnIndex()
+            ->setSortable(false);
 
         yield TextField::new('alt')
             ->setLabel('Texte alternatif')

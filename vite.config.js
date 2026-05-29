@@ -9,6 +9,7 @@ export default defineConfig({
                 app: './assets/styles/app.scss',
                 'admin-calendar': './assets/js/admin-calendar.js',
                 'admin-stats': './assets/js/admin-stats.js',
+                'admin-image-preview': './assets/js/admin-image-preview.js',
                 'signature': './assets/js/signature.js',
             },
             output: {

@@ -1,0 +1,137 @@
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{% block main %}
+{% set ea = ea() %}
+
+{% if entities is empty %}
+    <div style="padding:3rem 1rem;text-align:center;color:#6b7280;">
+        <p style="font-size:1rem;margin-bottom:.5rem;">Aucune photo dans la galerie.</p>
+        <p style="font-size:.875rem;">Cliquez sur "Ajouter une photo" pour commencer.</p>
+    </div>
+{% else %}
+    <div class="photo-mosaic">
+        {% for entity in entities %}
+            {% if entity.isAccessible %}
+            {% set photo = entity.instance %}
+            <div class="photo-mosaic-card">
+                <div class="photo-mosaic-img-wrap">
+                    <img
+                        src="/uploads/photos/{{ photo.filename }}"
+                        alt="{{ photo.alt ?? '' }}"
+                        loading="lazy"
+                    >
+                </div>
+                <div class="photo-mosaic-body">
+                    {% if photo.caption %}
+                        <p class="photo-mosaic-caption">{{ photo.caption }}</p>
+                    {% endif %}
+                    {% if photo.alt %}
+                        <p class="photo-mosaic-alt" title="Texte alternatif">{{ photo.alt }}</p>
+                    {% endif %}
+                    <span class="photo-mosaic-pos">Ordre : {{ photo.position }}</span>
+                </div>
+                <div class="photo-mosaic-actions">
+                    {% for action in entity.actions %}
+                        {% if not action.isActionGroup %}
+                            {{ include(action.templatePath, {action: action, entity: entity, isIncludedInDropdown: false}, with_context: false) }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% block delete_form %}
+    {{ include('@EasyAdmin/crud/includes/_action_confirmation_modal.html.twig', with_context: false) }}
+{% endblock delete_form %}
+
+{% if entities|length > 0 %}
+    <div class="content-panel-footer without-padding without-border" style="margin-top:1rem;">
+        {% block paginator %}
+            {{ include(ea.templatePath('crud/paginator'), {render_detailed_pagination: true}) }}
+        {% endblock paginator %}
+    </div>
+{% endif %}
+
+<style>
+.photo-mosaic {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.25rem;
+    padding: 0.25rem 0 1rem;
+}
+.photo-mosaic-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    transition: box-shadow .2s;
+}
+.photo-mosaic-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+}
+.photo-mosaic-img-wrap {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+.photo-mosaic-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .25s;
+}
+.photo-mosaic-card:hover .photo-mosaic-img-wrap img {
+    transform: scale(1.04);
+}
+.photo-mosaic-body {
+    padding: .6rem .75rem .3rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+.photo-mosaic-caption {
+    font-size: .8rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.photo-mosaic-alt {
+    font-size: .75rem;
+    color: #6b7280;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.photo-mosaic-pos {
+    font-size: .72rem;
+    color: #9ca3af;
+    margin-top: auto;
+}
+.photo-mosaic-actions {
+    display: flex;
+    gap: .4rem;
+    padding: .5rem .75rem .65rem;
+    border-top: 1px solid #f3f4f6;
+    justify-content: flex-end;
+}
+.photo-mosaic-actions a,
+.photo-mosaic-actions button {
+    font-size: .78rem;
+    padding: .3rem .7rem;
+    border-radius: 5px;
+}
+</style>
+
+{% endblock main %}
