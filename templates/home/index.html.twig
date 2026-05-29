@@ -86,6 +86,34 @@
         </div>
     </section>
 
+    <!-- Carousel photos galerie -->
+    {% if photos is not empty %}
+    <section class="carousel-section" aria-label="Galerie photos">
+        <div class="carousel-container">
+            <div class="carousel" id="photoCarousel">
+                <div class="carousel-track" id="carouselTrack">
+                    {% for photo in photos %}
+                    <div class="carousel-slide">
+                        <img
+                            src="{{ asset('uploads/photos/' ~ photo.filename) }}"
+                            alt="{{ photo.alt ?? 'Photo - Les patounes du glazik' }}"
+                            loading="lazy"
+                        >
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-btn carousel-btn--prev" id="carouselPrev" aria-label="Photo précédente">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="carousel-btn carousel-btn--next" id="carouselNext" aria-label="Photo suivante">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+    </section>
+    {% endif %}
+
     <!-- À propos + Présentation condensée -->
     <section class="about-section" id="a-propos">
         <div class="container">
@@ -662,4 +690,73 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('build/animations.js') }}"></script>
+    {% if photos is not empty %}
+    <script>
+    (function () {
+        var track   = document.getElementById('carouselTrack');
+        var dotsWrap = document.getElementById('carouselDots');
+        var carousel = document.getElementById('photoCarousel');
+        if (!track || !carousel) return;
+
+        // Collecte et mélange aléatoire des slides
+        var slides = Array.from(track.children);
+        var total  = slides.length;
+        if (total < 2) return;
+
+        for (var i = total - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = slides[i]; slides[i] = slides[j]; slides[j] = tmp;
+        }
+        slides.forEach(function (s) { track.appendChild(s); });
+        slides = Array.from(track.children);
+
+        // Génération des points de navigation
+        slides.forEach(function (_, idx) {
+            var dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (idx === 0 ? ' is-active' : '');
+            dot.setAttribute('aria-label', 'Photo ' + (idx + 1));
+            (function (n) {
+                dot.addEventListener('click', function () { stopAuto(); goTo(n); startAuto(); });
+            })(idx);
+            dotsWrap.appendChild(dot);
+        });
+
+        var dots     = Array.from(dotsWrap.children);
+        var current  = 0;
+        var autoTimer = null;
+
+        function goTo(n) {
+            current = ((n % total) + total) % total;
+            track.style.transform = 'translateX(-' + (current * 100) + '%)';
+            dots.forEach(function (d, i) { d.classList.toggle('is-active', i === current); });
+        }
+
+        function next() { goTo(current + 1); }
+        function prev() { goTo(current - 1); }
+
+        function startAuto() { autoTimer = setInterval(next, 4500); }
+        function stopAuto()  { clearInterval(autoTimer); }
+
+        document.getElementById('carouselNext').addEventListener('click', function () { stopAuto(); next(); startAuto(); });
+        document.getElementById('carouselPrev').addEventListener('click', function () { stopAuto(); prev(); startAuto(); });
+
+        carousel.addEventListener('mouseenter', stopAuto);
+        carousel.addEventListener('mouseleave', startAuto);
+
+        // Support tactile / swipe
+        var touchStartX = 0;
+        carousel.addEventListener('touchstart', function (e) {
+            touchStartX = e.touches[0].clientX;
+            stopAuto();
+        }, { passive: true });
+        carousel.addEventListener('touchend', function (e) {
+            var dx = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(dx) > 40) { dx > 0 ? next() : prev(); }
+            startAuto();
+        }, { passive: true });
+
+        startAuto();
+    })();
+    </script>
+    {% endif %}
 {% endblock %}
