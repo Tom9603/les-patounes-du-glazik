@@ -1065,6 +1065,46 @@ body {
     font-weight: 500;
 }
 
+// About section : layout avec carousel intégré
+.about-grid--carousel {
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    gap: 3rem;
+}
+
+.about-carousel-col {
+    display: flex;
+    flex-direction: column;
+
+    // Le carousel s'étire pour remplir toute la hauteur de la colonne
+    .carousel {
+        flex: 1;
+        aspect-ratio: unset;
+        min-height: 300px;
+    }
+
+    .carousel-dots {
+        flex-shrink: 0;
+        margin-top: 0.85rem;
+    }
+}
+
+.about-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    justify-content: center;
+}
+
+.about-image--compact {
+    border-radius: $border-radius-xl;
+    overflow: hidden;
+
+    .about-img {
+        height: 260px;
+    }
+}
+
 // Comment ça se passe
 .steps-section {
     padding: 5rem 0;
@@ -2945,8 +2985,19 @@ body {
     }
 
     .about-grid,
+    .about-grid--carousel,
     .zone-grid {
         grid-template-columns: 1fr;
+    }
+
+    .about-carousel-col .carousel {
+        min-height: 260px;
+        aspect-ratio: 4 / 3;
+        flex: unset;
+    }
+
+    .about-image--compact .about-img {
+        height: 220px;
     }
 
     .gallery-grid {

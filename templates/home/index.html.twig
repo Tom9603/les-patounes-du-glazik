@@ -86,38 +86,55 @@
         </div>
     </section>
 
-    <!-- Carousel photos galerie -->
-    {% if photos is not empty %}
-    <section class="carousel-section" aria-label="Galerie photos">
-        <div class="carousel-container">
-            <div class="carousel" id="photoCarousel">
-                <div class="carousel-track" id="carouselTrack">
-                    {% for photo in photos %}
-                    <div class="carousel-slide">
-                        <img
-                            src="{{ asset('uploads/photos/' ~ photo.filename) }}"
-                            alt="{{ photo.alt ?? 'Photo - Les patounes du glazik' }}"
-                            loading="lazy"
-                        >
-                    </div>
-                    {% endfor %}
-                </div>
-                <button class="carousel-btn carousel-btn--prev" id="carouselPrev" aria-label="Photo précédente">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <button class="carousel-btn carousel-btn--next" id="carouselNext" aria-label="Photo suivante">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </div>
-            <div class="carousel-dots" id="carouselDots"></div>
-        </div>
-    </section>
-    {% endif %}
-
-    <!-- À propos + Présentation condensée -->
+    <!-- À propos + carousel intégré -->
     <section class="about-section" id="a-propos">
         <div class="container">
-            <div class="about-grid">
+            <div class="about-grid{% if photos is not empty %} about-grid--carousel{% endif %}">
+
+                {% if photos is not empty %}
+                {# Colonne gauche : carousel galerie #}
+                <div class="about-carousel-col">
+                    <div class="carousel" id="photoCarousel">
+                        <div class="carousel-track" id="carouselTrack">
+                            {% for photo in photos %}
+                            <div class="carousel-slide">
+                                <img
+                                    src="{{ asset('uploads/photos/' ~ photo.filename) }}"
+                                    alt="{{ photo.alt ?? 'Photo - Les patounes du glazik' }}"
+                                    loading="lazy"
+                                >
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-btn carousel-btn--prev" id="carouselPrev" aria-label="Photo précédente">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <button class="carousel-btn carousel-btn--next" id="carouselNext" aria-label="Photo suivante">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                    </div>
+                    <div class="carousel-dots" id="carouselDots"></div>
+                </div>
+                {% endif %}
+
+                {% if photos is not empty %}
+                {# Avec carousel : photo + texte empilés à droite #}
+                <div class="about-right-col">
+                    <div class="about-image about-image--compact animate-on-scroll">
+                        <img src="{{ asset('images/heroPicture.png') }}" alt="Sophie, petsitter et naturopathe animalière" class="about-img">
+                    </div>
+                    <div class="about-content animate-on-scroll">
+                        <h3 class="section-title">Qui suis-je ?</h3>
+                        <p class="about-text">Je m'appelle Sophie, passionnée par les animaux depuis toujours. Basée à Landudal en Finistère, je me déplace chez vous pour prendre soin de vos compagnons - parce qu'un animal est toujours mieux dans son environnement familier.</p>
+                        <p class="about-text">Titulaire de l'ACACED (chien, chat, NAC) et formée en naturopathie animale à l'ENA MNC, j'interviens avec les garanties d'une professionnelle : assurée en responsabilité civile, déclarée auprès de la DDPP, avec médiateur agréé.</p>
+                        <div class="about-badges">
+                            <span class="about-badge">ACACED chien, chat, NAC</span>
+                            <span class="about-badge">ENA MNC</span>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                {# Sans carousel : layout original photo gauche / texte droite #}
                 <div class="about-image animate-on-scroll">
                     <img src="{{ asset('images/heroPicture.png') }}" alt="Sophie, petsitter et naturopathe animalière" class="about-img">
                 </div>
@@ -130,6 +147,8 @@
                         <span class="about-badge">ENA MNC</span>
                     </div>
                 </div>
+                {% endif %}
+
             </div>
         </div>
     </section>
