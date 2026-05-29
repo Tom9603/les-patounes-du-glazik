@@ -93,6 +93,7 @@ class BookingCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $complete)
             ->add(Crud::PAGE_INDEX, $invoice)
             ->add(Crud::PAGE_INDEX, $cancel)
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->disable(Action::NEW);
     }
 
@@ -143,7 +144,7 @@ class BookingCrudController extends AbstractCrudController
             ))
             ->onlyOnForms();
         yield TextareaField::new('clientNotes')->setLabel('Notes client')->setRequired(false)->onlyOnDetail();
-        yield TextareaField::new('adminNotes')->setLabel('Notes admin')->setRequired(false)->onlyOnForms();
+        yield TextareaField::new('adminNotes')->setLabel('Notes admin')->setRequired(false)->hideOnIndex();
         yield DateTimeField::new('createdAt')->setLabel('Créée le')->onlyOnIndex();
     }
 
